@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:superfleet_courier/widgets/colors.dart';
+import 'package:superfleet_courier/theme/colors.dart';
 
 class ReasonCheckbox extends StatelessWidget {
   const ReasonCheckbox(

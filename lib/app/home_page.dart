@@ -8,7 +8,7 @@ import 'package:superfleet_courier/app/bloc/user_bloc.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/repository/superfleet_repository.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
-import 'package:superfleet_courier/widgets/colors.dart';
+import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/widgets/order_tile.dart';
 
 import 'bloc/order_bloc.dart';
@@ -20,6 +20,8 @@ class HomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     final tabController = useTabController(initialLength: 2);
     return BlocProvider(
       create: ((context) {
@@ -193,7 +195,6 @@ class _OrderList extends StatelessWidget {
                   return OrderTile(
                     order: value.orders[index],
                     width: 296.w,
-                    height: 178.h,
                   );
                 },
                 itemCount: value.orders.length,

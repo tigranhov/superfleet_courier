@@ -343,7 +343,7 @@ packages:
     source: hosted
     version: "1.1.1"
   flutter_screenutil:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_screenutil
       url: "https://pub.dartlang.org"
@@ -402,7 +402,7 @@ packages:
     source: sdk
     version: "0.0.0"
   font_awesome_flutter:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: font_awesome_flutter
       url: "https://pub.dartlang.org"
@@ -493,7 +493,7 @@ packages:
     source: hosted
     version: "4.0.2"
   intl:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"
@@ -959,6 +959,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.16"
+  theme_tailor:
+    dependency: "direct dev"
+    description:
+      name: theme_tailor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.7"
+  theme_tailor_annotation:
+    dependency: "direct main"
+    description:
+      name: theme_tailor_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   timing:
     dependency: transitive
     description:
@@ -1093,7 +1107,7 @@ packages:
     source: hosted
     version: "3.1.1"
   yandex_geocoder:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: yandex_geocoder
       url: "https://pub.dartlang.org"

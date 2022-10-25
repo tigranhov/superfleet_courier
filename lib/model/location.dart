@@ -22,6 +22,7 @@ class Location with _$Location {
   }) = _Location;
 
   String addressString() {
+    return 'Alikhanyan 1st deadlock, house #13';
     return street! + ', ' + house!;
   }
 

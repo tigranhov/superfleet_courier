@@ -1,0 +1,8 @@
+{
+    "files.exclude": {
+        "**/*.chopper.dart": true,
+        "**/*.freezed.dart": true,
+        "**/*.g.dart": true,
+        "**/*.tailor.dart": true
+    },
+}

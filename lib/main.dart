@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:superfleet_courier/app/bloc/user_bloc.dart';
@@ -8,9 +9,11 @@ import 'package:superfleet_courier/app/home_page.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/app/splash_page.dart';
 import 'package:superfleet_courier/bloc_observer.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:superfleet_courier/theme/color_theme.dart';
+import 'package:superfleet_courier/theme/sf_text_theme.dart';
 import 'app/login_page.dart';
 import 'repository/superfleet_repository.dart';
+import 'theme/sf_theme.dart';
 
 void main() {
   Bloc.observer = AppObserver();
@@ -31,24 +34,24 @@ class MyApp extends HookWidget {
           BlocProvider(create: (_) => UserBloc(repository)),
         ],
         child: ScreenUtilInit(
-          designSize: const Size(320, 568),
-          
+          designSize: const Size(375, 667),
           builder: (context, child) => MaterialApp.router(
             routerConfig: _router,
             title: 'Flutter Demo',
             theme: ThemeData(
-              // This is the theme of your application.
-              //
-              // Try running your application with "flutter run". You'll see the
-              // application has a blue toolbar. Then, without quitting the app, try
-              // changing the primarySwatch below to Colors.green and then invoke
-              // "hot reload" (press "r" in the console where you ran "flutter run",
-              // or simply save your changes to "hot reload" in a Flutter IDE).
-              // Notice that the counter didn't reset back to zero; the application
-              // is not restarted.
-              primarySwatch: Colors.blue,
-              textTheme: GoogleFonts.robotoTextTheme(),
-            ),
+                    // This is the theme of your application.
+                    //
+                    // Try running your application with "flutter run". You'll see the
+                    // application has a blue toolbar. Then, without quitting the app, try
+                    // changing the primarySwatch below to Colors.green and then invoke
+                    // "hot reload" (press "r" in the console where you ran "flutter run",
+                    // or simply save your changes to "hot reload" in a Flutter IDE).
+                    // Notice that the counter didn't reset back to zero; the application
+                    // is not restarted.
+                    primarySwatch: Colors.blue,
+                    textTheme: GoogleFonts.robotoTextTheme(),
+                    backgroundColor: const Color(0xffCCCCCC))
+                .copyWith(extensions: [SFTheme.light]),
           ),
         ),
       ),

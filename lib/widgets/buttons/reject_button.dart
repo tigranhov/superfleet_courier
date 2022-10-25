@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:superfleet_courier/widgets/colors.dart';
+import 'package:superfleet_courier/theme/colors.dart';
 
 
 class RejectButton extends StatelessWidget {

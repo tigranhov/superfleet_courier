@@ -20,7 +20,7 @@ class AppObserver extends BlocObserver {
     logger.d("${bloc.runtimeType} $event called");
     super.onEvent(bloc, event);
   }
-
+//Kalbas lav bana
   @override
   void onChange(BlocBase bloc, Change change) {
     logger.i("${bloc.runtimeType} $change");
