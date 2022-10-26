@@ -19,14 +19,6 @@ class OrderTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final order = this.order.copyWith(
-        from: List.from(this.order.from)
-          ..add(this.order.from[0])
-          ..add(this.order.from[0])
-          ..add(this.order.from[0])
-          ..add(this.order.from[0])
-          ..add(this.order.from[0])
-          ..add(this.order.from[0]));
     final width = this.width.w;
     return Container(
       constraints: BoxConstraints(minWidth: width),
@@ -58,7 +50,7 @@ class OrderTile extends StatelessWidget {
             drawLine: false,
           ),
           SizedBox(
-            height: 16.h,
+            height: 16.r,
           )
         ],
       ),
@@ -73,7 +65,7 @@ class _BeforeDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 24.h,
+      height: 24.r,
       width: double.infinity,
       child: Row(
         children: [
@@ -108,9 +100,9 @@ class _AdressItem extends StatelessWidget {
   final bool drawLine;
   @override
   Widget build(BuildContext context) {
+   
     return Container(
-      height: 55.h,
-      padding: EdgeInsets.only(left: 12.w, right: 12.w, top: 12.h),
+      padding: EdgeInsets.only(left: 12.w, right: 12.w, top: 16.r),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -119,11 +111,12 @@ class _AdressItem extends StatelessWidget {
                 width: 26.r,
                 height: 26.r,
                 decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey, width: 0.5.r),
+                    border:
+                        Border.all(color: const Color(0xffD9D9D9), width: 2.r),
                     borderRadius: BorderRadius.circular(500)),
                 child: Icon(
                   isPickup ? SuperIcons.location_pin : SuperIcons.flag,
-                  size: 13.sp,
+                  size: 13.r,
                   color: isPickup
                       ? const Color(0xffE99700)
                       : const Color(0xff4F9E52),
@@ -134,9 +127,11 @@ class _AdressItem extends StatelessWidget {
                 top: 26.r,
                 child: Container(
                   width: 0,
-                  height: 30.h,
+                  height: 54.r,
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 0.3)),
+                    
+                      border: Border.all(
+                          color: const Color(0xffD9D9D9), width: 1.r)),
                 ),
               ),
           ]),
@@ -145,31 +140,31 @@ class _AdressItem extends StatelessWidget {
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: (26.r - 17.h) / 2),
+              SizedBox(height: (26.r - 17.r) / 2),
               Container(
-                height: 17.h,
-                alignment: Alignment.centerLeft,
-                child: AutoSizeText(
+                alignment: Alignment.topLeft,
+                padding: REdgeInsets.only(right: 16),
+                child: Text(
                   address,
-                  maxLines: 1,
-                  style: context.text12,
+                  maxLines: 2,
+                  style: context.orderTileAddress,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(height: 4.h),
+              SizedBox(height: 4.r),
               Container(
-                height: 17.h,
-                alignment: Alignment.center,
+                height: 17.r,
+                alignment: Alignment.topLeft,
                 child: Row(
                   children: [
                     Text(
                       isPickup ? 'Pickup time:' : 'Dropoff time:',
-                      style: context.text12grey,
+                      style: context.orderTilePickupText,
                     ),
                     SizedBox(width: 4.w),
                     Text(
                       time,
-                      style: context.text12,
+                      style: context.orderTileAddress,
                     )
                   ],
                 ),

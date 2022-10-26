@@ -10,7 +10,6 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: const Size(320, 692));
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(

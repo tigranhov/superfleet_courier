@@ -14,14 +14,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UserEventCheckIsLoggedIn>(
       (event, emit) async {
         final user = event.user ?? await repository.getCurrentUser();
-        final courier = await repository.getCourier(id: 14);
-        if (user != null) {
-          //repository.getOrdersForCourier(courierId: courier.id);
-          emit(UserState.loggedIn(user: user, courier: courier));
-        } else {
+        if (user == null) {
           emit(const UserState.loggedOut());
+          return;
         }
-       
+        final courier = await repository.getCourier(id: 14);
+          //repository.getOrdersForCourier(courierId: courier.id);
+        emit(UserState.loggedIn(user: user, courier: courier));
       },
     );
     add(const UserEvent.checkIsLoggedIn());
@@ -29,7 +28,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UserEventChangeStatus>(
       (event, emit) async {
         final loggedInState = state as UserStateLoggedIn;
-        final targetStatus = event.active ? 'ACTIVE' : 'INACTIVE';
+        final active = event.active ??
+            (loggedInState.courier.status == 'ACTIVE' ? false : true);
+        final targetStatus = active ? 'ACTIVE' : 'INACTIVE';
         final updatedCourier = await repository.updateCourierStatus(
             id: loggedInState.courier.id, status: targetStatus);
 
@@ -70,5 +71,5 @@ class UserEvent with _$UserEvent {
       {required String username, required String password}) = UserEventLogin;
   const factory UserEvent.checkIsLoggedIn({User? user}) =
       UserEventCheckIsLoggedIn;
-  const factory UserEvent.changeStatus(bool active) = UserEventChangeStatus;
+  const factory UserEvent.changeStatus([bool? active]) = UserEventChangeStatus;
 }

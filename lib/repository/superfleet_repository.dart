@@ -12,6 +12,7 @@ mixin Api {
 
   Future<List<Order>> getOrdersForCourier(
       {required int courierId, int? offset, int? limit}) async {
+    return [];
     final DotEnv dotEnv = DotEnv();
     await dotEnv.load();
     final geocoder = ygc.YandexGeocoder(apiKey: dotEnv.env['YANDEX_KEY']!);
@@ -112,6 +113,7 @@ class SuperfleetRepository with Api {
   }
 
   Future<User?> getCurrentUser() async {
+    return null;
     final token = (await _secureStorage).getString('accessToken');
     if (token != null) _accessToken = token;
 

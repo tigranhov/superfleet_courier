@@ -36,6 +36,16 @@ class _$SFTheme {
   static List<TextStyle> text14grey = [
     GoogleFonts.roboto().copyWith(fontSize: 14.sp, color: superfleetGrey)
   ];
+  static List<TextStyle> text16grey88 = [
+    GoogleFonts.roboto().copyWith(fontSize: 16.sp, color: Color(0xff888888))
+  ];
+  static List<TextStyle> orderTileAddress = [
+    GoogleFonts.roboto().copyWith(fontSize: 16.sp, fontWeight: FontWeight.w700)
+  ];
+  static List<TextStyle> orderTilePickupText = [
+    GoogleFonts.roboto().copyWith(
+        fontSize: 16.sp, fontWeight: FontWeight.w700, color: superfleetGrey)
+  ];
 
   static List<Color?> primaryColor = [superfleetBlue];
   static List<Color?> secondaryColor = [superfleetGreen];

@@ -25,7 +25,7 @@ class Order with _$Order {
 
 extension YandexOrderLocationUpdate on Order {
   Future<Order> updateLocation(YandexGeocoder geocoder) async {
-    return copyWith();
+    return copyWith(); //TODO
     final List<FromLocation> newFrom = [];
     for (final i in from) {
       newFrom.add(await i.updateLocation(geocoder));

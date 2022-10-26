@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:superfleet_courier/theme/sf_theme.dart';
 
 class SFTextfield extends StatefulWidget {
   const SFTextfield(
@@ -37,8 +39,10 @@ class _SFTextfieldState extends State<SFTextfield> {
       enableSuggestions: widget.enableSuggestions,
       decoration: InputDecoration(
         hintText: widget.hint,
+        hintStyle: context.text16grey88,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8.r),
         ),
         filled: focusNode.hasFocus ? false : true,
         fillColor: const Color(0xffF0F0F0),

@@ -33,7 +33,7 @@ class SFButton extends StatelessWidget {
         onPressed: onPressed,
         style: ButtonStyle(
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0.r))),
+              borderRadius: BorderRadius.circular(64.0.r))),
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
               return inverse ? mainColor : secondaryColor;

@@ -1,8 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:superfleet_courier/model/courier.dart';
 import 'package:superfleet_courier/model/model.dart';
-import 'package:superfleet_courier/model/order.dart';
 import 'package:superfleet_courier/repository/superfleet_repository.dart';
 
 part 'order_bloc.freezed.dart';
@@ -29,6 +27,7 @@ class OrderState with _$OrderState {
       {required List<Order> orders,
       required Courier courier}) = OrderStateLoaded;
   const factory OrderState.loading() = OrderStateLoading;
+  
 }
 
 @freezed
