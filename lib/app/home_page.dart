@@ -7,9 +7,9 @@ import 'package:superfleet_courier/app/bloc/user_bloc.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/repository/superfleet_repository.dart';
+import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
-import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/widgets/order_tile.dart';
 
 import 'bloc/order_bloc.dart';
@@ -51,13 +51,13 @@ class HomePage extends HookWidget {
 }
 
 class _TopPanel extends StatelessWidget {
-  const _TopPanel({super.key});
+  const _TopPanel();
 
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
       transitionType: ContainerTransitionType.fadeThrough,
-      openBuilder: (context, action) => ProfilePage(),
+      openBuilder: (context, action) => const ProfilePage(),
       closedBuilder: (context, action) => BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
           if (state is UserStateLoggedIn) {
@@ -66,25 +66,25 @@ class _TopPanel extends StatelessWidget {
               height: 48,
               child: Row(
                 children: [
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Container(
                       width: 36,
                       height: 36,
-                      padding: EdgeInsets.only(top: 6, bottom: 6),
+                      padding: const EdgeInsets.only(top: 6, bottom: 6),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
                             color: const Color(0xffDFDFDF), width: 2),
                       ),
                       alignment: Alignment.center,
-                      child: Icon(
+                      child: const Icon(
                         Icons.pedal_bike,
                         size: 24,
                         color: superfleetBlue,
                       )),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Padding(
-                    padding: EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.only(top: 8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -114,7 +114,7 @@ class _TopPanel extends StatelessWidget {
                           style: context.text12grey,
                         ),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       SizedBox(
                         height: 20,
                         width: 40,
@@ -128,7 +128,7 @@ class _TopPanel extends StatelessWidget {
                           },
                         ),
                       ),
-                      SizedBox(width: 12)
+                      const SizedBox(width: 12)
                     ]),
                   )
                 ],
@@ -143,7 +143,7 @@ class _TopPanel extends StatelessWidget {
 }
 
 class _TabBar extends StatelessWidget {
-  const _TabBar({super.key, this.controller});
+  const _TabBar({this.controller});
   final TabController? controller;
 
   @override
@@ -171,7 +171,7 @@ class _TabBar extends StatelessWidget {
 }
 
 class _OrderTab extends StatelessWidget {
-  const _OrderTab({super.key});
+  const _OrderTab();
 
   @override
   Widget build(BuildContext context) {
@@ -257,15 +257,15 @@ class _InactiveOrders extends StatelessWidget {
 }
 
 class _OrderList extends StatelessWidget {
-  const _OrderList({super.key, required this.orders});
+  const _OrderList({required this.orders});
   final List<Order> orders;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       key: const ValueKey(1),
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      separatorBuilder: (context, index) => SizedBox(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      separatorBuilder: (context, index) => const SizedBox(
         height: 12,
       ),
       itemBuilder: (context, index) {
@@ -280,7 +280,7 @@ class _OrderList extends StatelessWidget {
 }
 
 class _HistoryTab extends StatelessWidget {
-  const _HistoryTab({super.key});
+  const _HistoryTab();
 
   @override
   Widget build(BuildContext context) {
@@ -294,8 +294,7 @@ class _HistoryTab extends StatelessWidget {
 
 class _NoContent extends StatelessWidget {
   const _NoContent(
-      {super.key,
-      required this.icon,
+      {required this.icon,
       required this.description,
       required this.explanation});
   final IconData icon;
@@ -310,7 +309,7 @@ class _NoContent extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: 80),
+            margin: const EdgeInsets.only(top: 80),
             width: 88,
             height: 88,
             alignment: Alignment.center,

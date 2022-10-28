@@ -42,7 +42,7 @@ dependencies:
   search_choices: ^2.1.1
   carousel_slider: ^4.1.1
   flutter_portal: ^1.1.1
-  flutter_animate: ^1.0.0
+  flutter_animate: ^2.0.0
   responsive_builder: ^0.4.3
   fleasy: ^0.14.1
   google_fonts: ^3.0.1
@@ -58,11 +58,14 @@ dependencies:
   flutter_dotenv: ^5.0.2
   intl: ^0.17.0
   yandex_geocoder: ^2.0.2
- # flutter_screenutil: ^5.5.4
   animate_do: ^2.1.0
   device_preview: ^1.1.0
   sliding_up_panel: ^2.0.0+1
   modal_bottom_sheet: ^2.1.2
+  shake: ^2.1.0
+# flutter_screenutil: ^5.5.4
+
+  
 
 
   # The following adds the Cupertino Icons font to your application.

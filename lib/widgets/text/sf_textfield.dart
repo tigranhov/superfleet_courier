@@ -8,21 +8,24 @@ class SFTextfield extends StatefulWidget {
       this.hint,
       this.obscure = false,
       this.autoCorrect = true,
-      this.enableSuggestions = true});
+      this.enableSuggestions = true,
+      this.focusNode});
   final String? hint;
   final bool obscure;
   final bool autoCorrect;
   final bool enableSuggestions;
+  final FocusNode? focusNode;
 
   @override
   State<SFTextfield> createState() => _SFTextfieldState();
 }
 
 class _SFTextfieldState extends State<SFTextfield> {
-  FocusNode focusNode = FocusNode();
+  late final FocusNode focusNode;
 
   @override
   void initState() {
+    focusNode = widget.focusNode ?? FocusNode();
     focusNode.addListener(() {
       setState(() {});
     });
@@ -40,13 +43,11 @@ class _SFTextfieldState extends State<SFTextfield> {
         hintText: widget.hint,
         hintStyle: context.text16grey88,
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: superfleetBlue, width: 2),
+          borderSide: const BorderSide(color: superfleetBlue, width: 2),
           borderRadius: BorderRadius.circular(8),
         ),
-        
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
-          
           borderRadius: BorderRadius.circular(8),
         ),
         filled: focusNode.hasFocus ? false : true,

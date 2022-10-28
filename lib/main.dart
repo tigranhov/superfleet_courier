@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shake/shake.dart';
 import 'package:superfleet_courier/app/bloc/user_bloc.dart';
 import 'package:superfleet_courier/app/home_page.dart';
+import 'package:superfleet_courier/app/new_order_page.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/app/splash_page.dart';
 import 'package:superfleet_courier/bloc_observer.dart';
+
 import 'app/login_page.dart';
 import 'repository/superfleet_repository.dart';
 import 'theme/sf_theme.dart';
@@ -28,28 +31,34 @@ class MyApp extends HookWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    useEffect(() {
+      final shakeDetector = ShakeDetector.autoStart(
+        onPhoneShake: () {
+          print('Shake');
+        },
+      );
+      shakeDetector.startListening();
+      return null;
+    }, [1]);
     final repository = useMemoized(() => SuperfleetRepository());
     return RepositoryProvider.value(
       value: repository,
       child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (_) => UserBloc(repository)),
-        ],
+          providers: [
+            BlocProvider(create: (_) => UserBloc(repository)),
+          ],
           child: MaterialApp.router(
-              routerConfig: _router,
-              title: 'Flutter Demo',
-              useInheritedMediaQuery: true,
-              builder: DevicePreview.appBuilder,
-              locale: DevicePreview.locale(context),
+            routerConfig: _router,
+            title: 'Flutter Demo',
+            useInheritedMediaQuery: true,
+            builder: DevicePreview.appBuilder,
+            locale: DevicePreview.locale(context),
             theme: ThemeData(
-                      primarySwatch: Colors.blue,
-                      textTheme: GoogleFonts.robotoTextTheme(),
-                      backgroundColor: const Color(0xffCCCCCC))
-                  .copyWith(extensions: [SFTheme.light]),
-          )
-          
-        
-      ),
+                    primarySwatch: Colors.blue,
+                    textTheme: GoogleFonts.robotoTextTheme(),
+                    backgroundColor: const Color(0xffCCCCCC))
+                .copyWith(extensions: [SFTheme.light]),
+          )),
     );
   }
 }
@@ -59,25 +68,31 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return SplashPage();
+        return const SplashPage();
       },
     ),
     GoRoute(
       path: '/login',
       builder: (BuildContext context, GoRouterState state) {
-        return LoginPage();
+        return const LoginPage();
       },
     ),
     GoRoute(
       path: '/home',
       builder: (BuildContext context, GoRouterState state) {
-        return HomePage();
+        return const HomePage();
       },
     ),
     GoRoute(
       path: '/profile',
       builder: (BuildContext context, GoRouterState state) {
-        return ProfilePage();
+        return const ProfilePage();
+      },
+    ),
+    GoRoute(
+      path: '/new_order',
+      builder: (BuildContext context, GoRouterState state) {
+        return const NewOrderPage();
       },
     ),
   ],

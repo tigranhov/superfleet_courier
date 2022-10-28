@@ -112,7 +112,6 @@ class SuperfleetRepository with Api {
   }
 
   Future<User?> getCurrentUser() async {
-    return null;
     final token = (await _secureStorage).getString('accessToken');
     if (token != null) _accessToken = token;
 

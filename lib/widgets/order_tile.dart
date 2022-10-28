@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:superfleet_courier/model/location.dart';
 import 'package:superfleet_courier/model/order.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -26,10 +25,10 @@ class OrderTile extends StatelessWidget {
           color: Colors.white,
           border: Border.all(width: 0.5, color: const Color(0xffCCCCCC)),
           borderRadius: BorderRadius.circular(4),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              color: const Color.fromARGB(64, 0, 0, 0),
-              offset: const Offset(0, 2),
+              color: Color.fromARGB(64, 0, 0, 0),
+              offset: Offset(0, 2),
               blurRadius: 2,
             ),
           ]),
@@ -49,7 +48,7 @@ class OrderTile extends StatelessWidget {
             time: formatDate(order.deliverUntil),
             drawLine: false,
           ),
-          SizedBox(
+          const SizedBox(
             height: 16,
           )
         ],
@@ -89,8 +88,7 @@ class _BeforeDivider extends StatelessWidget {
 
 class _AdressItem extends StatelessWidget {
   const _AdressItem(
-      {super.key,
-      required this.address,
+      {required this.address,
       required this.isPickup,
       required this.time,
       this.drawLine = true});
@@ -101,7 +99,7 @@ class _AdressItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 12, right: 12, top: 16),
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -126,19 +124,19 @@ class _AdressItem extends StatelessWidget {
                 top: 26,
                 child: Container(
                   width: 0,
-                  height: 54,
+                  height: 63,
                   decoration: BoxDecoration(
                       border:
                           Border.all(color: const Color(0xffD9D9D9), width: 1)),
                 ),
               ),
           ]),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: (26 - 17) / 2),
+              const SizedBox(height: (26 - 22) / 2),
               Container(
                 height: 44,
                 alignment: Alignment.topLeft,
@@ -149,9 +147,9 @@ class _AdressItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Container(
-                height: 17,
+                height: 22,
                 alignment: Alignment.topLeft,
                 child: Row(
                   children: [
@@ -159,7 +157,7 @@ class _AdressItem extends StatelessWidget {
                       isPickup ? 'Pickup time:' : 'Dropoff time:',
                       style: context.orderTilePickupText,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
                       time,
                       style: context.orderTileAddress,

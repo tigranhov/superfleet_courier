@@ -45,7 +45,7 @@ class SFButton extends StatelessWidget {
             }
             return inverse ? mainColor : secondaryColor;
           }),
-          textStyle:  MaterialStatePropertyAll(
+          textStyle: const MaterialStatePropertyAll(
               TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           overlayColor: const MaterialStatePropertyAll(Colors.transparent),
           side:  MaterialStatePropertyAll(
