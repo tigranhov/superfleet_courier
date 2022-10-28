@@ -2,7 +2,6 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:superfleet_courier/app/bloc/user_bloc.dart';
@@ -17,7 +16,7 @@ import 'theme/sf_theme.dart';
 void main() {
   Bloc.observer = AppObserver();
   runApp(DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (context) {
         return const MyApp();
       }));
@@ -36,34 +35,20 @@ class MyApp extends HookWidget {
         providers: [
           BlocProvider(create: (_) => UserBloc(repository)),
         ],
-        child: ScreenUtilInit(
-          useInheritedMediaQuery: true,
-          designSize: const Size(320, 548),
-          builder: (context, child) {
-            return MaterialApp.router(
+          child: MaterialApp.router(
               routerConfig: _router,
               title: 'Flutter Demo',
               useInheritedMediaQuery: true,
               builder: DevicePreview.appBuilder,
               locale: DevicePreview.locale(context),
-              theme: ThemeData(
-                
-                      // This is the theme of your application.
-                      //
-                      // Try running your application with "flutter run". You'll see the
-                      // application has a blue toolbar. Then, without quitting the app, try
-                      // changing the primarySwatch below to Colors.green and then invoke
-                      // "hot reload" (press "r" in the console where you ran "flutter run",
-                      // or simply save your changes to "hot reload" in a Flutter IDE).
-                      // Notice that the counter didn't reset back to zero; the application
-                      // is not restarted.
+            theme: ThemeData(
                       primarySwatch: Colors.blue,
                       textTheme: GoogleFonts.robotoTextTheme(),
                       backgroundColor: const Color(0xffCCCCCC))
                   .copyWith(extensions: [SFTheme.light]),
-            );
-          },
-        ),
+          )
+          
+        
       ),
     );
   }
@@ -123,7 +108,7 @@ final GoRouter _router = GoRouter(
 //   int _counter = 0;
 
 //   void _incrementCounter() {
-//     setState(() {
+//     setState((F) {
 //       // This call to setState tells the Flutter framework that something has
 //       // changed in this State, which causes it to rerun the build method below
 //       // so that the display can reflect the updated values. If we changed

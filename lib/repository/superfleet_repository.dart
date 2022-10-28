@@ -12,7 +12,6 @@ mixin Api {
 
   Future<List<Order>> getOrdersForCourier(
       {required int courierId, int? offset, int? limit}) async {
-    return [];
     final DotEnv dotEnv = DotEnv();
     await dotEnv.load();
     final geocoder = ygc.YandexGeocoder(apiKey: dotEnv.env['YANDEX_KEY']!);

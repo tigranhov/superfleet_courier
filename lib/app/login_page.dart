@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:superfleet_courier/app/bloc/user_bloc.dart';
@@ -34,22 +34,22 @@ class LoginPage extends StatelessWidget {
                   Align(
                     alignment: Alignment.topCenter,
                     child: Container(
-                        width: 130.w,
-                        height: 110.h,
+                        width: 130,
+                        height: 110,
                         alignment: Alignment.topCenter,
-                        padding: EdgeInsets.only(top: 40.h),
+                        padding: const EdgeInsets.only(top: 40),
                         child: Image.asset('assets/logo.png')),
                   ),
-                  SizedBox(height: 40.h),
+                  const SizedBox(height: 40),
                   Text(
                     'EMAIL ADDRESS',
                     style: context.text12w700,
                   ),
-                  8.verticalSpace,
+                  const SizedBox(height: 8),
                   const SFTextfield(
                     hint: 'Enter your email address',
                   ),
-                  16.verticalSpace,
+                  const SizedBox(height: 16),
                   Text(
                     'PASSWORD',
                     style: context.text12w700,
@@ -72,7 +72,7 @@ class LoginPage extends StatelessWidget {
                           password: 'Aaaa123\$'));
                     },
                   ),
-                  20.verticalSpace,
+                  const SizedBox(height: 20),
                   Align(
                     alignment: Alignment.center,
                     child: TextButton(
@@ -80,9 +80,9 @@ class LoginPage extends StatelessWidget {
                           showCupertinoModalBottomSheet(
                             context: context,
                             barrierColor: superfleetGrey,
-                            topRadius: Radius.circular(20.h),
+                            topRadius: const Radius.circular(20),
                             builder: (context) {
-                              return _ForgotPasswordModal();
+                              return const _ForgotPasswordModal();
                             },
                           );
                         },
@@ -103,55 +103,55 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class _ForgotPasswordModal extends StatelessWidget {
-  const _ForgotPasswordModal({super.key});
+class _ForgotPasswordModal extends HookWidget {
+  const _ForgotPasswordModal();
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: SizedBox(
-        height: 470.h,
+        height: 470,
         child: Column(
           children: [
-            12.verticalSpace,
+            const SizedBox(height: 12),
             Container(
-                width: 39.5.w,
+                width: 39.5,
                 height: 4,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(500),
                   color: const Color(0xffCCCCCC),
                 )),
-            20.verticalSpaceFromWidth,
+            const SizedBox(height: 20),
             SizedBox(
-              height: 22.h,
+              height: 22,
               child: Text(
                 'Forgot password?',
                 style: context.text16grey88
                     .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
               ),
             ),
-            4.verticalSpace,
+            const SizedBox(height: 4),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Please enter your email address and we will send you a temporary password so you can set up a new one',
                 style: context.text16grey88,
                 textAlign: TextAlign.center,
               ),
             ),
-            16.verticalSpace,
+            const SizedBox(height: 16),
             Container(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(left: 16.w),
+              padding: const EdgeInsets.only(left: 16),
               child: Text(
                 'EMAIL ADDRESS',
                 style: context.text12w700,
               ),
             ),
-            8.verticalSpace,
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: const SFTextfield(
+            const SizedBox(height: 8),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: SFTextfield(
                 hint: 'Enter your email address',
               ),
             ),

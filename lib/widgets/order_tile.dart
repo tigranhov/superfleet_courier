@@ -1,7 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:superfleet_courier/model/location.dart';
 import 'package:superfleet_courier/model/order.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -19,18 +18,19 @@ class OrderTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = this.width.w;
+   
+    final width = this.width;
     return Container(
       constraints: BoxConstraints(minWidth: width),
       decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(width: 0.5.r, color: const Color(0xffCCCCCC)),
-          borderRadius: BorderRadius.circular(4.r),
+          border: Border.all(width: 0.5, color: const Color(0xffCCCCCC)),
+          borderRadius: BorderRadius.circular(4),
           boxShadow: [
             BoxShadow(
               color: const Color.fromARGB(64, 0, 0, 0),
               offset: const Offset(0, 2),
-              blurRadius: 2.r,
+              blurRadius: 2,
             ),
           ]),
       child: Column(
@@ -50,7 +50,7 @@ class OrderTile extends StatelessWidget {
             drawLine: false,
           ),
           SizedBox(
-            height: 16.r,
+            height: 16,
           )
         ],
       ),
@@ -65,17 +65,17 @@ class _BeforeDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 24.r,
+      height: 24,
       width: double.infinity,
       child: Row(
         children: [
           Padding(
-            padding: REdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(status, style: context.text12w700grey),
           ),
           const Expanded(child: SizedBox()),
           Padding(
-            padding: REdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
               '#123456789',
               style: context.text12w700grey,
@@ -100,50 +100,48 @@ class _AdressItem extends StatelessWidget {
   final bool drawLine;
   @override
   Widget build(BuildContext context) {
-   
     return Container(
-      padding: EdgeInsets.only(left: 12.w, right: 12.w, top: 16.r),
+      padding: EdgeInsets.only(left: 12, right: 12, top: 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(clipBehavior: Clip.none, children: [
             Container(
-                width: 26.r,
-                height: 26.r,
+                width: 26,
+                height: 26,
                 decoration: BoxDecoration(
                     border:
-                        Border.all(color: const Color(0xffD9D9D9), width: 2.r),
+                        Border.all(color: const Color(0xffD9D9D9), width: 2),
                     borderRadius: BorderRadius.circular(500)),
                 child: Icon(
                   isPickup ? SuperIcons.location_pin : SuperIcons.flag,
-                  size: 13.r,
+                  size: 13,
                   color: isPickup
                       ? const Color(0xffE99700)
                       : const Color(0xff4F9E52),
                 )),
             if (drawLine)
               Positioned(
-                left: 13.r,
-                top: 26.r,
+                left: 13,
+                top: 26,
                 child: Container(
                   width: 0,
-                  height: 54.r,
+                  height: 54,
                   decoration: BoxDecoration(
-                    
-                      border: Border.all(
-                          color: const Color(0xffD9D9D9), width: 1.r)),
+                      border:
+                          Border.all(color: const Color(0xffD9D9D9), width: 1)),
                 ),
               ),
           ]),
-          SizedBox(width: 16.w),
+          SizedBox(width: 16),
           Expanded(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: (26.r - 17.r) / 2),
+              SizedBox(height: (26 - 17) / 2),
               Container(
+                height: 44,
                 alignment: Alignment.topLeft,
-                padding: REdgeInsets.only(right: 16),
                 child: Text(
                   address,
                   maxLines: 2,
@@ -151,9 +149,9 @@ class _AdressItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(height: 4.r),
+              SizedBox(height: 4),
               Container(
-                height: 17.r,
+                height: 17,
                 alignment: Alignment.topLeft,
                 child: Row(
                   children: [
@@ -161,7 +159,7 @@ class _AdressItem extends StatelessWidget {
                       isPickup ? 'Pickup time:' : 'Dropoff time:',
                       style: context.orderTilePickupText,
                     ),
-                    SizedBox(width: 4.w),
+                    SizedBox(width: 4),
                     Text(
                       time,
                       style: context.orderTileAddress,

@@ -1,9 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
-import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 import 'package:superfleet_courier/theme/colors.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -19,7 +18,7 @@ class ProfilePage extends StatelessWidget {
                 Navigator.of(context).pop();
               },
             ),
-            SizedBox(height: 1.h),
+            const SizedBox(height: 1),
             const _ProfileInfoCard(),
             _ChangePasswordCard(onTap: () {
               
@@ -38,27 +37,27 @@ class ProfilePage extends StatelessWidget {
 }
 
 class _TopPanel extends StatelessWidget {
-  const _TopPanel({super.key, required this.onExitPage});
+  const _TopPanel({required this.onExitPage});
   final Function() onExitPage;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: 1.sp,
+      elevation: 1,
       color: Colors.white,
       child: SizedBox(
-        height: 48.h,
+        height: 48,
         child: Stack(
           children: [
             IconButton(
-                padding: REdgeInsets.all(17),
-                iconSize: 14.sp,
+                padding: const EdgeInsets.all(17),
+                iconSize: 14,
                 onPressed: onExitPage,
                 icon: const Icon(Icons.close)),
-            Center(
+            const Center(
                 child: Text(
               'Profile',
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ))
           ],
         ),
@@ -68,7 +67,7 @@ class _TopPanel extends StatelessWidget {
 }
 
 class _ProfileInfoCard extends StatelessWidget {
-  const _ProfileInfoCard({super.key});
+  const _ProfileInfoCard();
 
   @override
   Widget build(BuildContext context) {
@@ -77,16 +76,16 @@ class _ProfileInfoCard extends StatelessWidget {
       color: Colors.white,
       child: Column(
         children: [
-          SizedBox(height: 12.h),
-          Center(
+          const SizedBox(height: 12),
+          const Center(
               child: Text(
             'SAS Supermarket',
-            style: TextStyle(color: const Color(0xff888888), fontSize: 14.sp),
+            style: TextStyle(color: Color(0xff888888), fontSize: 14),
           )),
-          SizedBox(height: 12.h),
+          const SizedBox(height: 12),
           Container(
-            width: 88.w,
-            height: 88.h,
+            width: 88,
+            height: 88,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -95,30 +94,30 @@ class _ProfileInfoCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 12.h),
-          Text(
+          const SizedBox(height: 12),
+          const Text(
             'Levon Martirosyan',
-            style: TextStyle(fontSize: 20.sp),
+            style: TextStyle(fontSize: 20),
           ),
-          SizedBox(height: 4.h),
-          Text(
+          const SizedBox(height: 4),
+          const Text(
             '@lyovakyova',
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
-          SizedBox(height: 24.h),
-          Divider(height: 1.h, thickness: 1.h),
-          SizedBox(height: 15.h),
-          Padding(
-            padding: EdgeInsets.only(left: 26.w, bottom: 16.h),
-            child: const _IconText(
+          const SizedBox(height: 24),
+          const Divider(height: 1, thickness: 1),
+          const SizedBox(height: 15),
+          const Padding(
+            padding: EdgeInsets.only(left: 26, bottom: 16),
+            child: _IconText(
               iconData: Icons.phone,
               text: '+37491 555 555',
               iconColor: Color(0xffE99700),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 26.w, bottom: 16.h),
-            child: const _IconText(
+          const Padding(
+            padding: EdgeInsets.only(left: 26, bottom: 16),
+            child: _IconText(
               iconData: Icons.mail,
               text: 'levon.martirosyan@gmail.com',
               iconColor: Color(0xff4F9E52),
@@ -132,8 +131,7 @@ class _ProfileInfoCard extends StatelessWidget {
 
 class _IconText extends StatelessWidget {
   const _IconText(
-      {super.key,
-      required this.iconData,
+      {required this.iconData,
       required this.text,
       required this.iconColor});
   final IconData iconData;
@@ -146,62 +144,62 @@ class _IconText extends StatelessWidget {
         Icon(
           iconData,
           color: iconColor,
-          size: 18.sp,
+          size: 18,
         ),
-        SizedBox(width: 11.w),
-        Text(text, style: TextStyle(fontSize: 14.sp)),
+        const SizedBox(width: 11),
+        Text(text, style: const TextStyle(fontSize: 14)),
       ],
     );
   }
 }
 
 class _ChangePasswordCard extends StatelessWidget {
-  const _ChangePasswordCard({super.key, required this.onTap});
+  const _ChangePasswordCard({required this.onTap});
 
   final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 12.w, top: 12.h, right: 12.w),
+      padding: const EdgeInsets.only(left: 12, top: 12, right: 12),
       child: InkWell(
         onTap: onTap,
         child: Card(
           elevation: 1,
           child: Padding(
-            padding: EdgeInsets.only(
-                left: 12.w, top: 18.h, right: 19.5.w, bottom: 16.h),
+            padding: const EdgeInsets.only(
+                left: 12, top: 18, right: 19.5, bottom: 16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
+                const Icon(
                   Icons.key,
                   color: Color(0xffCA1E1E),
-                  size: 22.sp,
+                  size: 22,
                 ),
-                SizedBox(width: 9.w),
+                const SizedBox(width: 9),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: const [
                       Text(
                         'Change Password',
                         style: TextStyle(
-                            fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            fontSize: 14, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 4.h),
+                      SizedBox(height: 4),
                       AutoSizeText(
                         'It\'s a good idea to use a strong password that you\'re not using elsewhere',
-                        minFontSize: 14.sp,
-                        stepGranularity: 1.sp,
+                        minFontSize: 14,
+                        stepGranularity: 1,
                       )
                     ],
                   ),
                 ),
-                Icon(
+                const Icon(
                   SuperIcons.double_arrow,
-                  size: 24.sp,
-                  color: const Color(0xff888888),
+                  size: 24,
+                  color: Color(0xff888888),
                 )
               ],
             ),
@@ -213,51 +211,52 @@ class _ChangePasswordCard extends StatelessWidget {
 }
 
 class _ChangeLanguageCard extends StatelessWidget {
-  const _ChangeLanguageCard({super.key, required this.onTap});
+  const _ChangeLanguageCard({required this.onTap});
   final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: REdgeInsets.only(left: 12, top: 12, right: 12),
+      padding: const EdgeInsets.only(left: 12, top: 12, right: 12),
       child: InkWell(
         onTap: onTap,
         child: Card(
           elevation: 1,
           child: Padding(
             padding:
-                REdgeInsets.only(left: 12, top: 18, right: 19.5, bottom: 16),
+                const EdgeInsets.only(
+                left: 12, top: 18, right: 19.5, bottom: 16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
+                const Icon(
                   Icons.language,
                   color: superfleetBlue,
-                  size: 22.sp,
+                  size: 22,
                 ),
-                SizedBox(width: 9.w),
+                const SizedBox(width: 9),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: const [
                       Text(
                         'Change Language',
                         style: TextStyle(
-                            fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            fontSize: 14, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 4.h),
+                      SizedBox(height: 4),
                       AutoSizeText(
                         'App language: English',
-                        minFontSize: 14.sp,
-                        stepGranularity: 1.sp,
+                        minFontSize: 14,
+                        stepGranularity: 1,
                       )
                     ],
                   ),
                 ),
-                Icon(
+                const Icon(
                   SuperIcons.double_arrow,
-                  size: 24.sp,
-                  color: const Color(0xff888888),
+                  size: 24,
+                  color: Color(0xff888888),
                 )
               ],
             ),
@@ -269,16 +268,16 @@ class _ChangeLanguageCard extends StatelessWidget {
 }
 
 class _LogoutButton extends StatelessWidget {
-  const _LogoutButton({super.key, required this.onTap});
+  const _LogoutButton({required this.onTap});
   final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: REdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(24.0),
       child: SFButton(
-        width: 212.w,
-        height: 56.h,
+        width: 212,
+        height: 56,
         text: 'Log Out',
         onPressed: onTap,
         inverse: true,

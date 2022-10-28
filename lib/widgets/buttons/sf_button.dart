@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:superfleet_courier/theme/colors.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SFButton extends StatelessWidget {
   const SFButton(
       {super.key,
@@ -33,7 +32,7 @@ class SFButton extends StatelessWidget {
         onPressed: onPressed,
         style: ButtonStyle(
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(64.0.r))),
+              borderRadius: BorderRadius.circular(64.0))),
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
               return inverse ? mainColor : secondaryColor;
@@ -47,10 +46,10 @@ class SFButton extends StatelessWidget {
             return inverse ? mainColor : secondaryColor;
           }),
           textStyle:  MaterialStatePropertyAll(
-              TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+              TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           overlayColor: const MaterialStatePropertyAll(Colors.transparent),
           side:  MaterialStatePropertyAll(
-              BorderSide(color: borderColor, width: 2.w)),
+              BorderSide(color: borderColor, width: 2)),
           splashFactory: NoSplash.splashFactory,
         ),
         child: Text(text),

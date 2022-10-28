@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:superfleet_courier/app/bloc/user_bloc.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/model/model.dart';
@@ -34,7 +33,7 @@ class HomePage extends HookWidget {
         child: Scaffold(
           body: Column(
             children: [
-              _TopPanel(),
+              const _TopPanel(),
               _TabBar(
                 controller: tabController,
               ),
@@ -64,28 +63,28 @@ class _TopPanel extends StatelessWidget {
           if (state is UserStateLoggedIn) {
             return Container(
               color: Colors.white,
-              height: 48.r,
+              height: 48,
               child: Row(
                 children: [
-                  SizedBox(width: 12.r),
+                  SizedBox(width: 12),
                   Container(
-                      width: 36.r,
-                      height: 36.r,
-                      padding: EdgeInsets.only(top: 6.r, bottom: 6.r),
+                      width: 36,
+                      height: 36,
+                      padding: EdgeInsets.only(top: 6, bottom: 6),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: const Color(0xffDFDFDF), width: 2.r),
+                            color: const Color(0xffDFDFDF), width: 2),
                       ),
                       alignment: Alignment.center,
                       child: Icon(
                         Icons.pedal_bike,
-                        size: 24.r,
+                        size: 24,
                         color: superfleetBlue,
                       )),
-                  SizedBox(width: 8.r),
+                  SizedBox(width: 8),
                   Padding(
-                    padding: EdgeInsets.only(top: 8.r),
+                    padding: EdgeInsets.only(top: 8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -115,10 +114,10 @@ class _TopPanel extends StatelessWidget {
                           style: context.text12grey,
                         ),
                       ),
-                      SizedBox(width: 12.r),
+                      SizedBox(width: 12),
                       SizedBox(
-                        height: 20.r,
-                        width: 40.r,
+                        height: 20,
+                        width: 40,
                         child: CupertinoSwitch(
                           value: state.courier.status == "ACTIVE",
                           activeColor: const Color(0xff4F9E52),
@@ -129,7 +128,7 @@ class _TopPanel extends StatelessWidget {
                           },
                         ),
                       ),
-                      SizedBox(width: 12.r)
+                      SizedBox(width: 12)
                     ]),
                   )
                 ],
@@ -156,7 +155,8 @@ class _TabBar extends StatelessWidget {
         labelColor: superfleetBlue,
         unselectedLabelColor: const Color(0xff888888),
         indicatorColor: superfleetBlue,
-        labelStyle: TextStyle(fontSize: 14.sp),
+        labelStyle:
+            context.text14w700grey.copyWith(fontWeight: FontWeight.bold),
         tabs: const [
           Tab(
             text: 'Order List',
@@ -264,14 +264,14 @@ class _OrderList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       key: const ValueKey(1),
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       separatorBuilder: (context, index) => SizedBox(
-        height: 12.h,
+        height: 12,
       ),
       itemBuilder: (context, index) {
         return OrderTile(
           order: orders[index],
-          width: 296.w,
+          width: 296,
         );
       },
       itemCount: orders.length,
@@ -310,32 +310,32 @@ class _NoContent extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: 80.r),
-            width: 88.r,
-            height: 88.r,
+            margin: EdgeInsets.only(top: 80),
+            width: 88,
+            height: 88,
             alignment: Alignment.center,
             decoration: const BoxDecoration(
                 color: Colors.white, shape: BoxShape.circle),
             child: Icon(
-              size: 36.72.r,
+              size: 36.72,
               icon,
               color: const Color(0xff888888),
             ),
           ),
-          24.verticalSpaceFromWidth,
+          const SizedBox(height: 24),
           Container(
               width: double.infinity,
-              height: 22.r,
+              height: 22,
               alignment: Alignment.center,
               child: Text(
                 description,
                 style:
                     context.text16grey88.copyWith(fontWeight: FontWeight.bold),
               )),
-          4.verticalSpaceFromWidth,
+          const SizedBox(height: 4),
           Container(
               width: double.infinity,
-              height: 44.r,
+              height: 44,
               alignment: Alignment.center,
               child: Text(
                 explanation,
