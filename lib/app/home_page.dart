@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:superfleet_courier/app/bloc/user_bloc.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/model/model.dart';
@@ -10,18 +11,30 @@ import 'package:superfleet_courier/repository/superfleet_repository.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
-import 'package:superfleet_courier/widgets/order_tile.dart';
+import 'package:superfleet_courier/widgets/order/order_tile.dart';
 
 import 'bloc/order_bloc.dart';
 
 class HomePage extends HookWidget {
-  const HomePage({
-    super.key,
-  });
+  const HomePage({super.key, this.debugTools = false});
+  final bool debugTools;
 
   @override
   Widget build(BuildContext context) {
     final tabController = useTabController(initialLength: 2);
+    final content = Column(
+      children: [
+        const _TopPanel(),
+        _TabBar(
+          controller: tabController,
+        ),
+        Expanded(
+          child: TabBarView(
+              controller: tabController,
+              children: const [_OrderTab(), _HistoryTab()]),
+        )
+      ],
+    );
     return BlocProvider(
       create: ((context) {
         final courier =
@@ -29,24 +42,55 @@ class HomePage extends HookWidget {
         return OrderBloc(
             repository: context.read<SuperfleetRepository>(), courier: courier);
       }),
-      child: SafeArea(
-        child: Scaffold(
-          body: Column(
-            children: [
-              const _TopPanel(),
-              _TabBar(
-                controller: tabController,
-              ),
-              Expanded(
-                child: TabBarView(
-                    controller: tabController,
-                    children: const [_OrderTab(), _HistoryTab()]),
-              )
-            ],
-          ),
+      child: Scaffold(
+        body: SafeArea(
+          child: !debugTools
+              ? content
+              : Stack(
+                  children: [content, const _DebugBar()],
+                ),
         ),
       ),
     );
+  }
+}
+
+class _DebugBar extends StatelessWidget {
+  const _DebugBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+        left: 0,
+        bottom: 0,
+        right: 0,
+        height: 50,
+        child: ButtonBar(
+          children: [
+            TextButton(
+                onPressed: () {
+                  context.push('/new_order',
+                      extra: Order(
+                          id: 123,
+                          deliverUntil: DateTime.now(),
+                          to: ToLocation(
+                            id: 12,
+                            location: Location(),
+                          ),
+                          from: [
+                            FromLocation(
+                                id: 123,
+                                location: Location(),
+                                availableFrom: DateTime.now()),
+                            FromLocation(
+                                id: 123,
+                                location: Location(),
+                                availableFrom: DateTime.now())
+                          ]));
+                },
+                child: const Text('New Order'))
+          ],
+        ));
   }
 }
 
@@ -270,6 +314,9 @@ class _OrderList extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         return OrderTile(
+          onTap: (order) {
+            context.push('/order', extra: order);
+          },
           order: orders[index],
           width: 296,
         );

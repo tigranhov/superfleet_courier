@@ -1,16 +1,19 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shake/shake.dart';
 import 'package:superfleet_courier/app/bloc/user_bloc.dart';
 import 'package:superfleet_courier/app/home_page.dart';
-import 'package:superfleet_courier/app/new_order_page.dart';
+import 'package:superfleet_courier/app/new_order/new_order_map_view_page.dart';
+import 'package:superfleet_courier/app/new_order/new_order_page.dart';
+import 'package:superfleet_courier/app/order_page.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/app/splash_page.dart';
-import 'package:superfleet_courier/bloc_observer.dart';
+import 'package:superfleet_courier/debug/bloc_observer.dart';
+import 'package:superfleet_courier/model/order.dart';
 
 import 'app/login_page.dart';
 import 'repository/superfleet_repository.dart';
@@ -31,15 +34,6 @@ class MyApp extends HookWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      final shakeDetector = ShakeDetector.autoStart(
-        onPhoneShake: () {
-          print('Shake');
-        },
-      );
-      shakeDetector.startListening();
-      return null;
-    }, [1]);
     final repository = useMemoized(() => SuperfleetRepository());
     return RepositoryProvider.value(
       value: repository,
@@ -48,6 +42,8 @@ class MyApp extends HookWidget {
             BlocProvider(create: (_) => UserBloc(repository)),
           ],
           child: MaterialApp.router(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
             routerConfig: _router,
             title: 'Flutter Demo',
             useInheritedMediaQuery: true,
@@ -80,7 +76,9 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/home',
       builder: (BuildContext context, GoRouterState state) {
-        return const HomePage();
+        return const HomePage(
+          debugTools: true,
+        );
       },
     ),
     GoRoute(
@@ -92,7 +90,22 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/new_order',
       builder: (BuildContext context, GoRouterState state) {
-        return const NewOrderPage();
+        final order = state.extra! as Order;
+        return NewOrderPage(order: order);
+      },
+    ),
+    GoRoute(
+      path: '/new_order/map_view',
+      builder: (BuildContext context, GoRouterState state) {
+        final order = state.extra! as Order;
+        return NewOrderMapViewPage(order: order);
+      },
+    ),
+    GoRoute(
+      path: '/order',
+      builder: (BuildContext context, GoRouterState state) {
+        final order = state.extra! as Order;
+        return OrderPage(order: order);
       },
     ),
   ],

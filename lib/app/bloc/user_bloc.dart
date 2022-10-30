@@ -1,11 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:superfleet_courier/model/courier.dart';
 import 'package:superfleet_courier/model/user.dart';
 import 'package:superfleet_courier/repository/superfleet_repository.dart';
-import 'package:yandex_geocoder/yandex_geocoder.dart';
+
 part 'user_bloc.freezed.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
@@ -13,14 +12,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       : super(const UserState.checkingLoginStatus()) {
     on<UserEventCheckIsLoggedIn>(
       (event, emit) async {
-        final user = event.user ?? await repository.getCurrentUser();
-        if (user == null) {
-          emit(const UserState.loggedOut());
-          return;
-        }
-        final courier = await repository.getCourier(id: 14);
+        try {
+          final user = event.user ?? await repository.getCurrentUser();
+          if (user == null) {
+            emit(const UserState.loggedOut());
+            return;
+          }
+          final courier = await repository.getCourier(id: 14);
           //repository.getOrdersForCourier(courierId: courier.id);
-        emit(UserState.loggedIn(user: user, courier: courier));
+          emit(UserState.loggedIn(user: user, courier: courier));
+        } catch (e) {
+          emit(const UserState.loggedOut());
+        }
       },
     );
     add(const UserEvent.checkIsLoggedIn());
@@ -49,10 +52,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   @override
   void onError(Object error, StackTrace stackTrace) {
     if (error is DioError) {
-      emit(const UserState.loggedOut());
       print('object');
     }
     super.onError(error, stackTrace);
+  }
+
+  @override
+  Future<void> close() {
+    return super.close();
   }
 }
 
