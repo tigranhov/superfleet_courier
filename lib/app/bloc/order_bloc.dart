@@ -1,18 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:superfleet_courier/model/model.dart';
-import 'package:superfleet_courier/repository/superfleet_repository.dart';
+import 'package:superfleet_courier/repository/superfleet_api.dart';
 
 part 'order_bloc.freezed.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderBloc(
-      {required SuperfleetRepository repository, required Courier courier})
+      {required SuperfleetAPI repository, required Courier courier})
       : super(const OrderStateLoading()) {
     on<OrderEventLoad>(
       (event, emit) async {
         final orders =
-            await repository.getOrdersForCourier(courierId: courier.id);
+            await repository.getOrders();
 
         emit(OrderState.loaded(orders: orders, courier: courier));
       },

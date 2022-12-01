@@ -14,7 +14,8 @@ class Courier with _$Courier {
     String? profileImageId,
     String? status,
     String? transport,
-    Location? location
+      Location? location,
+      String? email
   }) = _Courier;
 	
   factory Courier.fromJson(Map<String, dynamic> json) =>

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:superfleet_courier/app/bloc/user_bloc.dart';
-import 'package:superfleet_courier/model/user.dart';
+import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -16,10 +13,10 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void didChangeDependencies() {
-    final state = context.read<UserBloc>().state;
-    if (state is UserStateLoggedIn) {
+    final state = context.read<CourierBloc>().state;
+    if (state is CourierStateLoggedIn) {
       context.go('/home');
-    } else if (state is UserStateLoggedOut) {
+    } else if (state is CourierStateLoggedOut) {
       context.go('/login');
     }
 
@@ -28,11 +25,11 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
+    return BlocListener<CourierBloc, CourierState>(
       listener: (context, state) {
-        if (state is UserStateLoggedIn) {
+        if (state is CourierStateLoggedIn) {
           context.go('/home');
-        } else if (state is UserStateLoggedOut) {
+        } else if (state is CourierStateLoggedOut) {
           context.go('/login');
         }
       },

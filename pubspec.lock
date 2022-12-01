@@ -1161,12 +1161,12 @@ packages:
     source: hosted
     version: "2.0.2"
   yandex_mapkit:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: yandex_mapkit
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.1"
+    version: "3.2.0"
 sdks:
   dart: ">=2.18.2 <3.0.0"
   flutter: ">=3.3.0"

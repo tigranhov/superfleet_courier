@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:superfleet_courier/app/bloc/user_bloc.dart';
+import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/model/model.dart';
-import 'package:superfleet_courier/repository/superfleet_repository.dart';
+import 'package:superfleet_courier/repository/mock_repository.dart';
+import 'package:superfleet_courier/repository/superfleet_api.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
@@ -38,9 +39,9 @@ class HomePage extends HookWidget {
     return BlocProvider(
       create: ((context) {
         final courier =
-            (context.read<UserBloc>().state as UserStateLoggedIn).courier;
+            (context.read<CourierBloc>().state as CourierStateLoggedIn).courier;
         return OrderBloc(
-            repository: context.read<SuperfleetRepository>(), courier: courier);
+            repository: context.read<SuperfleetAPI>(), courier: courier);
       }),
       child: Scaffold(
         body: SafeArea(
@@ -102,9 +103,12 @@ class _TopPanel extends StatelessWidget {
     return OpenContainer(
       transitionType: ContainerTransitionType.fadeThrough,
       openBuilder: (context, action) => const ProfilePage(),
-      closedBuilder: (context, action) => BlocBuilder<UserBloc, UserState>(
+      closedBuilder: (context, action) =>
+          BlocBuilder<CourierBloc, CourierState>(
         builder: (context, state) {
-          if (state is UserStateLoggedIn) {
+          if (state is! CourierStateLoggedIn) {
+            throw Exception('At home page without logged in user');
+          }
             return Container(
               color: Colors.white,
               height: 48,
@@ -147,8 +151,8 @@ class _TopPanel extends StatelessWidget {
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: (() => context
-                        .read<UserBloc>()
-                        .add(const UserEvent.changeStatus())),
+                      .read<CourierBloc>()
+                      .add(const CourierEvent.changeStatus())),
                     child: Row(children: [
                       Container(
                         height: double.infinity,
@@ -167,8 +171,8 @@ class _TopPanel extends StatelessWidget {
                           activeColor: const Color(0xff4F9E52),
                           onChanged: (value) {
                             context
-                                .read<UserBloc>()
-                                .add(UserEvent.changeStatus(value));
+                              .read<CourierBloc>()
+                              .add(CourierEvent.changeStatus(value));
                           },
                         ),
                       ),
@@ -178,8 +182,7 @@ class _TopPanel extends StatelessWidget {
                 ],
               ),
             );
-          }
-          throw Exception('At home page without logged in user');
+          
         },
       ),
     );
@@ -224,8 +227,8 @@ class _OrderTab extends StatelessWidget {
         return state.map(
           loaded: (value) {
             late final Widget finalWidget;
-            if (context.select((UserBloc value) =>
-                (value.state as UserStateLoggedIn).courier.status ==
+            if (context.select((CourierBloc value) =>
+                (value.state as CourierStateLoggedIn).courier.status ==
                 'INACTIVE')) {
               finalWidget = const _InactiveOrders(
                 key: ValueKey(0),
@@ -292,8 +295,8 @@ class _InactiveOrders extends StatelessWidget {
         SFButton(
             text: 'Go Online',
             onPressed: () => context
-                .read<UserBloc>()
-                .add(const UserEvent.changeStatus(true))),
+                .read<CourierBloc>()
+                .add(const CourierEvent.changeStatus(true))),
         const Expanded(child: SizedBox())
       ],
     );

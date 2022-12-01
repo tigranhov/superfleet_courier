@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:superfleet_courier/app/bloc/user_bloc.dart';
+import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
@@ -13,9 +13,9 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
+    return BlocListener<CourierBloc, CourierState>(
       listener: (context, state) {
-        if (state is UserStateLoggedIn) {
+        if (state is CourierStateLoggedIn) {
           context.go('/home');
         }
       },
@@ -66,7 +66,7 @@ class LoginPage extends StatelessWidget {
                     width: double.infinity,
                     height: 56,
                     onPressed: () {
-                      context.read<UserBloc>().add(const UserEvent.login(
+                      context.read<CourierBloc>().add(const CourierEvent.login(
                           username: 'harut.martirosyan@gmail.com',
                           password: 'Aaaa123\$'));
                     },

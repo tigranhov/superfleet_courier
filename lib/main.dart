@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:superfleet_courier/app/bloc/user_bloc.dart';
+import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
 import 'package:superfleet_courier/app/home_page.dart';
 import 'package:superfleet_courier/app/new_order/new_order_map_view_page.dart';
 import 'package:superfleet_courier/app/new_order/new_order_page.dart';
@@ -14,9 +14,10 @@ import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/app/splash_page.dart';
 import 'package:superfleet_courier/debug/bloc_observer.dart';
 import 'package:superfleet_courier/model/order.dart';
+import 'package:superfleet_courier/repository/mock_repository.dart';
+import 'package:superfleet_courier/repository/superfleet_api.dart';
 
 import 'app/login_page.dart';
-import 'repository/superfleet_repository.dart';
 import 'theme/sf_theme.dart';
 
 void main() {
@@ -34,12 +35,12 @@ class MyApp extends HookWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final repository = useMemoized(() => SuperfleetRepository());
-    return RepositoryProvider.value(
+    final repository = useMemoized(() => MockRepository());
+    return RepositoryProvider<SuperfleetAPI>.value(
       value: repository,
       child: MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_) => UserBloc(repository)),
+            BlocProvider(create: (_) => CourierBloc(repository)),
           ],
           child: MaterialApp.router(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
