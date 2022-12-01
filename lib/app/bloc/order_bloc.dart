@@ -33,4 +33,5 @@ class OrderState with _$OrderState {
 @freezed
 class OrderEvent with _$OrderEvent {
   const factory OrderEvent.load() = OrderEventLoad;
+  const factory OrderEvent.newOrder() = OrderEventNew;
 }

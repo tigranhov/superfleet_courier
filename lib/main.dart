@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
+import 'package:superfleet_courier/app/bloc/new_order_bloc.dart';
 import 'package:superfleet_courier/app/home_page.dart';
 import 'package:superfleet_courier/app/new_order/new_order_map_view_page.dart';
 import 'package:superfleet_courier/app/new_order/new_order_page.dart';
@@ -20,7 +22,8 @@ import 'package:superfleet_courier/repository/superfleet_api.dart';
 import 'app/login_page.dart';
 import 'theme/sf_theme.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   Bloc.observer = AppObserver();
   runApp(DevicePreview(
       enabled: true,
@@ -92,14 +95,17 @@ final GoRouter _router = GoRouter(
       path: '/new_order',
       builder: (BuildContext context, GoRouterState state) {
         final order = state.extra! as Order;
-        return NewOrderPage(order: order);
+        return BlocProvider(
+            create: (context) => NewOrderBloc(),
+            child: NewOrderPage(order: order));
       },
     ),
     GoRoute(
       path: '/new_order/map_view',
       builder: (BuildContext context, GoRouterState state) {
-        final order = state.extra! as Order;
-        return NewOrderMapViewPage(order: order);
+        final bloc = state.extra! as NewOrderBloc;
+        return BlocProvider.value(
+            value: bloc, child: NewOrderMapViewPage(order: order));
       },
     ),
     GoRoute(

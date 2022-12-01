@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:superfleet_courier/app/bloc/new_order_bloc.dart';
+import 'package:superfleet_courier/app/bloc/order_bloc.dart';
 import 'package:superfleet_courier/model/order.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -10,50 +13,80 @@ import 'package:superfleet_courier/widgets/progres_bars/time_progress_bar.dart';
 import 'package:superfleet_courier/widgets/top_panel.dart';
 
 class NewOrderMapViewPage extends StatelessWidget {
-  const NewOrderMapViewPage({super.key, required this.order});
-  final Order order;
+  const NewOrderMapViewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const _TopPanel(),
-            const TimeProgressBar(
-              value: 0.5,
-            ),
-            Expanded(
-                child: SlidingUpPanel(
-              backdropEnabled: true,
-              maxHeight: 356,
-              minHeight: 59,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-              panel: Column(
+    return BlocConsumer<NewOrderBloc, NewOrderState>(
+      listener: (context, state) {
+        // TODO: implement listener
+      },
+      buildWhen: (previous, current) {
+        return current is OrderStateLoaded;
+      },
+      builder: (context, state) {
+        return state.map(
+          valid: (value) => Scaffold(
+            body: SafeArea(
+              child: Column(
                 children: [
-                  const SizedBox(height: 12),
-                  Container(
-                      width: 39.5,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(500),
-                        color: const Color(0xffCCCCCC),
-                      )),
-                  const SizedBox(height: 12),
-                  Expanded(child: _AddressReviewList(order: order))
+                  const _TopPanel(),
+                  const TimeProgressBar(
+                    value: 0.5,
+                  ),
+                  Expanded(
+                      child: _ContentViewWithSlidingPanel(
+                    order: value.order,
+                    content: Container(
+                      color: Colors.green,
+                      child: const Placeholder(child: Text('Map Placeholder')),
+                    ),
+                  )),
+                  _BottomPanel(
+                    onAccept: () {
+                      final orderBloc = context.read<NewOrderBloc>();
+                    },
+                  )
                 ],
               ),
-              body: Container(
-                color: Colors.green,
-                child: const Placeholder(child: Text('Map Placeholder')),
-              ),
-            )),
-            const _BottomPanel()
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ContentViewWithSlidingPanel extends StatelessWidget {
+  const _ContentViewWithSlidingPanel(
+      {required this.order, required this.content});
+
+  final Order order;
+  final Widget content;
+
+  @override
+  Widget build(BuildContext context) {
+    return SlidingUpPanel(
+        backdropEnabled: true,
+        maxHeight: 356,
+        minHeight: 59,
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        panel: Column(
+          children: [
+            const SizedBox(height: 12),
+            Container(
+                width: 39.5,
+                height: 4,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(500),
+                  color: const Color(0xffCCCCCC),
+                )),
+            const SizedBox(height: 12),
+            Expanded(child: _AddressReviewList(order: order))
           ],
         ),
-      ),
-    );
+        body: content);
   }
 }
 
@@ -86,7 +119,9 @@ class _TopPanel extends StatelessWidget {
 }
 
 class _BottomPanel extends StatelessWidget {
-  const _BottomPanel();
+  const _BottomPanel({required this.onAccept});
+
+  final Function() onAccept;
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +152,7 @@ class _BottomPanel extends StatelessWidget {
               height: 56,
               text: 'Accept',
               inverse: false,
-              onPressed: () {}),
+              onPressed: onAccept),
         ],
       ),
     );

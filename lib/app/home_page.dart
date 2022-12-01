@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
+import 'package:superfleet_courier/app/bloc/new_order_bloc.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/model/model.dart';
-import 'package:superfleet_courier/repository/mock_repository.dart';
 import 'package:superfleet_courier/repository/superfleet_api.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -109,80 +109,79 @@ class _TopPanel extends StatelessWidget {
           if (state is! CourierStateLoggedIn) {
             throw Exception('At home page without logged in user');
           }
-            return Container(
-              color: Colors.white,
-              height: 48,
-              child: Row(
-                children: [
-                  const SizedBox(width: 12),
-                  Container(
-                      width: 36,
-                      height: 36,
-                      padding: const EdgeInsets.only(top: 6, bottom: 6),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: const Color(0xffDFDFDF), width: 2),
-                      ),
-                      alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.pedal_bike,
-                        size: 24,
-                        color: superfleetBlue,
-                      )),
-                  const SizedBox(width: 8),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${state.courier.firstName} ${state.courier.lastName}',
-                          style: context.text14,
-                        ),
-                        Text(
-                          '${state.courier.transport}',
-                          style: context.text12grey,
-                        )
-                      ],
+          return Container(
+            color: Colors.white,
+            height: 48,
+            child: Row(
+              children: [
+                const SizedBox(width: 12),
+                Container(
+                    width: 36,
+                    height: 36,
+                    padding: const EdgeInsets.only(top: 6, bottom: 6),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border:
+                          Border.all(color: const Color(0xffDFDFDF), width: 2),
                     ),
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.pedal_bike,
+                      size: 24,
+                      color: superfleetBlue,
+                    )),
+                const SizedBox(width: 8),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${state.courier.firstName} ${state.courier.lastName}',
+                        style: context.text14,
+                      ),
+                      Text(
+                        '${state.courier.transport}',
+                        style: context.text12grey,
+                      )
+                    ],
                   ),
-                  const Expanded(child: SizedBox()),
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: (() => context
+                ),
+                const Expanded(child: SizedBox()),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: (() => context
                       .read<CourierBloc>()
                       .add(const CourierEvent.changeStatus())),
-                    child: Row(children: [
-                      Container(
-                        height: double.infinity,
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Online',
-                          style: context.text12grey,
-                        ),
+                  child: Row(children: [
+                    Container(
+                      height: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Online',
+                        style: context.text12grey,
                       ),
-                      const SizedBox(width: 12),
-                      SizedBox(
-                        height: 20,
-                        width: 40,
-                        child: CupertinoSwitch(
-                          value: state.courier.status == "ACTIVE",
-                          activeColor: const Color(0xff4F9E52),
-                          onChanged: (value) {
-                            context
+                    ),
+                    const SizedBox(width: 12),
+                    SizedBox(
+                      height: 20,
+                      width: 40,
+                      child: CupertinoSwitch(
+                        value: state.courier.status == "ACTIVE",
+                        activeColor: const Color(0xff4F9E52),
+                        onChanged: (value) {
+                          context
                               .read<CourierBloc>()
                               .add(CourierEvent.changeStatus(value));
-                          },
-                        ),
+                        },
                       ),
-                      const SizedBox(width: 12)
-                    ]),
-                  )
-                ],
-              ),
-            );
-          
+                    ),
+                    const SizedBox(width: 12)
+                  ]),
+                )
+              ],
+            ),
+          );
         },
       ),
     );
