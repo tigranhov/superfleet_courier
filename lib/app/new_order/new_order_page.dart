@@ -1,6 +1,6 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -76,12 +76,33 @@ class _AnimatedPulseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Pulse(
-      infinite: true,
-      child: Container(
-        width: 114,
-        height: 114,
-        color: superfleetBlue,
+    return SizedBox(
+      width: 114,
+      height: 114,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            top: 30,
+            child: Container(
+              width: 114,
+              height: 114,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(600),
+              ),
+              child: const Icon(
+                Icons.shopping_bag,
+                color: superfleetBlue,
+                size: 37,
+              ),
+            ),
+          ),
+          Transform.scale(
+            scale: 15,
+            child: Lottie.asset('assets/animations/new_order_animation.json',
+                alignment: Alignment.center, fit: BoxFit.fill),
+          ),
+        ],
       ),
     );
   }

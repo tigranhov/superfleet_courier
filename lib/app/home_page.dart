@@ -1,27 +1,26 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
-import 'package:superfleet_courier/app/bloc/new_order_bloc.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
+import 'package:superfleet_courier/main.dart';
 import 'package:superfleet_courier/model/model.dart';
-import 'package:superfleet_courier/repository/superfleet_api.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 import 'package:superfleet_courier/widgets/order/order_tile.dart';
 
-import 'bloc/order_bloc.dart';
+import 'bloc/order_state.dart';
 
-class HomePage extends HookWidget {
+class HomePage extends HookConsumerWidget {
   const HomePage({super.key, this.debugTools = false});
   final bool debugTools;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final tabController = useTabController(initialLength: 2);
     final content = Column(
       children: [
@@ -36,31 +35,23 @@ class HomePage extends HookWidget {
         )
       ],
     );
-    return BlocProvider(
-      create: ((context) {
-        final courier =
-            (context.read<CourierBloc>().state as CourierStateLoggedIn).courier;
-        return OrderBloc(
-            repository: context.read<SuperfleetAPI>(), courier: courier);
-      }),
-      child: Scaffold(
-        body: SafeArea(
-          child: !debugTools
-              ? content
-              : Stack(
-                  children: [content, const _DebugBar()],
-                ),
-        ),
+    return Scaffold(
+      body: SafeArea(
+        child: !debugTools
+            ? content
+            : Stack(
+                children: [content, const _DebugBar()],
+              ),
       ),
     );
   }
 }
 
-class _DebugBar extends StatelessWidget {
+class _DebugBar extends ConsumerWidget {
   const _DebugBar();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Positioned(
         left: 0,
         bottom: 0,
@@ -70,24 +61,7 @@ class _DebugBar extends StatelessWidget {
           children: [
             TextButton(
                 onPressed: () {
-                  context.push('/new_order',
-                      extra: Order(
-                          id: 123,
-                          deliverUntil: DateTime.now(),
-                          to: ToLocation(
-                            id: 12,
-                            location: Location(),
-                          ),
-                          from: [
-                            FromLocation(
-                                id: 123,
-                                location: Location(),
-                                availableFrom: DateTime.now()),
-                            FromLocation(
-                                id: 123,
-                                location: Location(),
-                                availableFrom: DateTime.now())
-                          ]));
+                 
                 },
                 child: const Text('New Order'))
           ],
@@ -103,9 +77,9 @@ class _TopPanel extends StatelessWidget {
     return OpenContainer(
       transitionType: ContainerTransitionType.fadeThrough,
       openBuilder: (context, action) => const ProfilePage(),
-      closedBuilder: (context, action) =>
-          BlocBuilder<CourierBloc, CourierState>(
-        builder: (context, state) {
+      closedBuilder: (context, action) => Consumer(
+        builder: (context, ref, child) {
+          final state = ref.watch(courierProvider);
           if (state is! CourierStateLoggedIn) {
             throw Exception('At home page without logged in user');
           }
@@ -150,9 +124,8 @@ class _TopPanel extends StatelessWidget {
                 const Expanded(child: SizedBox()),
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: (() => context
-                      .read<CourierBloc>()
-                      .add(const CourierEvent.changeStatus())),
+                  onTap: (() =>
+                      ref.read(courierProvider.notifier).changeStatus()),
                   child: Row(children: [
                     Container(
                       height: double.infinity,
@@ -170,9 +143,9 @@ class _TopPanel extends StatelessWidget {
                         value: state.courier.status == "ACTIVE",
                         activeColor: const Color(0xff4F9E52),
                         onChanged: (value) {
-                          context
-                              .read<CourierBloc>()
-                              .add(CourierEvent.changeStatus(value));
+                          ref
+                              .read(courierProvider.notifier)
+                              .changeStatus(value);
                         },
                       ),
                     ),
@@ -216,58 +189,61 @@ class _TabBar extends StatelessWidget {
   }
 }
 
-class _OrderTab extends StatelessWidget {
+class _OrderTab extends ConsumerWidget {
   const _OrderTab();
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<OrderBloc, OrderState>(
-      builder: (context, state) {
-        return state.map(
-          loaded: (value) {
-            late final Widget finalWidget;
-            if (context.select((CourierBloc value) =>
-                (value.state as CourierStateLoggedIn).courier.status ==
-                'INACTIVE')) {
-              finalWidget = const _InactiveOrders(
-                key: ValueKey(0),
-              );
-            } else {
-              finalWidget = value.orders.isNotEmpty
-                  ? _OrderList(orders: value.orders)
-                  : const _NoContent(
-                      description: 'You don’t have any orders, yet',
-                      explanation:
-                          'Orders will appear here once you accept them',
-                      icon: Icons.remove_shopping_cart,
-                    );
-            }
-
-            return PageTransitionSwitcher(
-              transitionBuilder:
-                  (child, primaryAnimation, secondaryAnimation) =>
-                      SharedAxisTransition(
-                animation: primaryAnimation,
-                secondaryAnimation: secondaryAnimation,
-                transitionType: SharedAxisTransitionType.scaled,
-                child: child,
-              ),
-              duration: const Duration(milliseconds: 400),
-              child: finalWidget,
+  Widget build(BuildContext context, ref) {
+    final orderState = ref.watch(orderProvider);
+    final courierState = ref.watch(courierProvider);
+    return orderState.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        data: (OrderState value) {
+          late final Widget finalWidget;
+          if (courierState is! CourierStateLoggedIn ||
+              value is! OrderStateLoaded) {
+            throw Exception(
+                "Cannot be at order page without logged in Courier");
+          }
+          if (courierState.courier.status == 'INACTIVE') {
+            finalWidget = const _InactiveOrders(
+              key: ValueKey(0),
             );
-          },
-          loading: (value) => const Center(child: CircularProgressIndicator()),
-        );
-      },
-    );
+          } else {
+            finalWidget = value.orders.isNotEmpty
+                ? _OrderList(orders: value.orders)
+                : const _NoContent(
+                    description: 'You don’t have any orders, yet',
+                    explanation: 'Orders will appear here once you accept them',
+                    icon: Icons.remove_shopping_cart,
+                  );
+          }
+
+          return PageTransitionSwitcher(
+            transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
+                SharedAxisTransition(
+              animation: primaryAnimation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.scaled,
+              child: child,
+            ),
+            duration: const Duration(milliseconds: 400),
+            child: finalWidget,
+          );
+        },
+        error: (Object error, StackTrace stackTrace) {
+          return Center(
+            child: Text("$error"),
+          );
+        });
   }
 }
 
-class _InactiveOrders extends StatelessWidget {
+class _InactiveOrders extends ConsumerWidget {
   const _InactiveOrders({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -293,9 +269,7 @@ class _InactiveOrders extends StatelessWidget {
         const SizedBox(height: 32),
         SFButton(
             text: 'Go Online',
-            onPressed: () => context
-                .read<CourierBloc>()
-                .add(const CourierEvent.changeStatus(true))),
+            onPressed: () => ref.read(courierProvider.notifier).changeStatus()),
         const Expanded(child: SizedBox())
       ],
     );

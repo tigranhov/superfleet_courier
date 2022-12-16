@@ -1,122 +1,73 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
-import 'package:superfleet_courier/app/bloc/new_order_bloc.dart';
-import 'package:superfleet_courier/app/home_page.dart';
-import 'package:superfleet_courier/app/new_order/new_order_map_view_page.dart';
-import 'package:superfleet_courier/app/new_order/new_order_page.dart';
-import 'package:superfleet_courier/app/order_page.dart';
-import 'package:superfleet_courier/app/profile_page.dart';
-import 'package:superfleet_courier/app/splash_page.dart';
-import 'package:superfleet_courier/debug/bloc_observer.dart';
-import 'package:superfleet_courier/model/order.dart';
-import 'package:superfleet_courier/repository/mock_repository.dart';
+import 'package:superfleet_courier/app/bloc/order_state.dart';
 import 'package:superfleet_courier/repository/superfleet_api.dart';
+import 'package:superfleet_courier/repository/superfleet_repository.dart';
+import 'package:superfleet_courier/router.dart';
 
-import 'app/login_page.dart';
+import 'debug/pod_logger.dart';
 import 'theme/sf_theme.dart';
+
+/// Provider here is the list of app level provider */
+final repoistoryProvider = Provider<SuperfleetAPI>((ref) => SuperfleetRepository());
+final courierProvider = StateNotifierProvider<CourierBloc, CourierState>(
+  (ref) => CourierBloc(ref.read(repoistoryProvider)),
+);
+
+final orderProvider = StreamProvider<OrderState>(
+  (ref) async* {
+    final courierOrders = ref.watch(courierProvider.select(
+        (value) => (value is CourierStateLoggedIn) ? value.orders : null));
+    if (courierOrders == null) {
+      //Order list should be available. If for some reasone it is not available, even if it is empty
+      //This is an invalid state
+      yield const OrderState.invalid();
+      return;
+    }
+
+    yield OrderState.data(orders: courierOrders);
+  },
+);
 
 void main() async {
   await GetStorage.init();
-  Bloc.observer = AppObserver();
-  runApp(DevicePreview(
-      enabled: true,
-      builder: (context) {
-        return const MyApp();
-      }));
+  runApp(ProviderScope(
+    observers: [PodLogger()],
+    child: DevicePreview(
+        enabled: false,
+        builder: (context) {
+          return const MyApp();
+        }),
+  ));
 }
 
-class MyApp extends HookWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    final repository = useMemoized(() => MockRepository());
-    return RepositoryProvider<SuperfleetAPI>.value(
-      value: repository,
-      child: MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (_) => CourierBloc(repository)),
-          ],
-          child: MaterialApp.router(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            routerConfig: _router,
-            title: 'Flutter Demo',
-            useInheritedMediaQuery: true,
-            builder: DevicePreview.appBuilder,
-            locale: DevicePreview.locale(context),
-            theme: ThemeData(
-                    primarySwatch: Colors.blue,
-                    textTheme: GoogleFonts.robotoTextTheme(),
-                    backgroundColor: const Color(0xffCCCCCC))
-                .copyWith(extensions: [SFTheme.light]),
-          )),
+  Widget build(BuildContext context, ref) {
+    return MaterialApp.router(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      routerConfig: router,
+      title: 'hello',
+      useInheritedMediaQuery: true,
+      builder: DevicePreview.appBuilder,
+      locale: DevicePreview.locale(context),
+      theme: ThemeData(
+              primarySwatch: Colors.blue,
+              textTheme: GoogleFonts.robotoTextTheme(),
+              backgroundColor: const Color(0xffCCCCCC))
+          .copyWith(extensions: [SFTheme.light]),
     );
   }
 }
-
-final GoRouter _router = GoRouter(
-  routes: <GoRoute>[
-    GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return const SplashPage();
-      },
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (BuildContext context, GoRouterState state) {
-        return const LoginPage();
-      },
-    ),
-    GoRoute(
-      path: '/home',
-      builder: (BuildContext context, GoRouterState state) {
-        return const HomePage(
-          debugTools: true,
-        );
-      },
-    ),
-    GoRoute(
-      path: '/profile',
-      builder: (BuildContext context, GoRouterState state) {
-        return const ProfilePage();
-      },
-    ),
-    GoRoute(
-      path: '/new_order',
-      builder: (BuildContext context, GoRouterState state) {
-        final order = state.extra! as Order;
-        return BlocProvider(
-            create: (context) => NewOrderBloc(),
-            child: NewOrderPage(order: order));
-      },
-    ),
-    GoRoute(
-      path: '/new_order/map_view',
-      builder: (BuildContext context, GoRouterState state) {
-        final bloc = state.extra! as NewOrderBloc;
-        return BlocProvider.value(
-            value: bloc, child: NewOrderMapViewPage(order: order));
-      },
-    ),
-    GoRoute(
-      path: '/order',
-      builder: (BuildContext context, GoRouterState state) {
-        final order = state.extra! as Order;
-        return OrderPage(order: order);
-      },
-    ),
-  ],
-);
 
 
 

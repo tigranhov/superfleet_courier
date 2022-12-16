@@ -5,4 +5,11 @@
         "**/*.g.dart": true,
         "**/*.tailor.dart": true
     },
+    "github.copilot.enable": {
+        "*": true,
+        "yaml": true,
+        "plaintext": false,
+        "markdown": false,
+        "dart": true
+    }
 }
