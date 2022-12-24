@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
+import 'package:superfleet_courier/app/bloc/courier_state_notifier.dart';
 import 'package:superfleet_courier/main.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -21,79 +21,82 @@ class LoginPage extends ConsumerWidget {
       }
     });
 
-    return Listener(
-      onPointerDown: ((event) {
+    return GestureDetector(
+      onTap: () {
         FocusScope.of(context).unfocus();
-      }),
+      },
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                      width: 130,
-                      height: 110,
-                      alignment: Alignment.topCenter,
-                      padding: const EdgeInsets.only(top: 40),
-                      child: Image.asset('assets/logo.png')),
-                ),
-                const SizedBox(height: 40),
-                Text(
-                  'EMAIL ADDRESS',
-                  style: context.text12w700,
-                ),
-                const SizedBox(height: 8),
-                const SFTextfield(
-                  hint: 'Enter your email address',
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'PASSWORD',
-                  style: context.text12w700,
-                ),
-                const SizedBox(height: 8),
-                const SFTextfield(
-                  hint: 'Enter your password',
-                  obscure: true,
-                  enableSuggestions: false,
-                  autoCorrect: false,
-                ),
-                const SizedBox(height: 16),
-                SFButton(
-                  text: 'Login',
-                  width: double.infinity,
-                  height: 56,
-                  onPressed: () {
-                    ref
-                        .read(courierProvider.notifier)
-                        .login('ketchup@gmail.com', 'Aaaa123\$');
-                  },
-                ),
-                const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.center,
-                  child: TextButton(
-                      onPressed: () {
-                        showCupertinoModalBottomSheet(
-                          context: context,
-                          barrierColor: superfleetGrey,
-                          topRadius: const Radius.circular(20),
-                          builder: (context) {
-                            return const _ForgotPasswordModal();
-                          },
-                        );
-                      },
-                      child: Text(
-                        'Forgot password?',
-                        style: context.text16grey88.copyWith(
-                            color: superfleetBlue, fontWeight: FontWeight.bold),
-                      )),
-                )
-              ],
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                        width: 130,
+                        height: 110,
+                        alignment: Alignment.topCenter,
+                        padding: const EdgeInsets.only(top: 40),
+                        child: Image.asset('assets/logo.png')),
+                  ),
+                  const SizedBox(height: 40),
+                  Text(
+                    'EMAIL ADDRESS',
+                    style: context.text12w700,
+                  ),
+                  const SizedBox(height: 8),
+                  const SFTextfield(
+                    hint: 'Enter your email address',
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'PASSWORD',
+                    style: context.text12w700,
+                  ),
+                  const SizedBox(height: 8),
+                  const SFTextfield(
+                    hint: 'Enter your password',
+                    obscure: true,
+                    enableSuggestions: false,
+                    autoCorrect: false,
+                  ),
+                  const SizedBox(height: 16),
+                  SFButton(
+                    text: 'Login',
+                    width: double.infinity,
+                    height: 56,
+                    onPressed: () {
+                      ref
+                          .read(courierProvider.notifier)
+                          .login('kalbas@gmail.com', '123456');
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.center,
+                    child: TextButton(
+                        onPressed: () {
+                          showCupertinoModalBottomSheet(
+                            context: context,
+                            barrierColor: superfleetGrey,
+                            topRadius: const Radius.circular(20),
+                            builder: (context) {
+                              return const _ForgotPasswordModal();
+                            },
+                          );
+                        },
+                        child: Text(
+                          'Forgot password?',
+                          style: context.text16grey88.copyWith(
+                              color: superfleetBlue,
+                              fontWeight: FontWeight.bold),
+                        )),
+                  )
+                ],
+              ),
             ),
           ),
         ),

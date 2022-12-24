@@ -22,6 +22,8 @@ version: 1.0.0+1
 environment:
   sdk: '>=2.18.2 <3.0.0'
 
+
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -37,7 +39,7 @@ dependencies:
   shimmer: ^2.0.0
   flutter_hooks: ^0.18.5+1
   hooks_riverpod: ^2.1.1
-  go_router: ^5.0.1
+  go_router: ^6.0.0
   auto_size_text: ^3.0.0
   url_launcher: ^6.1.5
   outline_search_bar: ^2.3.0

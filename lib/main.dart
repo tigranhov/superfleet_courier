@@ -4,33 +4,34 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
-import 'package:superfleet_courier/app/bloc/order_state.dart';
+import 'package:superfleet_courier/app/bloc/courier_state_notifier.dart';
+import 'package:superfleet_courier/app/bloc/order_state_notifier.dart';
+import 'package:superfleet_courier/repository/mock_repository.dart';
 import 'package:superfleet_courier/repository/superfleet_api.dart';
-import 'package:superfleet_courier/repository/superfleet_repository.dart';
 import 'package:superfleet_courier/router.dart';
 
 import 'debug/pod_logger.dart';
 import 'theme/sf_theme.dart';
 
 /// Provider here is the list of app level provider */
-final repoistoryProvider = Provider<SuperfleetAPI>((ref) => SuperfleetRepository());
-final courierProvider = StateNotifierProvider<CourierBloc, CourierState>(
-  (ref) => CourierBloc(ref.read(repoistoryProvider)),
+final repoistoryProvider = Provider<SuperfleetAPI>((ref) => MockRepository());
+final courierProvider =
+    StateNotifierProvider<CourierStateNotifier, CourierState>(
+  (ref) => CourierStateNotifier(ref.read(repoistoryProvider)),
 );
 
-final orderProvider = StreamProvider<OrderState>(
-  (ref) async* {
-    final courierOrders = ref.watch(courierProvider.select(
-        (value) => (value is CourierStateLoggedIn) ? value.orders : null));
-    if (courierOrders == null) {
-      //Order list should be available. If for some reasone it is not available, even if it is empty
-      //This is an invalid state
-      yield const OrderState.invalid();
-      return;
-    }
-
-    yield OrderState.data(orders: courierOrders);
+final orderProvider = FutureProvider<OrderState>(
+  (ref) async {
+    final courierState = ref.watch(courierProvider);
+    return courierState.map(
+        checkingLoginStatus: (_) => const OrderState.loading(),
+        loggedOut: (_) => const OrderState.invalid(),
+        loggedIn: (courierState) async {
+          final orders = await ref
+              .read(repoistoryProvider)
+              .getOrders(courierId: courierState.courier.id);
+          return OrderState.data(orders: orders);
+        });
   },
 );
 

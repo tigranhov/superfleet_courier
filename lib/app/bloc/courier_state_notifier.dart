@@ -5,10 +5,10 @@ import 'package:superfleet_courier/repository/superfleet_api.dart';
 
 import '../../model/model.dart';
 
-part 'courier_bloc.freezed.dart';
+part 'courier_state_notifier.freezed.dart';
 
-class CourierBloc extends StateNotifier<CourierState> {
-  CourierBloc(this.repository)
+class CourierStateNotifier extends StateNotifier<CourierState> {
+  CourierStateNotifier(this.repository)
       : super(const CourierState.checkingLoginStatus()) {
     validateLoggedInState();
   }
@@ -18,12 +18,8 @@ class CourierBloc extends StateNotifier<CourierState> {
   void validateLoggedInState() async {
     try {
       final courier = await repository.getCourier();
-      if (courier == null) {
-        state = const CourierState.loggedOut();
-        return;
-      }
-      //repository.getOrdersForCourier(courierId: courier.id);
-      state = CourierState.loggedIn(courier: courier, orders: []);
+      state = const CourierState.loggedOut();
+      state = CourierState.loggedIn(courier: courier);
     } on DioError {
       state = const CourierState.loggedOut();
     }
@@ -40,8 +36,9 @@ class CourierBloc extends StateNotifier<CourierState> {
     state = loggedInState.copyWith(courier: updatedCourier);
   }
 
-  Future<Courier> login(String username, String password) async {
-    return await repository.login(username, password);
+  void login(String username, String password) async {
+    final courier = await repository.login(username, password);
+    state = CourierState.loggedIn(courier: courier);
   }
 }
 
@@ -51,7 +48,7 @@ class CourierState with _$CourierState {
       CourierStateCheckingLoginStatus;
 
   const factory CourierState.loggedOut() = CourierStateLoggedOut;
-  const factory CourierState.loggedIn(
-      {required Courier courier,
-      required List<Order> orders}) = CourierStateLoggedIn;
+  const factory CourierState.loggedIn({
+    required Courier courier,
+  }) = CourierStateLoggedIn;
 }

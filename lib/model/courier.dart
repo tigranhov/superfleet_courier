@@ -5,6 +5,8 @@ import 'package:superfleet_courier/model/location.dart';
 part 'courier.freezed.dart';
 part 'courier.g.dart';
 
+
+
 @freezed
 class Courier with _$Courier {
   factory Courier({

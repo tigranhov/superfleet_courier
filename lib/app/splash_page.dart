@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
 import 'package:superfleet_courier/main.dart';
+
+import 'bloc/courier_state_notifier.dart';
 
 class SplashPage extends ConsumerWidget {
   const SplashPage({super.key});

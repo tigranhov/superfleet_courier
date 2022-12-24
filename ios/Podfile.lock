@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_secure_storage (3.3.1):
+  - flutter_secure_storage (6.0.0):
     - Flutter
   - location (0.0.1):
     - Flutter
@@ -8,16 +8,14 @@ PODS:
     - Flutter
   - search_choices (0.0.1):
     - Flutter
-  - sensors_plus (0.0.1):
-    - Flutter
   - shared_preferences_ios (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
   - yandex_mapkit (0.0.1):
     - Flutter
-    - YandexMapsMobile (= 4.2.0-full)
-  - YandexMapsMobile (4.2.0-full)
+    - YandexMapsMobile (= 4.2.2-full)
+  - YandexMapsMobile (4.2.2-full)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -25,7 +23,6 @@ DEPENDENCIES:
   - location (from `.symlinks/plugins/location/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - search_choices (from `.symlinks/plugins/search_choices/ios`)
-  - sensors_plus (from `.symlinks/plugins/sensors_plus/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - yandex_mapkit (from `.symlinks/plugins/yandex_mapkit/ios`)
@@ -45,8 +42,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_ios/ios"
   search_choices:
     :path: ".symlinks/plugins/search_choices/ios"
-  sensors_plus:
-    :path: ".symlinks/plugins/sensors_plus/ios"
   shared_preferences_ios:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
   url_launcher_ios:
@@ -56,15 +51,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
+  flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   search_choices: b50731e8c425078048f681f39c34375c58d6ce8d
-  sensors_plus: 5717760720f7e6acd96fdbd75b7428f5ad755ec2
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
-  yandex_mapkit: 18908ff708911af749f98d6ad63899fa8726fe70
-  YandexMapsMobile: 4ea6eb64194c1e810ed4265ec9f877ac3167958b
+  yandex_mapkit: 3431f8997d36bc0df753407ef282565c09163766
+  YandexMapsMobile: 1fd5f86bc368ad6ba528b199f9477e4a26796567
 
 PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 

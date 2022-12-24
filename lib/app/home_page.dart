@@ -1,19 +1,21 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:superfleet_courier/app/bloc/courier_bloc.dart';
+import 'package:superfleet_courier/app/bloc/courier_state_notifier.dart';
 import 'package:superfleet_courier/app/profile_page.dart';
 import 'package:superfleet_courier/main.dart';
 import 'package:superfleet_courier/model/model.dart';
+import 'package:superfleet_courier/repository/superfleet_repository.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 import 'package:superfleet_courier/widgets/order/order_tile.dart';
 
-import 'bloc/order_state.dart';
+import 'bloc/order_state_notifier.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key, this.debugTools = false});
@@ -60,10 +62,22 @@ class _DebugBar extends ConsumerWidget {
         child: ButtonBar(
           children: [
             TextButton(
-                onPressed: () {
-                 
+                onPressed: () async {
+                  ref.read(courierProvider).mapOrNull(
+                        loggedIn: (value) => Clipboard.setData(
+                            ClipboardData(text: value.courier.id.toString())),
+                      );
                 },
-                child: const Text('New Order'))
+                child: const Text('CourierId')),
+            TextButton(
+                onPressed: () async {
+                  final token = await (ref.read(repoistoryProvider)
+                          as SuperfleetRepository)
+                      .token();
+                  Clipboard.setData(ClipboardData(text: token));
+                },
+                child: const Text('Token')),
+            TextButton(onPressed: () {}, child: const Text('New Order'))
           ],
         ));
   }
@@ -194,48 +208,58 @@ class _OrderTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final orderState = ref.watch(orderProvider);
+    final orderStateStream = ref.watch(orderProvider);
     final courierState = ref.watch(courierProvider);
-    return orderState.when(
+    final buildWidget = orderStateStream.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        data: (OrderState value) {
-          late final Widget finalWidget;
-          if (courierState is! CourierStateLoggedIn ||
-              value is! OrderStateLoaded) {
+        data: (OrderState orderState) {
+          Widget finalWidget = const Center(child: Text('Invalid State'));
+          courierState.mapOrNull(
+            loggedIn: (courierState) {
+              if (courierState.courier.status == 'INACTIVE') {
+                finalWidget = const _InactiveOrders(
+                  key: ValueKey(0),
+                );
+              } else {
+                finalWidget = orderState.map(
+                    data: (value) => value.orders.isNotEmpty
+                        ? _OrderList(
+                            key: const ValueKey(1), orders: value.orders)
+                        : const _NoContent(
+                            key: ValueKey(2),
+                            description: 'You don’t have any orders, yet',
+                            explanation:
+                                'Orders will appear here once you accept them',
+                            icon: Icons.remove_shopping_cart,
+                          ),
+                    loading: (_) =>
+                        const Center(child: CircularProgressIndicator()),
+                    invalid: (_) => const Center(child: Text('Invalid State')));
+              }
+            },
+          );
+          if (courierState is! CourierStateLoggedIn) {
             throw Exception(
                 "Cannot be at order page without logged in Courier");
           }
-          if (courierState.courier.status == 'INACTIVE') {
-            finalWidget = const _InactiveOrders(
-              key: ValueKey(0),
-            );
-          } else {
-            finalWidget = value.orders.isNotEmpty
-                ? _OrderList(orders: value.orders)
-                : const _NoContent(
-                    description: 'You don’t have any orders, yet',
-                    explanation: 'Orders will appear here once you accept them',
-                    icon: Icons.remove_shopping_cart,
-                  );
-          }
-
-          return PageTransitionSwitcher(
-            transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
-                SharedAxisTransition(
-              animation: primaryAnimation,
-              secondaryAnimation: secondaryAnimation,
-              transitionType: SharedAxisTransitionType.scaled,
-              child: child,
-            ),
-            duration: const Duration(milliseconds: 400),
-            child: finalWidget,
-          );
+          return finalWidget;
         },
         error: (Object error, StackTrace stackTrace) {
           return Center(
             child: Text("$error"),
           );
         });
+    return PageTransitionSwitcher(
+      transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
+          SharedAxisTransition(
+        animation: primaryAnimation,
+        secondaryAnimation: secondaryAnimation,
+        transitionType: SharedAxisTransitionType.scaled,
+        child: child,
+      ),
+      duration: const Duration(milliseconds: 400),
+      child: buildWidget,
+    );
   }
 }
 
@@ -277,13 +301,12 @@ class _InactiveOrders extends ConsumerWidget {
 }
 
 class _OrderList extends StatelessWidget {
-  const _OrderList({required this.orders});
+  const _OrderList({Key? key, required this.orders}) : super(key: key);
   final List<Order> orders;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      key: const ValueKey(1),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       separatorBuilder: (context, index) => const SizedBox(
         height: 12,
@@ -317,9 +340,11 @@ class _HistoryTab extends StatelessWidget {
 
 class _NoContent extends StatelessWidget {
   const _NoContent(
-      {required this.icon,
+      {Key? key,
+      required this.icon,
       required this.description,
-      required this.explanation});
+      required this.explanation})
+      : super(key: key);
   final IconData icon;
   final String description;
   final String explanation;
