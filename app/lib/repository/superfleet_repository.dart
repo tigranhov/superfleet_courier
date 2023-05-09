@@ -101,6 +101,7 @@ class SuperfleetRepository with SuperfleetAPI {
       throw Exception('Failed to refresh access token');
     }
   }
+
 //TODO delete
   Future<String> token() async {
     final token = (await _secureStorage).getString('accessToken');

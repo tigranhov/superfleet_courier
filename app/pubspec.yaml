@@ -36,8 +36,10 @@ dependencies:
   auto_size_text: ^3.0.0
   carousel_slider: ^4.1.1
   cupertino_icons: ^1.0.2
+  dart_jsonwebtoken: ^2.7.1
   device_preview: ^1.1.0
   dio: ^5.1.2
+  dio_smart_retry: ^5.0.0
   fleasy: ^0.14.1
   flutter:
     sdk: flutter
@@ -48,6 +50,7 @@ dependencies:
     sdk: flutter
   flutter_portal: ^1.1.1
   flutter_secure_storage: ^8.0.0
+  fresh_dio: ^0.4.0
   get_storage: ^2.0.3
   go_router: ^7.0.0
   google_fonts: ^4.0.4
@@ -55,13 +58,13 @@ dependencies:
   hooks_riverpod: ^2.1.1
   intl: ^0.17.0
   json_annotation: ^4.8.1
+  location: ^4.4.0
   logger: ^1.1.0
   lottie: ^2.0.0
-  location: ^4.4.0
-  modal_bottom_sheet: ^2.1.2
   outline_search_bar: ^2.3.0
   pretty_dio_logger: ^1.1.1
   responsive_builder: ^0.6.4
+  riverpod_annotation: ^2.1.1
   search_choices: ^2.1.1
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0
@@ -78,6 +81,7 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.3.2
   freezed_annotation: ^2.1.0
+  go_router_builder: ^2.0.0
   json_serializable: ^6.3.2
   riverpod_generator: ^2.1.6
   riverpod_lint: ^1.0.1

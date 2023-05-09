@@ -4,41 +4,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:superfleet_courier/app/bloc/courier_state_notifier.dart';
-import 'package:superfleet_courier/app/bloc/order_state_notifier.dart';
-import 'package:superfleet_courier/repository/mock_repository.dart';
-import 'package:superfleet_courier/repository/superfleet_api.dart';
-import 'package:superfleet_courier/router.dart';
+import 'package:superfleet_courier/routes.dart';
 
 import 'debug/pod_logger.dart';
 import 'theme/sf_theme.dart';
 
-/// Provider here is the list of app level provider */
-final repoistoryProvider = Provider<SuperfleetAPI>((ref) => MockRepository());
-final courierProvider =
-    StateNotifierProvider<CourierStateNotifier, CourierState>(
-  (ref) => CourierStateNotifier(ref.read(repoistoryProvider)),
-);
-
-final orderProvider = FutureProvider<OrderState>(
-  (ref) async {
-    final courierState = ref.watch(courierProvider);
-    return courierState.map(
-        checkingLoginStatus: (_) => const OrderState.loading(),
-        loggedOut: (_) => const OrderState.invalid(),
-        loggedIn: (courierState) async {
-          final orders = await ref
-              .read(repoistoryProvider)
-              .getOrders(courierId: courierState.courier.id);
-          return OrderState.data(orders: orders);
-        });
-  },
-);
-
 void main() async {
   await GetStorage.init();
   runApp(ProviderScope(
-    observers: [PodLogger()],
     child: DevicePreview(
         enabled: false,
         builder: (context) {
@@ -53,11 +26,13 @@ class MyApp extends HookConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, ref) {
+    final router = ref.watch(routerProvider);
+
     return MaterialApp.router(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      title: 'Courier',
       routerConfig: router,
-      title: 'hello',
       useInheritedMediaQuery: true,
       builder: DevicePreview.appBuilder,
       locale: DevicePreview.locale(context),
@@ -69,9 +44,6 @@ class MyApp extends HookConsumerWidget {
     );
   }
 }
-
-
-
 
 // class MyHomePage extends StatefulWidget {
 //   const MyHomePage({super.key, required this.title});

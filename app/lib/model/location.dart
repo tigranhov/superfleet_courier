@@ -7,7 +7,7 @@ part 'location.g.dart';
 @freezed
 class Location with _$Location {
   const Location._();
-  factory Location({
+  const factory Location({
     String? name,
     String? address,
     String? country,

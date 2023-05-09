@@ -1,10 +1,16 @@
+// import 'package:flutter/material.dart';
+// import 'package:flutter_hooks/flutter_hooks.dart';
+// import 'package:go_router/go_router.dart';
+// import 'package:hooks_riverpod/hooks_riverpod.dart';
+// import 'package:superfleet_courier/theme/colors.dart';
+// import 'package:superfleet_courier/theme/sf_theme.dart';
+// import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
+// import 'package:superfleet_courier/widgets/text/sf_textfield.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:superfleet_courier/app/bloc/courier_state_notifier.dart';
-import 'package:superfleet_courier/main.dart';
+import 'package:superfleet_courier/features/login/logic/auth_notifier.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
@@ -15,12 +21,6 @@ class LoginPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    ref.listen(courierProvider, (previous, next) {
-      if (next is CourierStateLoggedIn) {
-        context.go('/home');
-      }
-    });
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -36,11 +36,10 @@ class LoginPage extends ConsumerWidget {
                   Align(
                     alignment: Alignment.topCenter,
                     child: Container(
-                        width: 130,
-                        height: 110,
-                        alignment: Alignment.topCenter,
-                        padding: const EdgeInsets.only(top: 40),
-                        child: Image.asset('assets/logo.png')),
+                      alignment: Alignment.topCenter,
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Image.asset('assets/logo.png'),
+                    ),
                   ),
                   const SizedBox(height: 40),
                   Text(
@@ -69,31 +68,27 @@ class LoginPage extends ConsumerWidget {
                     width: double.infinity,
                     height: 56,
                     onPressed: () {
-                      ref
-                          .read(courierProvider.notifier)
-                          .login('kalbas@gmail.com', '123456');
+                      ref.read(authNotifierProvider.notifier).login();
                     },
                   ),
                   const SizedBox(height: 20),
                   Align(
                     alignment: Alignment.center,
-                    child: TextButton(
-                        onPressed: () {
-                          showCupertinoModalBottomSheet(
+                    child: GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
                             context: context,
-                            barrierColor: superfleetGrey,
-                            topRadius: const Radius.circular(20),
-                            builder: (context) {
-                              return const _ForgotPasswordModal();
-                            },
-                          );
-                        },
-                        child: Text(
-                          'Forgot password?',
-                          style: context.text16grey88.copyWith(
-                              color: superfleetBlue,
-                              fontWeight: FontWeight.bold),
-                        )),
+                            isScrollControlled: true,
+                            builder: (context) => const _ForgotPasswordModal());
+                      },
+                      child: Text(
+                        'Forgot password?',
+                        style: context.text16grey88.copyWith(
+                            color: superfleetBlue,
+                            height: 1.25,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   )
                 ],
               ),

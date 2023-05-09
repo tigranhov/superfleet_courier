@@ -34,24 +34,29 @@ class _SFTextfieldState extends State<SFTextfield> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      focusNode: focusNode,
-      obscureText: widget.obscure,
-      autocorrect: widget.autoCorrect,
-      enableSuggestions: widget.enableSuggestions,
-      decoration: InputDecoration(
-        hintText: widget.hint,
-        hintStyle: context.text16grey88,
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: superfleetBlue, width: 2),
-          borderRadius: BorderRadius.circular(8),
+    return SizedBox(
+      child: TextField(
+        focusNode: focusNode,
+        obscureText: widget.obscure,
+        autocorrect: widget.autoCorrect,
+        enableSuggestions: widget.enableSuggestions,
+        decoration: InputDecoration(
+          hintText: widget.hint,
+          hintStyle: context.text16grey88.copyWith(height: 1.375),
+          isCollapsed: true,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: superfleetBlue, width: 2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          filled: focusNode.hasFocus ? false : true,
+          fillColor: const Color(0xffF0F0F0),
         ),
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        filled: focusNode.hasFocus ? false : true,
-        fillColor: const Color(0xffF0F0F0),
       ),
     );
   }
