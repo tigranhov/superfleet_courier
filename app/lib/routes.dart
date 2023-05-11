@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'features/home/home_page.dart';
 import 'features/login/logic/auth_notifier.dart';
-import 'features/login/presentation/login_page.dart';
-import 'features/login/presentation/splash_page.dart';
+import 'features/login/widgets/login_page.dart';
+import 'features/login/widgets/splash_page.dart';
 
 part 'routes.g.dart';
 

@@ -44,4 +44,14 @@ class CourierNotifier extends _$CourierNotifier {
       return Courier.fromJson(response.data['data']);
     });
   }
+
+  void selectTransport(String transport) async {
+    state = await AsyncValue.guard(() async {
+      final courier = state.value!;
+      final dio = ref.read(apiProvider);
+      final response = await dio.patch('/couriers/${courier.id}',
+          data: {'transport': transport.toUpperCase()});
+      return Courier.fromJson(response.data['data']);
+    });
+  }
 }

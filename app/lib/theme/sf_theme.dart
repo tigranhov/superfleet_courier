@@ -21,22 +21,44 @@ class _$SFTheme {
     GoogleFonts.roboto().copyWith(
         fontSize: 12, fontWeight: FontWeight.w700, color: superfleetGrey)
   ];
-  static List<TextStyle> text14 = [GoogleFonts.roboto().copyWith(fontSize: 14)];
+  static List<TextStyle> text14 = [
+    GoogleFonts.roboto().copyWith(fontSize: 14, height: 1.4)
+  ];
   static List<TextStyle> text14w700 = [
-    GoogleFonts.roboto().copyWith(fontSize: 14, fontWeight: FontWeight.w700)
+    GoogleFonts.roboto().copyWith(
+      fontSize: 14,
+      height: 1.4,
+      fontWeight: FontWeight.w700,
+    )
   ];
   static List<TextStyle> text14w700grey = [
     GoogleFonts.roboto().copyWith(
-        fontSize: 14, color: superfleetGrey, fontWeight: FontWeight.w700)
+        fontSize: 14,
+        color: superfleetGrey,
+        height: 1.4,
+        fontWeight: FontWeight.w700)
   ];
   static List<TextStyle> text14grey = [
-    GoogleFonts.roboto().copyWith(fontSize: 14, color: superfleetGrey)
+    GoogleFonts.roboto().copyWith(
+      fontSize: 14,
+      height: 1.4,
+      color: superfleetGrey,
+    )
+  ];
+  static List<TextStyle> text14grey88 = [
+    GoogleFonts.roboto().copyWith(
+      fontSize: 14,
+      height: 1.4,
+      color: const Color(0xff888888),
+    )
   ];
   static List<TextStyle> text16w700 = [
-    GoogleFonts.roboto().copyWith(fontSize: 16, height: 1.4, fontWeight: FontWeight.w700)
+    GoogleFonts.roboto()
+        .copyWith(fontSize: 16, height: 1.4, fontWeight: FontWeight.w700)
   ];
   static List<TextStyle> text16grey88 = [
-    GoogleFonts.roboto().copyWith(fontSize: 16, color: const Color(0xff888888))
+    GoogleFonts.roboto()
+        .copyWith(fontSize: 16, height: 1.4, color: const Color(0xff888888))
   ];
   static List<TextStyle> orderTileAddress = [
     GoogleFonts.roboto().copyWith(fontSize: 16, fontWeight: FontWeight.w700)
@@ -50,4 +72,5 @@ class _$SFTheme {
   static List<Color?> secondaryColor = [superfleetGreen];
   static List<Color?> iconColor1 = [superfleetOrange];
   static List<Color?> iconColor2 = [superfleetGreen];
+  static List<Color?> colorDivider = [const Color(0xFFCCCCCC)];
 }

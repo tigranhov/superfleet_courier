@@ -11,8 +11,7 @@ import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 import 'package:superfleet_courier/widgets/order/order_tile.dart';
 
-import '../../old_app/profile_page.dart';
-import '../deliver_methods/delivery_method_selector.dart';
+import '../deliver_methods/widgets/delivery_method_selector.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key, this.debugTools = false});
@@ -30,8 +29,8 @@ class HomePage extends HookConsumerWidget {
             onCarChangeTap: () {
               showModalBottomSheet(
                 context: context,
-                showDragHandle: true,
-                shape:  const RoundedRectangleBorder( // <-- SEE HERE
+                shape: const RoundedRectangleBorder(
+                  // <-- SEE HERE
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(25.0),
                   ),

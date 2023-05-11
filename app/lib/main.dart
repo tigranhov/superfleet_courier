@@ -18,7 +18,7 @@ void main() async {
   };
   runApp(ProviderScope(
     child: DevicePreview(
-        enabled: true,
+        enabled: false,
         defaultDevice: Devices.ios.iPhoneSE,
         isToolbarVisible: false,
         builder: (context) {
@@ -40,7 +40,6 @@ class MyApp extends HookConsumerWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       title: 'Courier',
       routerConfig: router,
-      useInheritedMediaQuery: true,
       builder: DevicePreview.appBuilder,
       locale: DevicePreview.locale(context),
       theme: ThemeData(
