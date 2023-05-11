@@ -45,6 +45,7 @@ class SharedPreferencesTokenStorage extends TokenStorage<OAuth2Token> {
 @Riverpod(keepAlive: true)
 class Api extends _$Api {
   late final Fresh<OAuth2Token> _refreshInterceptor;
+  var _refreshRetries = 0;
 
   @override
   Dio build() {
@@ -54,12 +55,14 @@ class Api extends _$Api {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
+      validateStatus: (status) {
+        return status! < 500;
+      },
     ));
-
     dio.interceptors.add(PrettyDioLogger(
         requestHeader: false,
-        requestBody: false,
-        responseBody: false,
+        requestBody: true,
+        responseBody: true,
         responseHeader: false,
         error: true,
         compact: true,
@@ -78,12 +81,21 @@ class Api extends _$Api {
         },
         tokenStorage: _tokenStorage,
         refreshToken: (token, dio) async {
-          final response = await dio.post('/auth/refresh-token',
-              data: {'refreshToken': token!.refreshToken});
-          return OAuth2Token(
-            accessToken: response.data['data']['accessToken'],
-            refreshToken: response.data['data']['refreshToken'],
-          );
+          if (_refreshRetries > 0) {
+            _refreshRetries = 0;
+            throw RevokeTokenException();
+          }
+          _refreshRetries++;
+          try {
+            final response = await dio.post('/auth/refresh-token',
+                data: {'refreshToken': token!.refreshToken});
+            return OAuth2Token(
+              accessToken: response.data['data']['accessToken'],
+              refreshToken: response.data['data']['refreshToken'],
+            );
+          } catch (_) {
+            throw RevokeTokenException();
+          }
         }));
     return dio;
   }

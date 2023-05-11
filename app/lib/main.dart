@@ -5,15 +5,22 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/routes.dart';
+import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
-import 'debug/pod_logger.dart';
 import 'theme/sf_theme.dart';
 
 void main() async {
   await GetStorage.init();
+  FlutterError.demangleStackTrace = (StackTrace stack) {
+    if (stack is stack_trace.Trace) return stack.vmTrace;
+    if (stack is stack_trace.Chain) return stack.toTrace().vmTrace;
+    return stack;
+  };
   runApp(ProviderScope(
     child: DevicePreview(
-        enabled: false,
+        enabled: true,
+        defaultDevice: Devices.ios.iPhoneSE,
+        isToolbarVisible: false,
         builder: (context) {
           return const MyApp();
         }),

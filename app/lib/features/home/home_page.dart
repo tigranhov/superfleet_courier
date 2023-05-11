@@ -1,20 +1,15 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:superfleet_courier/features/login/logic/auth_notifier.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 import 'package:superfleet_courier/widgets/order/order_tile.dart';
 
-import '../../old_app/bloc/courier_state_notifier.dart';
-import '../../old_app/bloc/order_state_notifier.dart';
 import '../../old_app/profile_page.dart';
 
 class HomePage extends HookConsumerWidget {
@@ -24,51 +19,24 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final tabController = useTabController(initialLength: 2);
-
     return Scaffold(
       body: SafeArea(
           child: Column(
         children: [
-          Center(
-            child: Text(
-              'Home Page',
-              style: context.text12,
-            ),
-          ),
           const _TopPanel(),
           _TabBar(
             controller: tabController,
           ),
-          // Expanded(
-          //   child: TabBarView(
-          //       controller: tabController,
-          //       children: const [_OrderTab(), _HistoryTab()]),
-          // )
+          Expanded(
+            child: TabBarView(
+                controller: tabController,
+                children: const [_OrderTab(), _HistoryTab()]),
+          )
         ],
       )),
     );
   }
 }
-//
-// class _DebugBar extends ConsumerWidget {
-//   const _DebugBar();
-//
-//   @override
-//   Widget build(BuildContext context, ref) {
-//     return Positioned(
-//         left: 0,
-//         bottom: 0,
-//         right: 0,
-//         height: 50,
-//         child: ButtonBar(
-//           children: [
-//             TextButton(onPressed: () async {}, child: const Text('CourierId')),
-//             TextButton(onPressed: () async {}, child: const Text('Token')),
-//             TextButton(onPressed: () {}, child: const Text('New Order'))
-//           ],
-//         ));
-//   }
-// }
 
 class _TopPanel extends ConsumerWidget {
   const _TopPanel();
@@ -120,7 +88,7 @@ class _TopPanel extends ConsumerWidget {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: (() {
-                // ref.read(courierNotifierProvider.notifier).changeStatus();
+                ref.read(courierNotifierProvider.notifier).changeStatus();
               }),
               child: Row(children: [
                 Container(
@@ -189,9 +157,13 @@ class _OrderTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final courierStatus = ref
-        .watch(courierNotifierProvider.select((value) => value.value!.status));
+        .watch(courierNotifierProvider.select((value) => value.value?.status));
     final orderCount = ref
-        .watch(ordersNotifierProvider().select((value) => value.value!.length));
+        .watch(ordersNotifierProvider().select((value) => value.value?.length));
+
+    if (orderCount == null) {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }
     buildWidget() {
       if (courierStatus == 'INACTIVE') {
         return const _InactiveOrders(

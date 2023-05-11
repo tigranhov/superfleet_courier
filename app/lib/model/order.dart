@@ -1,10 +1,10 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/material.dart';
+import 'package:mockito/mockito.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/model/api.dart';
-import 'package:superfleet_courier/model/courier.dart';
-import 'package:superfleet_courier/model/location.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:yandex_geocoder/yandex_geocoder.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'order.freezed.dart';
 part 'order.g.dart';
@@ -27,7 +27,6 @@ class Order with _$Order {
 
 extension YandexOrderLocationUpdate on Order {
   Future<Order> updateLocation(YandexGeocoder geocoder) async {
-    return copyWith(); //TODO
     final List<FromLocation> newFrom = [];
     for (final i in from) {
       newFrom.add(await i.updateLocation(geocoder));
@@ -44,7 +43,13 @@ class OrdersNotifier extends _$OrdersNotifier {
   Future<List<Order>> build({int? offset, int? limit}) async {
     // final DotEnv dotEnv = DotEnv();
     // await dotEnv.load();
-    // final geocoder = ygc.YandexGeocoder(apiKey: dotEnv.env['YANDEX_KEY']!);
+    // final geocoder = MockGeocoder();
+    // when(geocoder.getGeocode(GeocodeRequest(
+    //         geocode: PointGeocode(latitude: 40, longitude: 40),
+    //         lang: Lang.enEn)))
+    //     .thenAnswer((_) async => GeocodeResponse());
+    // final r = await geocoder.getGeocode(GeocodeRequest(
+    //     geocode: PointGeocode(latitude: 40, longitude: 40), lang: Lang.enEn));
 
     final courier = await ref.watch(courierNotifierProvider.future);
 
@@ -60,8 +65,25 @@ class OrdersNotifier extends _$OrdersNotifier {
     final List result = response.data['data']['items'];
     return Future.wait(result.map(
       (e) async {
-        return Order.fromJson(e);
+        final order = Order.fromJson(e);
+        return order.copyWith(
+          from: [
+            // FromLocation(
+            //     location: const Location(
+            //         street: "Alikhanyan brothers street", house: '1'),
+            //     availableFrom: DateTime.now().add(const Duration(minutes: 40))),
+            FromLocation(
+                location: const Location(
+                    street: "Alikhanyan brothers street", house: '2'),
+                availableFrom: DateTime.now().add(const Duration(minutes: 50))),
+          ],
+          to: const ToLocation(
+            location: Location(street: "Bagrevand 1st deadlock", house: '2'),
+          ),
+          deliverUntil: DateTime.now().add(const Duration(hours: 1)),
+        );
       },
     ).toList());
   }
 }
+

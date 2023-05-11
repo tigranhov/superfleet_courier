@@ -22,7 +22,7 @@ class Location with _$Location {
   }) = _Location;
 
   String addressString() {
-    return '${street!}, ${house!}';
+    return '${street} ${house}';
   }
 
   factory Location.fromJson(Map<String, dynamic> json) =>
