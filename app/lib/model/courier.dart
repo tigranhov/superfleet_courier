@@ -40,7 +40,7 @@ class CourierNotifier extends _$CourierNotifier {
       final activeState = active ?? (courier.status == 'ACTIVE' ? false : true);
       final targetStatus = activeState ? 'ACTIVE' : 'INACTIVE';
       final response = await dio
-          .patch('/couriers/${courier.id}}', data: {'status': targetStatus});
+          .patch('/couriers/${courier.id}', data: {'status': targetStatus});
       return Courier.fromJson(response.data['data']);
     });
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:superfleet_courier/features/home/top_panel.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -11,9 +12,11 @@ import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 import 'package:superfleet_courier/widgets/order/order_tile.dart';
 
 import '../../old_app/profile_page.dart';
+import '../deliver_methods/delivery_method_selector.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key, this.debugTools = false});
+
   final bool debugTools;
 
   @override
@@ -23,7 +26,22 @@ class HomePage extends HookConsumerWidget {
       body: SafeArea(
           child: Column(
         children: [
-          const _TopPanel(),
+          TopPanel(
+            onCarChangeTap: () {
+              showModalBottomSheet(
+                context: context,
+                showDragHandle: true,
+                shape:  const RoundedRectangleBorder( // <-- SEE HERE
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(25.0),
+                  ),
+                ),
+                builder: (context) {
+                  return const DeliveryMethodSelector();
+                },
+              );
+            },
+          ),
           _TabBar(
             controller: tabController,
           ),
@@ -38,93 +56,9 @@ class HomePage extends HookConsumerWidget {
   }
 }
 
-class _TopPanel extends ConsumerWidget {
-  const _TopPanel();
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final courier = ref.watch(courierNotifierProvider).value;
-    return OpenContainer(
-      transitionType: ContainerTransitionType.fadeThrough,
-      openBuilder: (context, action) => const ProfilePage(),
-      closedBuilder: (context, action) => Container(
-        color: Colors.white,
-        height: 48,
-        child: Row(
-          children: [
-            const SizedBox(width: 12),
-            Container(
-                width: 36,
-                height: 36,
-                padding: const EdgeInsets.only(top: 6, bottom: 6),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xffDFDFDF), width: 2),
-                ),
-                alignment: Alignment.center,
-                child: const Icon(
-                  Icons.pedal_bike,
-                  size: 24,
-                  color: superfleetBlue,
-                )),
-            const SizedBox(width: 8),
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${courier?.firstName ?? ''} ${courier?.lastName ?? ''}',
-                    style: context.text14,
-                  ),
-                  Text(
-                    courier?.transport ?? '',
-                    style: context.text12grey,
-                  )
-                ],
-              ),
-            ),
-            const Expanded(child: SizedBox()),
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: (() {
-                ref.read(courierNotifierProvider.notifier).changeStatus();
-              }),
-              child: Row(children: [
-                Container(
-                  height: double.infinity,
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Online',
-                    style: context.text12grey,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                SizedBox(
-                  height: 20,
-                  width: 40,
-                  child: CupertinoSwitch(
-                    value: courier?.status == "ACTIVE",
-                    activeColor: const Color(0xff4F9E52),
-                    onChanged: (value) {
-                      ref
-                          .read(courierNotifierProvider.notifier)
-                          .changeStatus(value);
-                    },
-                  ),
-                ),
-                const SizedBox(width: 12)
-              ]),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _TabBar extends StatelessWidget {
   const _TabBar({this.controller});
+
   final TabController? controller;
 
   @override
@@ -140,7 +74,7 @@ class _TabBar extends StatelessWidget {
             context.text14w700grey.copyWith(fontWeight: FontWeight.bold),
         tabs: const [
           Tab(
-            text: 'Order List',
+            text: "Order List",
           ),
           Tab(
             text: 'History',

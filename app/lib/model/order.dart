@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mockito/mockito.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/model/api.dart';
 import 'package:superfleet_courier/model/model.dart';
@@ -43,14 +43,12 @@ class OrdersNotifier extends _$OrdersNotifier {
   Future<List<Order>> build({int? offset, int? limit}) async {
     // final DotEnv dotEnv = DotEnv();
     // await dotEnv.load();
-    // final geocoder = MockGeocoder();
-    // when(geocoder.getGeocode(GeocodeRequest(
+    // final geocoder = YandexGeocoder(apiKey: 'cb2c60ca-b404-4d6b-8861-564645da5aa3');
+    // geocoder.getGeocode(GeocodeRequest(
     //         geocode: PointGeocode(latitude: 40, longitude: 40),
-    //         lang: Lang.enEn)))
-    //     .thenAnswer((_) async => GeocodeResponse());
+    //         lang: Lang.enEn));
     // final r = await geocoder.getGeocode(GeocodeRequest(
     //     geocode: PointGeocode(latitude: 40, longitude: 40), lang: Lang.enEn));
-
     final courier = await ref.watch(courierNotifierProvider.future);
 
     final queryParams = <String, dynamic>{};

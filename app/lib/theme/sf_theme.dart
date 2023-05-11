@@ -32,6 +32,9 @@ class _$SFTheme {
   static List<TextStyle> text14grey = [
     GoogleFonts.roboto().copyWith(fontSize: 14, color: superfleetGrey)
   ];
+  static List<TextStyle> text16w700 = [
+    GoogleFonts.roboto().copyWith(fontSize: 16, height: 1.4, fontWeight: FontWeight.w700)
+  ];
   static List<TextStyle> text16grey88 = [
     GoogleFonts.roboto().copyWith(fontSize: 16, color: const Color(0xff888888))
   ];

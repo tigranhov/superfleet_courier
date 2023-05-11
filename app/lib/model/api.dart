@@ -55,17 +55,14 @@ class Api extends _$Api {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      validateStatus: (status) {
-        return status! < 500;
-      },
     ));
     dio.interceptors.add(PrettyDioLogger(
-        requestHeader: false,
+        requestHeader: true,
         requestBody: true,
         responseBody: true,
         responseHeader: false,
         error: true,
-        compact: true,
+        compact: false,
         maxWidth: 90));
     // dio.interceptors.add(RetryInterceptor(dio: dio, retries: 3, retryDelays: [
     //   const Duration(seconds: 1),
