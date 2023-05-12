@@ -4,7 +4,8 @@ import 'package:superfleet_courier/theme/sf_theme.dart';
 
 class AddressItem extends StatelessWidget {
   const AddressItem(
-      {required this.address,
+      {super.key,
+      required this.address,
       required this.isPickup,
       required this.time,
       this.paddingTop = 16,
@@ -27,31 +28,34 @@ class AddressItem extends StatelessWidget {
           _LocationIcon(drawLine: drawLine, isPickup: isPickup),
           const SizedBox(width: 16),
           Expanded(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 2),
-              Text(
-                address,
-                maxLines: 2,
-                style: context.text16w700,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Text(
-                    isPickup ? 'Pickup time:' : 'Dropoff time:',
-                    style: context.text16w700grey,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    time,
-                    style: context.text16w700,
-                  )
-                ],
-              )
-            ],
+              child: SizedBox(
+            height: drawLine ? (72) : null,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 2),
+                Text(
+                  address,
+                  maxLines: 2,
+                  style: context.text16w700,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text(
+                      isPickup ? 'Pickup time:' : 'Dropoff time:',
+                      style: context.text16w700grey,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      time,
+                      style: context.text16w700,
+                    )
+                  ],
+                )
+              ],
+            ),
           ))
         ],
       ),
@@ -88,7 +92,7 @@ class _LocationIcon extends StatelessWidget {
           left: 13,
           top: 26,
           child: Container(
-            width: 0,
+            width: 2,
             height: 62,
             decoration: BoxDecoration(
                 border: Border.all(color: const Color(0xffD9D9D9), width: 1)),

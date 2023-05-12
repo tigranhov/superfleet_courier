@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:superfleet_courier/features/orders/widgets/address_item.dart';
 import 'package:superfleet_courier/model/order.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
-import 'package:superfleet_courier/widgets/order/address_item.dart';
 import 'package:superfleet_courier/widgets/progres_bars/time_progress_bar.dart';
 import 'package:superfleet_courier/widgets/top_panel.dart';
 
@@ -192,7 +192,7 @@ class _AddressItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        AdressItem(
+        AddressItem(
           address: addressString,
           isPickup: isPickup,
           time: time,

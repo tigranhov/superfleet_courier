@@ -179,6 +179,7 @@ class _OrderList extends ConsumerWidget {
       ),
       itemBuilder: (context, index) {
         return OrderTile(
+          key: ValueKey(orders[index].id),
           onTap: (order) {
             context.push('/order', extra: order);
           },

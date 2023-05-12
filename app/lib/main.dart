@@ -20,7 +20,7 @@ void main() async {
     child: DevicePreview(
         enabled: false,
         defaultDevice: Devices.ios.iPhoneSE,
-        isToolbarVisible: false,
+        isToolbarVisible: true,
         builder: (context) {
           return const MyApp();
         }),

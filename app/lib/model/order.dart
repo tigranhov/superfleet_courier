@@ -70,8 +70,13 @@ class OrdersNotifier extends _$OrdersNotifier {
             //     availableFrom: DateTime.now().add(const Duration(minutes: 40))),
             FromLocation(
                 location: const Location(
-                    street: "Alikhanyan brothers street, qebab party street",
-                    house: '2'),
+                    street: "Alikhanyan brothers street", house: '2'),
+                availableFrom: DateTime.now().add(const Duration(minutes: 50))),
+            FromLocation(
+                location: const Location(
+                    street:
+                        "Some other street, where the street is a streeet by the side of another street",
+                    house: '4'),
                 availableFrom: DateTime.now().add(const Duration(minutes: 50))),
           ],
           to: const ToLocation(
