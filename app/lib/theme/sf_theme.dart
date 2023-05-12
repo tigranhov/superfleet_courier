@@ -62,6 +62,13 @@ class _$SFTheme {
     GoogleFonts.roboto()
         .copyWith(fontSize: 16, height: 1.4, fontWeight: FontWeight.w700)
   ];
+  static List<TextStyle> text16w700grey = [
+    GoogleFonts.roboto().copyWith(
+        fontSize: 16,
+        height: 1.4,
+        fontWeight: FontWeight.w700,
+        color: const Color.fromRGBO(0, 0, 0, 0.5))
+  ];
   static List<TextStyle> text16grey88 = [
     GoogleFonts.roboto()
         .copyWith(fontSize: 16, height: 1.4, color: const Color(0xff888888))

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:superfleet_courier/model/model.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:superfleet_courier/model/order.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 
 import 'address_item.dart';
@@ -40,21 +40,20 @@ class OrderTile extends StatelessWidget {
           children: [
             _BeforeDivider(
               status: order.status ?? '!!No Status',
-            ),
+              isNew: true,
+            ), //TODO use actual value
             const Divider(height: 0),
-            ...order.from.map((e) => AdressItem(
+            ...order.from.map((e) => AddressItem(
                 address: e.location?.addressString() ?? 'No Address',
                 isPickup: true,
                 time: formatDate(e.availableFrom))),
-            AdressItem(
+            AddressItem(
               address: order.to.location?.addressString() ?? 'No Address',
               isPickup: false,
               time: formatDate(order.deliverUntil),
               drawLine: false,
             ),
-            const SizedBox(
-              height: 16,
-            )
+            const SizedBox(height: 16)
           ],
         ),
       ),
@@ -63,29 +62,51 @@ class OrderTile extends StatelessWidget {
 }
 
 class _BeforeDivider extends StatelessWidget {
-  const _BeforeDivider({Key? key, required this.status}) : super(key: key);
+  const _BeforeDivider({Key? key, required this.status, this.isNew = false})
+      : super(key: key);
   final String status;
+  final bool isNew;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 24,
+      height: 28,
       width: double.infinity,
       child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Text(status, style: context.text12w700grey),
-          ),
+          const SizedBox(width: 12),
+          Text(status, style: context.text14w700grey),
+          if (isNew) ...[const SizedBox(width: 4), const _IsNewTag()],
           const Expanded(child: SizedBox()),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
               '#123456789',
-              style: context.text12w700grey,
+              style: context.text14w700grey,
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class _IsNewTag extends StatelessWidget {
+  const _IsNewTag({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 47,
+      height: 20,
+      decoration: BoxDecoration(
+        color: context.secondaryColor,
+        borderRadius: BorderRadius.circular(37),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        'NEW',
+        style: context.text14w700.copyWith(height: 1.3, color: Colors.white),
       ),
     );
   }

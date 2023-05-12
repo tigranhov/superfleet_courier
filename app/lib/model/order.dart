@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/model/api.dart';
 import 'package:superfleet_courier/model/model.dart';
@@ -72,7 +70,8 @@ class OrdersNotifier extends _$OrdersNotifier {
             //     availableFrom: DateTime.now().add(const Duration(minutes: 40))),
             FromLocation(
                 location: const Location(
-                    street: "Alikhanyan brothers street", house: '2'),
+                    street: "Alikhanyan brothers street, qebab party street",
+                    house: '2'),
                 availableFrom: DateTime.now().add(const Duration(minutes: 50))),
           ],
           to: const ToLocation(
@@ -84,4 +83,3 @@ class OrdersNotifier extends _$OrdersNotifier {
     ).toList());
   }
 }
-
