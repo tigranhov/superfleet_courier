@@ -8,18 +8,24 @@ part 'sf_theme.tailor.dart';
 @Tailor(themes: ['light'])
 class _$SFTheme {
   static List<TextStyle> text12 = [
-    GoogleFonts.roboto().copyWith(fontSize: 12, color: const Color(0xff000000))
+    GoogleFonts.roboto()
+        .copyWith(fontSize: 12, height: 1.4, color: const Color(0xff000000))
   ];
 
   static List<TextStyle> text12grey = [
-    GoogleFonts.roboto().copyWith(fontSize: 12, color: superfleetGrey)
+    GoogleFonts.roboto()
+        .copyWith(fontSize: 12, height: 1.4, color: superfleetGrey)
   ];
   static List<TextStyle> text12w700 = [
-    GoogleFonts.roboto().copyWith(fontSize: 12, fontWeight: FontWeight.w700)
+    GoogleFonts.roboto()
+        .copyWith(fontSize: 12, height: 1.4, fontWeight: FontWeight.w700)
   ];
   static List<TextStyle> text12w700grey = [
     GoogleFonts.roboto().copyWith(
-        fontSize: 12, fontWeight: FontWeight.w700, color: superfleetGrey)
+        fontSize: 12,
+        height: 1.4,
+        fontWeight: FontWeight.w700,
+        color: superfleetGrey)
   ];
   static List<TextStyle> text14 = [
     GoogleFonts.roboto().copyWith(fontSize: 14, height: 1.4)

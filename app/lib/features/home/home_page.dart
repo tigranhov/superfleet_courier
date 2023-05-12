@@ -5,13 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/home/top_panel.dart';
+import 'package:superfleet_courier/features/transports/widgets/transport_selector.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 import 'package:superfleet_courier/widgets/order/order_tile.dart';
-
-import '../deliver_methods/widgets/delivery_method_selector.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key, this.debugTools = false});
@@ -28,17 +27,14 @@ class HomePage extends HookConsumerWidget {
           TopPanel(
             onCarChangeTap: () {
               showModalBottomSheet(
-                context: context,
-                shape: const RoundedRectangleBorder(
-                  // <-- SEE HERE
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(25.0),
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    // <-- SEE HERE
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(25.0),
+                    ),
                   ),
-                ),
-                builder: (context) {
-                  return const DeliveryMethodSelector();
-                },
-              );
+                  builder: (context) => const TransportSelector());
             },
           ),
           _TabBar(

@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:superfleet_courier/features/deliver_methods/model/delivery_method.dart';
+import 'package:superfleet_courier/features/transports/model/transport.dart';
 import 'package:superfleet_courier/model/courier.dart';
 
 part 'selected_transport_provider.g.dart';
@@ -7,13 +7,13 @@ part 'selected_transport_provider.g.dart';
 @riverpod
 class SelectedTransport extends _$SelectedTransport {
   @override
-  Future<DeliveryMethod> build() async {
+  Future<Transport> build() async {
     final courier = await ref.watch(courierNotifierProvider.future);
-    return DeliveryMethod.fromString(courier!.transport!);
+    return Transport.fromString(courier!.transport!);
   }
 
-  void selectTransport(DeliveryMethod transport) {
+  void selectTransport(Transport transport) {
     final courier = ref.read(courierNotifierProvider.notifier);
-    courier.selectTransport(transport.toString());
+    courier.selectTransport(transport.key);
   }
 }

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:superfleet_courier/features/deliver_methods/logic/selected_transport_provider.dart';
-import 'package:superfleet_courier/features/deliver_methods/model/delivery_method.dart';
-import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/modal_hanlde.dart';
 
-import 'deliver_method_selection_tile.dart';
+import '../logic/selected_transport_provider.dart';
+import '../model/transport.dart';
+import 'selected_transport_icon.dart';
 
-class DeliveryMethodSelector extends ConsumerWidget {
-  const DeliveryMethodSelector({
+class TransportSelector extends ConsumerWidget {
+  const TransportSelector({
     Key? key,
   }) : super(key: key);
 
@@ -28,7 +27,7 @@ class DeliveryMethodSelector extends ConsumerWidget {
     }
     final selectedTransport = selectedTransportAsync.value;
 
-    onSelected(DeliveryMethod transport) {
+    onSelected(Transport transport) {
       ref.read(selectedTransportProvider.notifier).selectTransport(transport);
     }
 
@@ -48,23 +47,20 @@ class DeliveryMethodSelector extends ConsumerWidget {
         Divider(color: context.colorDivider),
         const SizedBox(height: 12),
         DeliveryMethodSelectionTile(
-          transport: const DeliveryMethod.foot(),
-          icon: SuperIcons.person,
-          selected: selectedTransport == const DeliveryMethod.foot(),
+          transport: const Transport.walk(),
+          selected: selectedTransport == const Transport.walk(),
           onSelected: onSelected,
         ),
         const SizedBox(height: 12),
         DeliveryMethodSelectionTile(
-          transport: const DeliveryMethod.bicycle(),
-          icon: SuperIcons.bycicle,
-          selected: selectedTransport == const DeliveryMethod.bicycle(),
+          transport: const Transport.bike(),
+          selected: selectedTransport == const Transport.bike(),
           onSelected: onSelected,
         ),
         const SizedBox(height: 12),
         DeliveryMethodSelectionTile(
-          transport: const DeliveryMethod.car(),
-          icon: SuperIcons.car,
-          selected: selectedTransport == const DeliveryMethod.car(),
+          transport: const Transport.car(),
+          selected: selectedTransport == const Transport.car(),
           onSelected: onSelected,
         ),
       ],
