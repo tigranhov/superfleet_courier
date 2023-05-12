@@ -80,6 +80,19 @@ class _$SFTheme {
     GoogleFonts.roboto().copyWith(
         fontSize: 16, fontWeight: FontWeight.w700, color: superfleetGrey)
   ];
+  static List<BoxDecoration> appbarDecoration = [
+    const BoxDecoration(
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          color: Color(0xFFCCCCCC),
+          blurRadius: 0.0, // no blur
+          spreadRadius: 1.0, // spread as far as 1px
+          offset: Offset(0.0, 1.0), // Offset downwards
+        ),
+      ],
+    ),
+  ];
 
   static List<Color?> primaryColor = [superfleetBlue];
   static List<Color?> secondaryColor = [superfleetGreen];

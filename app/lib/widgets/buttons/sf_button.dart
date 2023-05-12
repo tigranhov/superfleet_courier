@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:superfleet_courier/theme/colors.dart';
+
 class SFButton extends StatelessWidget {
   const SFButton(
       {super.key,
@@ -11,7 +12,9 @@ class SFButton extends StatelessWidget {
       this.mainColor = superfleetBlue,
       this.secondaryColor = Colors.white,
       this.borderColor = superfleetBlue,
-      required this.onPressed});
+      required this.onPressed,
+      this.textStyle =
+          const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)});
   final double width;
   final double height;
   final bool inverse;
@@ -21,6 +24,7 @@ class SFButton extends StatelessWidget {
   final Color mainColor;
   final Color secondaryColor;
   final Color borderColor;
+  final TextStyle textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +49,9 @@ class SFButton extends StatelessWidget {
             }
             return inverse ? mainColor : secondaryColor;
           }),
-          textStyle: const MaterialStatePropertyAll(
-              TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          textStyle: MaterialStatePropertyAll(textStyle),
           overlayColor: const MaterialStatePropertyAll(Colors.transparent),
-          side:  MaterialStatePropertyAll(
+          side: MaterialStatePropertyAll(
               BorderSide(color: borderColor, width: 2)),
           splashFactory: NoSplash.splashFactory,
         ),

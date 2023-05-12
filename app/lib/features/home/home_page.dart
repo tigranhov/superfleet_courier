@@ -2,11 +2,11 @@ import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/home/top_panel.dart';
 import 'package:superfleet_courier/features/transports/widgets/transport_selector.dart';
 import 'package:superfleet_courier/model/model.dart';
+import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
@@ -42,9 +42,14 @@ class HomePage extends HookConsumerWidget {
             controller: tabController,
           ),
           Expanded(
-            child: TabBarView(
-                controller: tabController,
-                children: const [_OrderTab(), _HistoryTab()]),
+            child: TabBarView(controller: tabController, children: [
+              _OrderTab(
+                onOrderSelected: (order) {
+                  OrderViewRoute(order.id).push(context);
+                },
+              ),
+              const _HistoryTab()
+            ]),
           )
         ],
       )),
@@ -82,7 +87,9 @@ class _TabBar extends StatelessWidget {
 }
 
 class _OrderTab extends ConsumerWidget {
-  const _OrderTab();
+  const _OrderTab({required this.onOrderSelected});
+
+  final Function(Order order) onOrderSelected;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -101,7 +108,10 @@ class _OrderTab extends ConsumerWidget {
         );
       } else {
         return orderCount > 0
-            ? const _OrderList(key: ValueKey(1))
+            ? _OrderList(
+                key: const ValueKey(1),
+                onTilePressed: onOrderSelected,
+              )
             : const _NoContent(
                 key: ValueKey(2),
                 description: 'You don’t have any orders, yet',
@@ -166,7 +176,10 @@ class _InactiveOrders extends ConsumerWidget {
 class _OrderList extends ConsumerWidget {
   const _OrderList({
     Key? key,
+    required this.onTilePressed,
   }) : super(key: key);
+
+  final Function(Order order) onTilePressed;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -180,9 +193,7 @@ class _OrderList extends ConsumerWidget {
       itemBuilder: (context, index) {
         return OrderTile(
           key: ValueKey(orders[index].id),
-          onTap: (order) {
-            context.push('/order', extra: order);
-          },
+          onTap: onTilePressed,
           order: orders[index],
           width: 296,
         );

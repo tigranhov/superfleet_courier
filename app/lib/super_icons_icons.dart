@@ -29,4 +29,5 @@ class SuperIcons {
   static const IconData flag = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData location_pin = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData double_arrow = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData close = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

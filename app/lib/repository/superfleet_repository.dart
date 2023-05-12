@@ -43,7 +43,6 @@ mixin Api {
 
 class SuperfleetRepository with SuperfleetAPI {
   final _secureStorage = SharedPreferences.getInstance();
-  @override
   final Dio dio = Dio(BaseOptions(
     baseUrl: 'https://api-new.superfleet.ai',
   ));
