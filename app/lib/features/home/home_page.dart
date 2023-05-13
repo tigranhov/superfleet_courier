@@ -27,6 +27,7 @@ class HomePage extends HookConsumerWidget {
           TopPanel(
             onCarChangeTap: () {
               showModalBottomSheet(
+                  isScrollControlled: true,
                   context: context,
                   shape: const RoundedRectangleBorder(
                     // <-- SEE HERE

@@ -31,39 +31,42 @@ class TransportSelector extends ConsumerWidget {
       ref.read(selectedTransportProvider.notifier).selectTransport(transport);
     }
 
-    return Column(
-      children: [
-        const ModalHandle(),
-        Text(
-          'Choose your delivery method',
-          style: context.text16w700,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Contact administrator to update options',
-          style: context.text16grey88,
-        ),
-        const SizedBox(height: 14),
-        Divider(color: context.colorDivider),
-        const SizedBox(height: 12),
-        DeliveryMethodSelectionTile(
-          transport: const Transport.walk(),
-          selected: selectedTransport == const Transport.walk(),
-          onSelected: onSelected,
-        ),
-        const SizedBox(height: 12),
-        DeliveryMethodSelectionTile(
-          transport: const Transport.bike(),
-          selected: selectedTransport == const Transport.bike(),
-          onSelected: onSelected,
-        ),
-        const SizedBox(height: 12),
-        DeliveryMethodSelectionTile(
-          transport: const Transport.car(),
-          selected: selectedTransport == const Transport.car(),
-          onSelected: onSelected,
-        ),
-      ],
+    return SizedBox(
+      height: 470,
+      child: Column(
+        children: [
+          const ModalHandle(),
+          Text(
+            'Choose your delivery method',
+            style: context.text16w700,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Contact administrator to update options',
+            style: context.text16grey88,
+          ),
+          const SizedBox(height: 14),
+          Divider(color: context.colorDivider),
+          const SizedBox(height: 12),
+          DeliveryMethodSelectionTile(
+            transport: const Transport.walk(),
+            selected: selectedTransport == const Transport.walk(),
+            onSelected: onSelected,
+          ),
+          const SizedBox(height: 12),
+          DeliveryMethodSelectionTile(
+            transport: const Transport.bike(),
+            selected: selectedTransport == const Transport.bike(),
+            onSelected: onSelected,
+          ),
+          const SizedBox(height: 12),
+          DeliveryMethodSelectionTile(
+            transport: const Transport.car(),
+            selected: selectedTransport == const Transport.car(),
+            onSelected: onSelected,
+          ),
+        ],
+      ),
     );
   }
 }
