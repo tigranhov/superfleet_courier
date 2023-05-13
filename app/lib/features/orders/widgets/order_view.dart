@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
@@ -16,7 +18,42 @@ class OrderView extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
-          slivers: [_AppBar()],
+          slivers: [
+            _AppBar(
+              onClosed: () {
+                context.pop();
+              },
+            ),
+            const _Map(),
+            const _TotalDistance(),
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Container(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: const LocationIndicatorYou()),
+                  Container(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: const LocationIndicatorFrom(
+                        text:
+                            'Alikhanyan  brothers street 1st blind alley, house #13',
+                      )),
+                  Container(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: const LocationIndicatorFrom(
+                        text:
+                            'Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13',
+                      )),
+                  Container(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: const LocationIndicatorTo(
+                        text:
+                            'Alikhanyan  brothers street 1st blind alley, house #13',
+                      )),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -24,7 +61,9 @@ class OrderView extends ConsumerWidget {
 }
 
 class _AppBar extends StatelessWidget {
-  const _AppBar();
+  const _AppBar({required this.onClosed});
+
+  final Function()? onClosed;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +84,7 @@ class _AppBar extends StatelessWidget {
                   vertical: 12,
                 ),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: onClosed,
                   icon: const Icon(SuperIcons.close),
                   iconSize: 14,
                   padding: const EdgeInsets.all(0),
@@ -95,5 +134,49 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return maxHeight != oldDelegate.maxHeight ||
         minHeight != oldDelegate.minHeight ||
         child != oldDelegate.child;
+  }
+}
+
+class _Map extends StatelessWidget {
+  const _Map({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Container(
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+}
+
+class _TotalDistance extends StatelessWidget {
+  const _TotalDistance();
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        height: 50,
+        decoration: context.borderDecoration,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Total distance', style: context.text14),
+                const SizedBox(width: 4),
+                Text('12.5 km', style: context.text14w700),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -28,7 +28,7 @@ GoRouter router(RouterRef ref) {
       final bool onSplashPage = state.matchedLocation == splashLoc;
 
       // the user is not logged in and not headed to /login, they need to login
-      if (!loggedIn && !onSplashPage) {
+      if (!loggedIn) {
         return const LoginRoute().location;
       }
 

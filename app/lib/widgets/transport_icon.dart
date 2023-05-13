@@ -3,8 +3,12 @@ import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 
 class TransportIcon extends StatelessWidget {
-  const TransportIcon({Key? key, required this.icon}) : super(key: key);
+  const TransportIcon(
+      {Key? key, required this.icon, this.color, this.borderColor})
+      : super(key: key);
   final IconData icon;
+  final Color? color;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +24,14 @@ class TransportIcon extends StatelessWidget {
       height: 56,
       decoration: BoxDecoration(
         border: Border.all(
-          color: context.colorDivider!,
+          color: borderColor ?? context.colorDivider!,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(500),
       ),
       child: Icon(
         icon,
-        color: context.primaryColor,
+        color: color ?? context.primaryColor,
         size: iconSize(),
       ),
     );

@@ -4,7 +4,12 @@ import 'package:superfleet_courier/features/transports/logic/selected_transport_
 import 'package:superfleet_courier/widgets/transport_icon.dart';
 
 class SelectedTransportIcon extends ConsumerWidget {
-  const SelectedTransportIcon({Key? key, required this.size}) : super(key: key);
+  const SelectedTransportIcon(
+      {Key? key, required this.size, this.color, this.borderColor})
+      : super(key: key);
+
+  final Color? color;
+  final Color? borderColor;
 
   final double size;
 
@@ -18,7 +23,11 @@ class SelectedTransportIcon extends ConsumerWidget {
       child: FittedBox(
           child: selectedTransport == null
               ? const SizedBox()
-              : TransportIcon(icon: selectedTransport.icon)),
+              : TransportIcon(
+                  icon: selectedTransport.icon,
+                  color: color,
+                  borderColor: borderColor,
+                )),
     );
   }
 }

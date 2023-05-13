@@ -93,6 +93,17 @@ class _$SFTheme {
       ],
     ),
   ];
+  static List<BoxDecoration> borderDecoration = [
+    const BoxDecoration(
+      color: Colors.white,
+      border: Border(
+        bottom: BorderSide(
+          color: Color(0xFFCCCCCC),
+          width: 1.0,
+        ),
+      ),
+    ),
+  ];
 
   static List<Color?> primaryColor = [superfleetBlue];
   static List<Color?> secondaryColor = [superfleetGreen];
