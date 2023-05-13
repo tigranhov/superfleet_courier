@@ -2,6 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+part 'pulsing_border.g.dart';
 
 /// A widget that adds an animated pulsing border around its child.
 ///
@@ -25,13 +28,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 /// This will display the text 'Hello, world!' with a red pulsing border
 /// around it. The border's width will vary between 0 and 2 pixels, and
 /// each pulse will last 1 second.
-class PulsingBorder extends StatelessWidget {
+class PulsingBorder extends ConsumerWidget {
   const PulsingBorder({
     Key? key,
     required this.strokeWidth,
     required this.color,
     required this.child,
-    this.duration = const Duration(milliseconds: 500),
+    this.duration = const Duration(milliseconds: 1000),
   }) : super(key: key);
 
   final Color color;
@@ -40,10 +43,12 @@ class PulsingBorder extends StatelessWidget {
   final Duration duration;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final animatinoController = ref.watch(pulsingAnimationControllerProvider);
     return Animate(
+      controller: animatinoController,
       child: child,
-      onPlay: (controller) => controller.repeat(),
+      // onPlay: (controller) => controller.repeat(),
     ).custom(
         duration: duration,
         builder: (context, animation, child) {
@@ -57,6 +62,12 @@ class PulsingBorder extends StatelessWidget {
           );
         });
   }
+}
+
+@riverpod
+AnimationController pulsingAnimationController(
+    PulsingAnimationControllerRef ref) {
+  throw UnimplementedError();
 }
 
 class _AnimatedBorder extends CustomPainter {

@@ -1,59 +1,93 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
+import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
+import 'package:superfleet_courier/widgets/swiper_to_order.dart';
 
-class OrderView extends ConsumerWidget {
+class OrderView extends HookConsumerWidget {
   const OrderView({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            _AppBar(
-              onClosed: () {
-                context.pop();
-              },
-            ),
-            const _Map(),
-            const _TotalDistance(),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  Container(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: const LocationIndicatorYou()),
-                  Container(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: const LocationIndicatorFrom(
-                        text:
-                            'Alikhanyan  brothers street 1st blind alley, house #13',
-                      )),
-                  Container(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: const LocationIndicatorFrom(
-                        text:
-                            'Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13',
-                      )),
-                  Container(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: const LocationIndicatorTo(
-                        text:
-                            'Alikhanyan  brothers street 1st blind alley, house #13',
-                      )),
-                ],
+    final pulsingAnimationController = useAnimationController();
+    return ProviderScope(
+      overrides: [
+        pulsingAnimationControllerProvider
+            .overrideWith((ref) => pulsingAnimationController)
+      ],
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: CustomScrollView(
+                  slivers: [
+                    _AppBar(
+                      onClosed: () {
+                        context.pop();
+                      },
+                    ),
+                    const _Map(),
+                    const _TotalDistance(),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          Container(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: const LocationIndicatorYou(
+                                started: false,
+                              )),
+                          Container(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: const LocationIndicatorFrom(
+                                state: LocationIndicatorState.goingTo,
+                                text:
+                                    'Alikhanyan  brothers street 1st blind alley, house #13',
+                              )),
+                          Container(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: const LocationIndicatorFrom(
+                                state: LocationIndicatorState.reached,
+                                text:
+                                    'Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13',
+                              )),
+                          Container(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: const LocationIndicatorTo(
+                                state: LocationIndicatorState.completed,
+                                text:
+                                    'Alikhanyan  brothers street 1st blind alley, house #13',
+                              )),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            )
-          ],
+              const Divider(height: 1),
+              Container(
+                  height: 73,
+                  alignment: Alignment.center,
+                  child: SwipeToOrder(
+                    height: 56,
+                    width: 304,
+                    text: 'Swipe to order',
+                    onDone: (reset) async {
+                      await Future.delayed(const Duration(seconds: 1));
+                      reset();
+                    },
+                  )),
+            ],
+          ),
         ),
       ),
     );

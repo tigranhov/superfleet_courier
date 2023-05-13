@@ -3,12 +3,20 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
+import 'package:superfleet_courier/theme/sf_theme.dart';
 
 class SwipeToOrder extends HookWidget {
-  const SwipeToOrder({Key? key, this.width = 304, this.height = 56})
-      : super(key: key);
+  const SwipeToOrder({
+    Key? key,
+    this.width = 304,
+    this.height = 56,
+    required this.text,
+    required this.onDone,
+  }) : super(key: key);
   final double width;
   final double height;
+  final String text;
+  final Function(Function() resetCallback) onDone;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +35,13 @@ class SwipeToOrder extends HookWidget {
     final swiping = useState(false);
     final double maxOffset = width - height;
     double positionOffset() => maxOffset * positionAnimator.value;
-    final icon = useState(SuperIcons.doublerightarrows);
+
+    reset() {
+      if (context.mounted) {
+        positionAnimator.reverse();
+        colorChangeAnimator.animateTo(0);
+      }
+    }
 
     return SizedBox(
       width: width,
@@ -59,12 +73,13 @@ class SwipeToOrder extends HookWidget {
             animation: positionAnimator,
             builder: (context, child) {
               return Center(
-                  child: Text(
-                "Start Order",
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: textColorAnimation),
+                  child: SizedBox(
+                width: 168,
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: context.text16w700.copyWith(color: textColorAnimation),
+                ),
               ));
             },
           ),
@@ -79,11 +94,9 @@ class SwipeToOrder extends HookWidget {
                 if (positionAnimator.value > 0.7) {
                   positionAnimator.animateTo(1);
                   colorChangeAnimator.animateTo(1);
-                  icon.value = SuperIcons.done;
+                  onDone(reset);
                 } else {
-                  positionAnimator.reverse();
-                  colorChangeAnimator.animateTo(0);
-                  icon.value = SuperIcons.doublerightarrows;
+                  reset();
                 }
               },
               onHorizontalDragUpdate: (details) {
@@ -104,10 +117,27 @@ class SwipeToOrder extends HookWidget {
                         ? Border.all(color: Colors.white, width: 2)
                         : null),
                 duration: const Duration(milliseconds: 100),
-                child: Icon(
-                  icon.value,
-                  color: Colors.white,
-                  size: 14,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    FadeTransition(
+                      opacity:
+                          positionAnimator.drive(Tween(begin: 1.0, end: 0.0)),
+                      child: const Icon(
+                        SuperIcons.doublerightarrows,
+                        color: Colors.white,
+                        size: 14,
+                      ),
+                    ),
+                    FadeTransition(
+                      opacity: positionAnimator,
+                      child: const Icon(
+                        SuperIcons.done,
+                        color: Colors.white,
+                        size: 14,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

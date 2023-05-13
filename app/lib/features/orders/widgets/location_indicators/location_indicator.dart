@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
+import 'package:superfleet_courier/features/orders/widgets/pickup_description.dart';
 import 'package:superfleet_courier/features/transports/widgets/selected_delivery_method_icon.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -9,12 +11,15 @@ import 'package:superfleet_courier/super_icons_icons.dart';
 class LocationIndicatorYou extends StatelessWidget {
   const LocationIndicatorYou({
     super.key,
+    required this.started,
   });
+
+  final bool started;
 
   @override
   Widget build(BuildContext context) {
     return _PulsingBorderOverlay(
-      enabled: false,
+      enabled: started,
       child: Container(
         alignment: Alignment.topLeft,
         clipBehavior: Clip.hardEdge,
@@ -46,31 +51,108 @@ class LocationIndicatorYou extends StatelessWidget {
   }
 }
 
+enum LocationIndicatorState {
+  goingTo,
+  reached,
+  completed,
+}
+
 class LocationIndicatorFrom extends StatelessWidget {
-  const LocationIndicatorFrom({Key? key, required this.text}) : super(key: key);
+  const LocationIndicatorFrom(
+      {Key? key, required this.text, required this.state})
+      : super(key: key);
 
   final String text;
+  final LocationIndicatorState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _PulsingBorderOverlay(
+          enabled: true,
+          child: Container(
+            clipBehavior: Clip.hardEdge,
+            decoration: const BoxDecoration(),
+            padding: const EdgeInsets.only(left: 16),
+            alignment: Alignment.topLeft,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const LocationPinIcon(
+                  infiniteLine: true,
+                  icon: Icon(
+                    SuperIcons.location_pin,
+                    size: 13.33,
+                    color: superfleetOrange,
+                  ),
+                  drawLine: true,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Column(
+                      children: [
+                        Text(
+                          text,
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.text16w700,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              'Pickup time:',
+                              style: context.text16w700grey,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'ASAP',
+                              style: context.text16w700,
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        PickupDescription()
+      ],
+    );
+  }
+}
+
+class LocationIndicatorTo extends StatelessWidget {
+  const LocationIndicatorTo({Key? key, required this.text, required this.state})
+      : super(key: key);
+
+  final String text;
+  final LocationIndicatorState state;
 
   @override
   Widget build(BuildContext context) {
     return _PulsingBorderOverlay(
-      enabled: false,
+      enabled: true,
       child: Container(
-        clipBehavior: Clip.hardEdge,
-        decoration: const BoxDecoration(),
         padding: const EdgeInsets.only(left: 16),
         alignment: Alignment.topLeft,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const LocationPinIcon(
-              infiniteLine: true,
+            LocationPinIcon(
               icon: Icon(
-                SuperIcons.location_pin,
-                size: 13.33,
-                color: superfleetOrange,
+                SuperIcons.flag,
+                size: 11.33,
+                color: context.secondaryColor,
               ),
-              drawLine: true,
+              drawLine: false,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -88,7 +170,7 @@ class LocationIndicatorFrom extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Pickup time:',
+                          'Dropoff time:',
                           style: context.text16w700grey,
                         ),
                         const SizedBox(width: 4),
@@ -102,7 +184,7 @@ class LocationIndicatorFrom extends StatelessWidget {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -110,53 +192,14 @@ class LocationIndicatorFrom extends StatelessWidget {
   }
 }
 
-class LocationIndicatorTo extends StatelessWidget {
-  const LocationIndicatorTo({Key? key, required this.text}) : super(key: key);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 16),
-      alignment: Alignment.topLeft,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          LocationPinIcon(
-            icon: Icon(
-              SuperIcons.flag,
-              size: 11.33,
-              color: context.secondaryColor,
-            ),
-            drawLine: false,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: Text(
-                text,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: context.text16w700,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class _PulsingBorderOverlay extends StatelessWidget {
+class _PulsingBorderOverlay extends ConsumerWidget {
   const _PulsingBorderOverlay(
       {Key? key, required this.enabled, required this.child})
       : super(key: key);
   final bool enabled;
   final Widget child;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     if (!enabled) return child;
     return Stack(
       children: [
@@ -164,7 +207,7 @@ class _PulsingBorderOverlay extends StatelessWidget {
           left: 16,
           child: PulsingBorder(
               color: superfleetBlue.withAlpha(122),
-              strokeWidth: 8,
+              strokeWidth: 4,
               child: const SizedBox(
                 width: 26,
                 height: 26,
