@@ -44,36 +44,46 @@ class OrderView extends HookConsumerWidget {
                           Container(
                               padding: const EdgeInsets.only(top: 16),
                               child: const LocationIndicatorYou(
-                                started: false,
+                                state: LocationIndicatorState.exhausted,
                               )),
                           Container(
                               padding: const EdgeInsets.only(right: 16),
-                              child: const LocationIndicatorFrom(
-                                state: LocationIndicatorState.goingTo,
+                              child: const LocationIndicatorTile(
+                                state: LocationIndicatorState.exhausted,
+                                type: LocationTileType.pickup,
+                                showPickupInformation: true,
                                 text:
                                     'Alikhanyan  brothers street 1st blind alley, house #13',
                               )),
                           Container(
                               padding: const EdgeInsets.only(right: 16),
-                              child: const LocationIndicatorFrom(
-                                state: LocationIndicatorState.reached,
+                              child: const LocationIndicatorTile(
+                                state: LocationIndicatorState.exhausted,
+                                type: LocationTileType.pickup,
+                                showPickupInformation: true,
                                 text:
                                     'Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13',
                               )),
                           Container(
+                              height: 1, decoration: context.borderDecoration),
+                          const SizedBox(height: 16),
+                          Container(
                               padding: const EdgeInsets.only(right: 16),
-                              child: const LocationIndicatorTo(
-                                state: LocationIndicatorState.completed,
+                              child: const LocationIndicatorTile(
+                                state: LocationIndicatorState.exhausted,
+                                type: LocationTileType.dropoff,
                                 text:
                                     'Alikhanyan  brothers street 1st blind alley, house #13',
                               )),
+                          Container(
+                              height: 1, decoration: context.borderDecoration),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-              const Divider(height: 1),
+              Container(height: 1, decoration: context.borderDecoration),
               Container(
                   height: 73,
                   alignment: Alignment.center,

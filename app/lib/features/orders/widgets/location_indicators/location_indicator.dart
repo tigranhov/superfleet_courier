@@ -8,18 +8,28 @@ import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_pin_icon.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
 
+enum LocationIndicatorState {
+  inactive,
+  active,
+  exhausted,
+}
+
 class LocationIndicatorYou extends StatelessWidget {
   const LocationIndicatorYou({
     super.key,
-    required this.started,
+    required this.state,
   });
 
-  final bool started;
+  final LocationIndicatorState state;
 
   @override
   Widget build(BuildContext context) {
     return _PulsingBorderOverlay(
-      enabled: started,
+      enabled: switch (state) {
+        LocationIndicatorState.inactive => false,
+        LocationIndicatorState.exhausted => false,
+        LocationIndicatorState.active => true,
+      },
       child: Container(
         alignment: Alignment.topLeft,
         clipBehavior: Clip.hardEdge,
@@ -28,11 +38,19 @@ class LocationIndicatorYou extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const LocationPinIcon(
+            LocationPinIcon(
               replacement: SelectedTransportIcon(
                 size: 26,
-                borderColor: superfleetBlue,
+                borderColor: switch (state) {
+                  LocationIndicatorState.exhausted => superfleetBlue,
+                  LocationIndicatorState.active => superfleetBlue,
+                  LocationIndicatorState.inactive => null,
+                },
               ),
+              lineColor: switch (state) {
+                LocationIndicatorState.exhausted => superfleetBlue,
+                _ => null
+              },
               infiniteLine: true,
               drawLine: true,
             ),
@@ -41,7 +59,12 @@ class LocationIndicatorYou extends StatelessWidget {
               padding: const EdgeInsets.only(top: 2),
               child: Text(
                 'You',
-                style: context.text16w700,
+                style: context.text16w700.copyWith(
+                    color: switch (state) {
+                  LocationIndicatorState.exhausted => null,
+                  LocationIndicatorState.active => superfleetBlue,
+                  LocationIndicatorState.inactive => null,
+                }),
               ),
             )
           ],
@@ -51,26 +74,34 @@ class LocationIndicatorYou extends StatelessWidget {
   }
 }
 
-enum LocationIndicatorState {
-  goingTo,
-  reached,
-  completed,
+enum LocationTileType {
+  pickup,
+  dropoff,
 }
 
-class LocationIndicatorFrom extends StatelessWidget {
-  const LocationIndicatorFrom(
-      {Key? key, required this.text, required this.state})
-      : super(key: key);
+class LocationIndicatorTile extends StatelessWidget {
+  const LocationIndicatorTile({
+    Key? key,
+    required this.text,
+    required this.state,
+    required this.type,
+    this.showPickupInformation = false,
+  }) : super(key: key);
 
   final String text;
   final LocationIndicatorState state;
+  final LocationTileType type;
+  final bool showPickupInformation;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         _PulsingBorderOverlay(
-          enabled: true,
+          enabled: switch (state) {
+            LocationIndicatorState.active => true,
+            _ => false,
+          },
           child: Container(
             clipBehavior: Clip.hardEdge,
             decoration: const BoxDecoration(),
@@ -79,14 +110,32 @@ class LocationIndicatorFrom extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const LocationPinIcon(
+                LocationPinIcon(
                   infiniteLine: true,
-                  icon: Icon(
-                    SuperIcons.location_pin,
-                    size: 13.33,
-                    color: superfleetOrange,
-                  ),
-                  drawLine: true,
+                  lineColor: switch (state) {
+                    LocationIndicatorState.exhausted => superfleetBlue,
+                    _ => null,
+                  },
+                  borderColor: switch (state) {
+                    LocationIndicatorState.inactive => null,
+                    _ => superfleetBlue,
+                  },
+                  icon: switch (type) {
+                    LocationTileType.pickup => const Icon(
+                        SuperIcons.location_pin,
+                        size: 13.33,
+                        color: superfleetOrange,
+                      ),
+                    LocationTileType.dropoff => const Icon(
+                        SuperIcons.flag,
+                        size: 11.33,
+                        color: superfleetGreen,
+                      ),
+                  },
+                  drawLine: switch (type) {
+                    LocationTileType.pickup => true,
+                    _ => false,
+                  },
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -98,7 +147,11 @@ class LocationIndicatorFrom extends StatelessWidget {
                           text,
                           maxLines: 4,
                           overflow: TextOverflow.ellipsis,
-                          style: context.text16w700,
+                          style: context.text16w700.copyWith(
+                              color: switch (state) {
+                            LocationIndicatorState.active => superfleetBlue,
+                            _ => null,
+                          }),
                         ),
                         const SizedBox(height: 4),
                         Row(
@@ -123,71 +176,12 @@ class LocationIndicatorFrom extends StatelessWidget {
             ),
           ),
         ),
-        PickupDescription()
+        switch (type) {
+          LocationTileType.pickup when showPickupInformation =>
+            const PickupDescription(),
+          _ => const SizedBox.shrink(),
+        },
       ],
-    );
-  }
-}
-
-class LocationIndicatorTo extends StatelessWidget {
-  const LocationIndicatorTo({Key? key, required this.text, required this.state})
-      : super(key: key);
-
-  final String text;
-  final LocationIndicatorState state;
-
-  @override
-  Widget build(BuildContext context) {
-    return _PulsingBorderOverlay(
-      enabled: true,
-      child: Container(
-        padding: const EdgeInsets.only(left: 16),
-        alignment: Alignment.topLeft,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            LocationPinIcon(
-              icon: Icon(
-                SuperIcons.flag,
-                size: 11.33,
-                color: context.secondaryColor,
-              ),
-              drawLine: false,
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Column(
-                  children: [
-                    Text(
-                      text,
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.text16w700,
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Text(
-                          'Dropoff time:',
-                          style: context.text16w700grey,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'ASAP',
-                          style: context.text16w700,
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
