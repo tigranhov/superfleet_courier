@@ -27,4 +27,4 @@ docker build -t ${NAME}:latest .
 
 # Run the Docker container
 echo "Running Docker container on port 10004..."
-docker run -d -p 10004:80 --name ${NAME} ${NAME}:latest
+docker run -d --restart=unless-stopped -p 10004:80 --name ${NAME} ${NAME}:latest
