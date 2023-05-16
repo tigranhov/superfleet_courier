@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/orders/domain/location_indicator_state.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
@@ -75,7 +76,7 @@ enum LocationTileType {
   dropoff,
 }
 
-class LocationIndicatorTile extends StatelessWidget {
+class LocationIndicatorTile extends HookConsumerWidget {
   const LocationIndicatorTile({
     Key? key,
     required this.text,
@@ -90,7 +91,12 @@ class LocationIndicatorTile extends StatelessWidget {
   final bool showPickupInformation;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    useValueChanged(state, (oldValue, oldResult) {
+      Scrollable.ensureVisible(context,
+          duration: const Duration(milliseconds: 300), alignment: 0.5);
+      return false;
+    });
     return Column(
       children: [
         _PulsingBorderOverlay(

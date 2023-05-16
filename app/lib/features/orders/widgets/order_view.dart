@@ -37,6 +37,7 @@ class OrderView extends HookConsumerWidget {
             children: [
               Expanded(
                 child: CustomScrollView(
+                  primary: true,
                   slivers: [
                     _AppBar(
                       onClosed: () {
@@ -95,7 +96,7 @@ class OrderContent extends StatelessWidget {
           Container(
               padding: const EdgeInsets.only(top: 16),
               child: LocationIndicatorYou(
-                state: LocationIndicatorState.from(0, order!.orderProgress),
+                state: LocationIndicatorState.from(0, order.orderProgress),
               )),
         for (final loc in order.from)
           LocationIndicatorTile(
