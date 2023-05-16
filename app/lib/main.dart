@@ -1,4 +1,5 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,7 +19,7 @@ void main() async {
   };
   runApp(ProviderScope(
     child: DevicePreview(
-        enabled: false,
+        enabled: kIsWeb,
         defaultDevice: Devices.ios.iPhoneSE,
         isToolbarVisible: true,
         builder: (context) {

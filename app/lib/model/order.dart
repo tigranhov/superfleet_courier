@@ -1,7 +1,7 @@
+import 'package:get_storage/get_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/model/api.dart';
 import 'package:superfleet_courier/model/model.dart';
-import 'package:yandex_geocoder/yandex_geocoder.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'order.freezed.dart';
@@ -9,6 +9,7 @@ part 'order.g.dart';
 
 @freezed
 class Order with _$Order {
+  const Order._();
   const factory Order(
       {required int id,
       String? status,
@@ -18,22 +19,30 @@ class Order with _$Order {
       DateTime? deliverUntil,
       DateTime? createdAt,
       DateTime? updatedAt,
-      DateTime? deletedAt}) = _Order;
+      DateTime? deletedAt,
+      @Default(0) int orderProgress}) = _Order;
+
+  int locationIndex(Location location) {
+    if (location is ToLocation) {
+      return from.length;
+    }
+    return from.indexWhere((element) => element == location);
+  }
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 }
 
-extension YandexOrderLocationUpdate on Order {
-  Future<Order> updateLocation(YandexGeocoder geocoder) async {
-    final List<FromLocation> newFrom = [];
-    for (final i in from) {
-      newFrom.add(await i.updateLocation(geocoder));
-    }
-    final newTo = await to.updateLocation(geocoder);
-
-    return copyWith(from: newFrom, to: newTo);
-  }
-}
+// extension YandexOrderLocationUpdate on Order {
+//   Future<Order> updateLocation(YandexGeocoder geocoder) async {
+//     final List<FromLocation> newFrom = [];
+//     for (final i in from) {
+//       newFrom.add(await i.updateLocation(geocoder));
+//     }
+//     final newTo = await to.updateLocation(geocoder);
+//
+//     return copyWith(from: newFrom, to: newTo);
+//   }
+// }
 
 @riverpod
 class OrdersNotifier extends _$OrdersNotifier {
@@ -69,22 +78,67 @@ class OrdersNotifier extends _$OrdersNotifier {
             //         street: "Alikhanyan brothers street", house: '1'),
             //     availableFrom: DateTime.now().add(const Duration(minutes: 40))),
             FromLocation(
-                location: const Location(
+                locationData: const LocationData(
                     street: "Alikhanyan brothers street", house: '2'),
                 availableFrom: DateTime.now().add(const Duration(minutes: 50))),
             FromLocation(
-                location: const Location(
+                locationData: const LocationData(
                     street:
                         "Some other street, where the street is a streeet by the side of another street",
                     house: '4'),
                 availableFrom: DateTime.now().add(const Duration(minutes: 50))),
           ],
           to: const ToLocation(
-            location: Location(street: "Bagrevand 1st deadlock", house: '2'),
+            locationData:
+                LocationData(street: "Bagrevand 1st deadlock", house: '2'),
           ),
           deliverUntil: DateTime.now().add(const Duration(hours: 1)),
         );
       },
     ).toList());
+  }
+}
+
+@riverpod
+class OrderByIdNotifier extends _$OrderByIdNotifier {
+  @override
+  Future<Order> build(int id) async {
+    final dio = ref.watch(apiProvider);
+    final response = await dio.get('/orders/$id');
+    final result = response.data['data'];
+    return Order.fromJson(result).copyWith(
+      from: [
+        // FromLocation(
+        //     location: const Location(
+        //         street: "Alikhanyan brothers street", house: '1'),
+        //     availableFrom: DateTime.now().add(const Duration(minutes: 40))),
+        FromLocation(
+            locationData: const LocationData(
+                street: "Alikhanyan brothers street", house: '2'),
+            availableFrom: DateTime.now().add(const Duration(minutes: 50))),
+        FromLocation(
+            locationData: const LocationData(
+                street:
+                    "Some other street, where the street is a streeet by the side of another street",
+                house: '4'),
+            availableFrom: DateTime.now().add(const Duration(minutes: 50))),
+      ],
+      to: const ToLocation(
+        locationData:
+            LocationData(street: "Bagrevand 1st deadlock", house: '2'),
+      ),
+    );
+  }
+
+  addProgress() async {
+    state = await AsyncValue.guard(() async {
+      final api = ref.watch(apiProvider);
+      await api.patch('/orders/$id',
+          data: {'orderProgress': state.value!.orderProgress + 1});
+      ref.invalidateSelf();
+      ref.invalidate(ordersNotifierProvider);
+      return state.value!
+          .copyWith(orderProgress: state.value!.orderProgress + 1);
+    });
   }
 }

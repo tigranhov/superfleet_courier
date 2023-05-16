@@ -64,10 +64,10 @@ class PulsingBorder extends ConsumerWidget {
   }
 }
 
-@riverpod
+@Riverpod(dependencies: [])
 AnimationController pulsingAnimationController(
     PulsingAnimationControllerRef ref) {
-  throw UnimplementedError();
+  throw UnimplementedError("Animator is not initialized bofer usage");
 }
 
 class _AnimatedBorder extends CustomPainter {

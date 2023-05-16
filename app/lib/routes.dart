@@ -82,6 +82,8 @@ class OrderViewRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const OrderView();
+    return OrderView(
+      orderId: id,
+    );
   }
 }

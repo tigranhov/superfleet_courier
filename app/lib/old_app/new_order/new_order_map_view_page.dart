@@ -156,7 +156,7 @@ class _AddressReviewList extends StatelessWidget {
         children: [
           for (int i = 0; i < order.from.length; i++)
             _AddressItem(
-                addressString: order.from[i].location!.addressString(),
+                addressString: order.from[i].addressString(),
                 time: DateFormat.Hm()
                     .format(order.from[i].availableFrom!)
                     .toString(),
@@ -165,7 +165,7 @@ class _AddressReviewList extends StatelessWidget {
                 description:
                     'Inch graca order descriptioni mej Take the box from lorem ipsum dolor set amet  lorem ipsum dolor set amet '),
           _AddressItem(
-              addressString: order.to.location!.addressString(),
+              addressString: order.to!.addressString(),
               time: DateFormat.Hm().format(order.deliverUntil!).toString(),
               isPickup: false,
               description:

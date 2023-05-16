@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:superfleet_courier/features/orders/domain/location_indicator_state.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
 import 'package:superfleet_courier/features/orders/widgets/pickup_description.dart';
 import 'package:superfleet_courier/features/transports/widgets/selected_delivery_method_icon.dart';
@@ -7,12 +8,6 @@ import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_pin_icon.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
-
-enum LocationIndicatorState {
-  inactive,
-  active,
-  exhausted,
-}
 
 class LocationIndicatorYou extends StatelessWidget {
   const LocationIndicatorYou({
@@ -49,6 +44,7 @@ class LocationIndicatorYou extends StatelessWidget {
               ),
               lineColor: switch (state) {
                 LocationIndicatorState.exhausted => superfleetBlue,
+                LocationIndicatorState.active => superfleetBlue,
                 _ => null
               },
               infiniteLine: true,
@@ -105,7 +101,7 @@ class LocationIndicatorTile extends StatelessWidget {
           child: Container(
             clipBehavior: Clip.hardEdge,
             decoration: const BoxDecoration(),
-            padding: const EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(left: 16, right: 24),
             alignment: Alignment.topLeft,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,10 +138,11 @@ class LocationIndicatorTile extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 2),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           text,
-                          maxLines: 4,
+                          maxLines: 30,
                           overflow: TextOverflow.ellipsis,
                           style: context.text16w700.copyWith(
                               color: switch (state) {

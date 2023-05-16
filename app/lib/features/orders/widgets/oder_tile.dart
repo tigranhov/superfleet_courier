@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
+import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
+import 'package:superfleet_courier/features/orders/widgets/order_view.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:superfleet_courier/theme/sf_theme.dart';
 
+import '../domain/location_indicator_state.dart';
 import 'address_item.dart';
 
-class OrderTile extends StatelessWidget {
+class OrderTile extends HookConsumerWidget {
   const OrderTile(
       {super.key, this.width = 296, required this.order, required this.onTap});
   final double width;
@@ -19,42 +25,41 @@ class OrderTile extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final width = this.width;
-    return GestureDetector(
-      onTap: () => onTap(order),
-      child: Container(
-        constraints: BoxConstraints(minWidth: width),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(width: 0.5, color: const Color(0xffCCCCCC)),
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromARGB(64, 0, 0, 0),
-                offset: Offset(0, 2),
-                blurRadius: 2,
-              ),
-            ]),
-        child: Column(
-          children: [
-            _BeforeDivider(
-              status: order.status ?? '!!No Status',
-              isNew: true,
-            ), //TODO use actual value
-            const Divider(height: 0),
-            ...order.from.map((e) => AddressItem(
-                address: e.location?.addressString() ?? 'No Address',
-                isPickup: true,
-                time: formatDate(e.availableFrom))),
-            AddressItem(
-              address: order.to.location?.addressString() ?? 'No Address',
-              isPickup: false,
-              time: formatDate(order.deliverUntil),
-              drawLine: false,
-            ),
-            const SizedBox(height: 16)
-          ],
+    final animationController = useAnimationController();
+    return ProviderScope(
+      overrides: [
+        pulsingAnimationControllerProvider
+            .overrideWith((ref) => animationController)
+      ],
+      child: GestureDetector(
+        onTap: () => onTap(order),
+        child: Container(
+          constraints: BoxConstraints(minWidth: width),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(width: 0.5, color: const Color(0xffCCCCCC)),
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromARGB(64, 0, 0, 0),
+                  offset: Offset(0, 2),
+                  blurRadius: 2,
+                ),
+              ]),
+          child: Column(
+            children: [
+              _BeforeDivider(
+                status: order.status ?? '!!No Status',
+                isNew: true,
+              ), //TODO use actual value
+              const Divider(height: 0),
+              const SizedBox(height: 18),
+              OrderContent(order: order),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );

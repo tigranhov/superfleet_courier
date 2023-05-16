@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'api.g.dart';
+part 'mock_storage.dart';
 
 final _tokenStorage = SharedPreferencesTokenStorage();
 
@@ -56,6 +60,8 @@ class Api extends _$Api {
         'Accept': 'application/json',
       },
     ));
+    // DioMock(dio);
+    dio.interceptors.add(DioMock());
     dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
@@ -64,14 +70,16 @@ class Api extends _$Api {
         error: true,
         compact: false,
         maxWidth: 90));
-    // dio.interceptors.add(RetryInterceptor(dio: dio, retries: 3, retryDelays: [
-    //   const Duration(seconds: 1),
-    //   const Duration(seconds: 2),
-    //   const Duration(seconds: 3),
-    // ]));
+    dio.interceptors.add(InterceptorsWrapper(
+      onResponse: (response, handler) {
+        print(response.data);
+        return handler.next(response);
+      },
+    ));
     dio.interceptors.add(_refreshInterceptor = Fresh.oAuth2(
         httpClient: dio,
         tokenHeader: (token) {
+          print(token.accessToken);
           return {
             'Authorization': 'Bearer ${token.accessToken}',
           };

@@ -6,18 +6,25 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
+import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 import 'package:superfleet_courier/widgets/swiper_to_order.dart';
 
+import '../domain/location_indicator_state.dart';
+
 class OrderView extends HookConsumerWidget {
   const OrderView({
     Key? key,
+    required this.orderId,
   }) : super(key: key);
+
+  final int orderId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final order = ref.watch(orderByIdNotifierProvider(orderId)).value;
     final pulsingAnimationController = useAnimationController();
     return ProviderScope(
       overrides: [
@@ -39,45 +46,9 @@ class OrderView extends HookConsumerWidget {
                     const _Map(),
                     const _TotalDistance(),
                     SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          Container(
-                              padding: const EdgeInsets.only(top: 16),
-                              child: const LocationIndicatorYou(
-                                state: LocationIndicatorState.exhausted,
-                              )),
-                          Container(
-                              padding: const EdgeInsets.only(right: 16),
-                              child: const LocationIndicatorTile(
-                                state: LocationIndicatorState.exhausted,
-                                type: LocationTileType.pickup,
-                                showPickupInformation: true,
-                                text:
-                                    'Alikhanyan  brothers street 1st blind alley, house #13',
-                              )),
-                          Container(
-                              padding: const EdgeInsets.only(right: 16),
-                              child: const LocationIndicatorTile(
-                                state: LocationIndicatorState.exhausted,
-                                type: LocationTileType.pickup,
-                                showPickupInformation: true,
-                                text:
-                                    'Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13',
-                              )),
-                          Container(
-                              height: 1, decoration: context.borderDecoration),
-                          const SizedBox(height: 16),
-                          Container(
-                              padding: const EdgeInsets.only(right: 16),
-                              child: const LocationIndicatorTile(
-                                state: LocationIndicatorState.exhausted,
-                                type: LocationTileType.dropoff,
-                                text:
-                                    'Alikhanyan  brothers street 1st blind alley, house #13',
-                              )),
-                          Container(
-                              height: 1, decoration: context.borderDecoration),
-                        ],
+                      child: OrderContent(
+                        order: order!,
+                        showPickupInformation: true,
                       ),
                     ),
                   ],
@@ -92,7 +63,9 @@ class OrderView extends HookConsumerWidget {
                     width: 304,
                     text: 'Swipe to order',
                     onDone: (reset) async {
-                      await Future.delayed(const Duration(seconds: 1));
+                      ref
+                          .read(orderByIdNotifierProvider(orderId).notifier)
+                          .addProgress();
                       reset();
                     },
                   )),
@@ -100,6 +73,52 @@ class OrderView extends HookConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class OrderContent extends StatelessWidget {
+  const OrderContent({
+    super.key,
+    required this.order,
+    this.showPickupInformation = false,
+  });
+
+  final Order order;
+  final bool showPickupInformation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (showPickupInformation)
+          Container(
+              padding: const EdgeInsets.only(top: 16),
+              child: LocationIndicatorYou(
+                state: LocationIndicatorState.from(0, order!.orderProgress),
+              )),
+        for (final loc in order.from)
+          LocationIndicatorTile(
+            state: LocationIndicatorState.from(
+                order.locationIndex(loc) + 1, order.orderProgress),
+            type: LocationTileType.pickup,
+            showPickupInformation: showPickupInformation,
+            text: loc.addressString(),
+          ),
+        if (showPickupInformation)
+          Container(height: 1, decoration: context.borderDecoration),
+        if (showPickupInformation) const SizedBox(height: 16),
+        LocationIndicatorTile(
+          state: LocationIndicatorState.from(
+              order.locationIndex(order.to) + 1, order.orderProgress),
+          type: LocationTileType.dropoff,
+          showPickupInformation: showPickupInformation,
+          text:
+              'Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13',
+        ),
+        if (showPickupInformation)
+          Container(height: 1, decoration: context.borderDecoration),
+      ],
     );
   }
 }
