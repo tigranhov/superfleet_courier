@@ -3,6 +3,10 @@
 # Define container and image name
 NAME=superfleet-app
 
+# Pull the latest code
+echo "Pulling latest code..."
+git pull
+
 # Check if the Docker container exists
 if [ "$(docker ps -aq -f name=${NAME})" ]; then
     # If it does, delete the container
