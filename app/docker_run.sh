@@ -1,19 +1,26 @@
 #!/bin/bash
 
-# Define container name
-CONTAINER_NAME=superfleet-app
+# Define container and image name
+NAME=superfleet-app
 
 # Check if the Docker container exists
-if [ "$(docker ps -aq -f name=${CONTAINER_NAME})" ]; then
+if [ "$(docker ps -aq -f name=${NAME})" ]; then
     # If it does, delete the container
-    echo "Deleting existing Docker container: ${CONTAINER_NAME}"
-    docker rm -f ${CONTAINER_NAME}
+    echo "Deleting existing Docker container: ${NAME}"
+    docker rm -f ${NAME}
+fi
+
+# Check if the Docker image exists
+if [ "$(docker images -q ${NAME}:latest)" ]; then
+    # If it does, delete the image
+    echo "Deleting existing Docker image: ${NAME}"
+    docker rmi -f ${NAME}:latest
 fi
 
 # Build the Docker image
 echo "Building Docker image..."
-docker build -t ${CONTAINER_NAME}:latest .
+docker build -t ${NAME}:latest .
 
 # Run the Docker container
 echo "Running Docker container on port 10004..."
-docker run -d -p 10004:80 --name ${CONTAINER_NAME} ${CONTAINER_NAME}:latest
+docker run -d -p 10004:80 --name ${NAME} ${NAME}:latest
