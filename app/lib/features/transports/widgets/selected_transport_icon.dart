@@ -30,7 +30,7 @@ class DeliveryMethodSelectionTile extends ConsumerWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: selected ? superfleetBlue : context.colorDivider!,
+              color: selected ? superfleetBlue : context.superfleetGrey!,
               width: selected ? 2 : 1,
             ),
             color: selected ? context.primaryColor!.withOpacity(0.1) : null),

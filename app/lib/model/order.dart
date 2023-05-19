@@ -29,6 +29,21 @@ class Order with _$Order {
     return from.indexWhere((element) => element == location);
   }
 
+  int activeLocationIndex() {
+    if (orderProgress < 2) return -1;
+    final index = (orderProgress - 2) ~/ 3;
+
+    return index;
+  }
+
+  Location? activeLocation() {
+    final index = activeLocationIndex();
+    if (index < 0) return null;
+    if (index >= from.length) return to;
+
+    return from[index];
+  }
+
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 }
 

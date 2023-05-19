@@ -14,7 +14,7 @@ class _$SFTheme {
 
   static List<TextStyle> text12grey = [
     GoogleFonts.roboto()
-        .copyWith(fontSize: 12, height: 1.4, color: superfleetGrey)
+        .copyWith(fontSize: 12, height: 1.4, color: superfleetGrey[0])
   ];
   static List<TextStyle> text12w700 = [
     GoogleFonts.roboto()
@@ -25,7 +25,7 @@ class _$SFTheme {
         fontSize: 12,
         height: 1.4,
         fontWeight: FontWeight.w700,
-        color: superfleetGrey)
+        color: superfleetGrey[0])
   ];
   static List<TextStyle> text14 = [
     GoogleFonts.roboto().copyWith(fontSize: 14, height: 1.4)
@@ -40,7 +40,7 @@ class _$SFTheme {
   static List<TextStyle> text14w700grey = [
     GoogleFonts.roboto().copyWith(
         fontSize: 14,
-        color: superfleetGrey,
+        color: superfleetGrey[0],
         height: 1.4,
         fontWeight: FontWeight.w700)
   ];
@@ -48,7 +48,7 @@ class _$SFTheme {
     GoogleFonts.roboto().copyWith(
       fontSize: 14,
       height: 1.4,
-      color: superfleetGrey,
+      color: superfleetGrey[0],
     )
   ];
   static List<TextStyle> text14grey88 = [
@@ -78,7 +78,7 @@ class _$SFTheme {
   ];
   static List<TextStyle> orderTilePickupText = [
     GoogleFonts.roboto().copyWith(
-        fontSize: 16, fontWeight: FontWeight.w700, color: superfleetGrey)
+        fontSize: 16, fontWeight: FontWeight.w700, color: superfleetGrey[0])
   ];
   static List<BoxDecoration> appbarDecoration = [
     const BoxDecoration(
@@ -104,10 +104,10 @@ class _$SFTheme {
       ),
     ),
   ];
-
   static List<Color?> primaryColor = [superfleetBlue];
   static List<Color?> secondaryColor = [superfleetGreen];
   static List<Color?> iconColor1 = [superfleetOrange];
   static List<Color?> iconColor2 = [superfleetGreen];
-  static List<Color?> colorDivider = [const Color(0xFFCCCCCC)];
+  static List<Color?> superfleetGrey = [const Color(0xFFCCCCCC)];
+  static List<Color?> superfleetRed = [const Color(0xFFCA1E1E)];
 }

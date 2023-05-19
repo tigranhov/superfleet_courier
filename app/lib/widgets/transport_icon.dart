@@ -24,7 +24,7 @@ class TransportIcon extends StatelessWidget {
       height: 56,
       decoration: BoxDecoration(
         border: Border.all(
-          color: borderColor ?? context.colorDivider!,
+          color: borderColor ?? context.superfleetGrey!,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(500),

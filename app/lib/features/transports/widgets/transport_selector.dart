@@ -46,7 +46,7 @@ class TransportSelector extends ConsumerWidget {
             style: context.text16grey88,
           ),
           const SizedBox(height: 14),
-          Divider(color: context.colorDivider),
+          Divider(color: context.superfleetGrey),
           const SizedBox(height: 12),
           DeliveryMethodSelectionTile(
             transport: const Transport.walk(),

@@ -1,18 +1,25 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:superfleet_courier/features/orders/domain/location_prgress.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
+import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
+import 'package:superfleet_courier/widgets/buttons/cancellation_button.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 import 'package:superfleet_courier/widgets/swiper_to_order.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../domain/location_indicator_state.dart';
+part 'order_view.g.dart';
 
 class OrderView extends HookConsumerWidget {
   const OrderView({
@@ -25,6 +32,7 @@ class OrderView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final order = ref.watch(orderByIdNotifierProvider(orderId)).value;
+    if (order == null) return const SizedBox();
     final pulsingAnimationController = useAnimationController();
     return ProviderScope(
       overrides: [
@@ -44,7 +52,9 @@ class OrderView extends HookConsumerWidget {
                         context.pop();
                       },
                     ),
-                    const _Map(),
+                    _Map(
+                      order: order,
+                    ),
                     const _TotalDistance(),
                     SliverToBoxAdapter(
                       child: OrderContent(
@@ -52,6 +62,15 @@ class OrderView extends HookConsumerWidget {
                         showPickupInformation: true,
                       ),
                     ),
+                    SliverToBoxAdapter(
+                      child: Container(
+                        height: 104,
+                        alignment: Alignment.center,
+                        child: CancellationButton(
+                          onPressed: () {},
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -62,7 +81,9 @@ class OrderView extends HookConsumerWidget {
                   child: SwipeToOrder(
                     height: 56,
                     width: 304,
-                    text: 'Swipe to order',
+                    text: ref
+                        .watch(locationProgressProvider(order))
+                        .currentStepString(order.orderProgress)!,
                     onDone: (reset) async {
                       ref
                           .read(orderByIdNotifierProvider(orderId).notifier)
@@ -78,7 +99,12 @@ class OrderView extends HookConsumerWidget {
   }
 }
 
-class OrderContent extends StatelessWidget {
+@riverpod
+LocationProgress locationProgress(LocationProgressRef ref, Order order) {
+  return LocationProgress()..register(order);
+}
+
+class OrderContent extends ConsumerWidget {
   const OrderContent({
     super.key,
     required this.order,
@@ -89,36 +115,43 @@ class OrderContent extends StatelessWidget {
   final bool showPickupInformation;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final locationProgress = ref.watch(locationProgressProvider(order));
     return Column(
       children: [
-        if (showPickupInformation)
-          Container(
-              padding: const EdgeInsets.only(top: 16),
-              child: LocationIndicatorYou(
-                state: LocationIndicatorState.from(0, order.orderProgress),
-              )),
-        for (final loc in order.from)
-          LocationIndicatorTile(
-            state: LocationIndicatorState.from(
-                order.locationIndex(loc) + 1, order.orderProgress),
-            type: LocationTileType.pickup,
-            showPickupInformation: showPickupInformation,
-            text: loc.addressString(),
-          ),
-        if (showPickupInformation)
-          Container(height: 1, decoration: context.borderDecoration),
         if (showPickupInformation) const SizedBox(height: 16),
-        LocationIndicatorTile(
-          state: LocationIndicatorState.from(
-              order.locationIndex(order.to) + 1, order.orderProgress),
-          type: LocationTileType.dropoff,
-          showPickupInformation: showPickupInformation,
-          text:
-              'Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13,Alikhanyan  brothers street 1st blind alley, house #13',
-        ),
-        if (showPickupInformation)
-          Container(height: 1, decoration: context.borderDecoration),
+        ...locationProgress.steps.map((e) {
+          if (e is MeLocationSteps) {
+            return LocationIndicatorYou(
+              state: e.indicatorState,
+            );
+          } else if (e is PickupLocationSteps) {
+            return LocationIndicatorTile(
+              state: e.indicatorState,
+              type: LocationTileType.pickup,
+              showPickupInformation: showPickupInformation,
+              text: e.location.addressString(),
+            );
+          } else if (e is DropoffLocationSteps) {
+            return Column(
+              children: [
+                if (showPickupInformation)
+                  Container(height: 1, decoration: context.borderDecoration),
+                if (showPickupInformation) const SizedBox(height: 16),
+                LocationIndicatorTile(
+                  state: e.indicatorState,
+                  type: LocationTileType.dropoff,
+                  showPickupInformation: showPickupInformation,
+                  text: e.location.addressString(),
+                ),
+                if (showPickupInformation)
+                  Container(height: 1, decoration: context.borderDecoration),
+              ],
+            );
+          } else {
+            return Container();
+          }
+        })
       ],
     );
   }
@@ -202,17 +235,54 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class _Map extends StatelessWidget {
-  const _Map({Key? key}) : super(key: key);
+  const _Map({Key? key, required this.order}) : super(key: key);
+  final Order order;
 
   @override
   Widget build(BuildContext context) {
+    final PlacemarkMapObject startPlacemark = PlacemarkMapObject(
+      mapId: MapObjectId('start_placemark'),
+      point: Point(latitude: 55.7558, longitude: 37.6173),
+      icon: PlacemarkIcon.single(PlacemarkIconStyle(
+          image: BitmapDescriptor.fromAssetImage('assets/logo.png'),
+          scale: 0.3)),
+    );
+    final PlacemarkMapObject stopByPlacemark = PlacemarkMapObject(
+      mapId: MapObjectId('stop_by_placemark'),
+      point: Point(latitude: 45.0360, longitude: 38.9746),
+      icon: PlacemarkIcon.single(PlacemarkIconStyle(
+          image: BitmapDescriptor.fromAssetImage('assets/logo.png'),
+          scale: 0.3)),
+    );
+    final PlacemarkMapObject endPlacemark = PlacemarkMapObject(
+        mapId: MapObjectId('end_placemark'),
+        point: Point(latitude: 48.4814, longitude: 135.0721),
+        icon: PlacemarkIcon.single(PlacemarkIconStyle(
+            image: BitmapDescriptor.fromAssetImage('assets/logo.png'),
+            scale: 0.3)));
+    final List<MapObject> mapObjects = [
+      startPlacemark,
+      stopByPlacemark,
+      endPlacemark
+    ];
     return SliverToBoxAdapter(
       child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: Container(
-          color: Colors.red,
-        ),
-      ),
+          aspectRatio: 16 / 9,
+          child: kIsWeb
+              ? Container(
+                  child: YandexMap(
+                    mapObjects: mapObjects,
+                    focusRect: ScreenRect(
+                      topLeft: ScreenPoint(x: 0, y: 0),
+                      bottomRight: ScreenPoint(x: 100, y: 10),
+                    ),
+                    mapType: MapType.map,
+                    zoomGesturesEnabled: true,
+                  ),
+                )
+              : const Center(
+                  child: Text('Map preview is working only on mobile devices'),
+                )),
     );
   }
 }
