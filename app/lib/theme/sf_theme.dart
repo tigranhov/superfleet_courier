@@ -28,7 +28,10 @@ class _$SFTheme {
         color: superfleetGrey[0])
   ];
   static List<TextStyle> text14 = [
-    GoogleFonts.roboto().copyWith(fontSize: 14, height: 1.4)
+    GoogleFonts.roboto().copyWith(
+      fontSize: 14,
+      height: 1.4,
+    )
   ];
   static List<TextStyle> text14w700 = [
     GoogleFonts.roboto().copyWith(
@@ -56,6 +59,12 @@ class _$SFTheme {
       fontSize: 14,
       height: 1.4,
       color: const Color(0xff888888),
+    )
+  ];
+  static List<TextStyle> text16 = [
+    GoogleFonts.roboto().copyWith(
+      fontSize: 16,
+      height: 1.4,
     )
   ];
   static List<TextStyle> text16w700 = [
@@ -109,5 +118,9 @@ class _$SFTheme {
   static List<Color?> iconColor1 = [superfleetOrange];
   static List<Color?> iconColor2 = [superfleetGreen];
   static List<Color?> superfleetGrey = [const Color(0xFFCCCCCC)];
+  static List<Color?> superfleetGreyOpacity = [
+    const Color.fromRGBO(0, 0, 0, 0.5)
+  ];
+
   static List<Color?> superfleetRed = [const Color(0xFFCA1E1E)];
 }

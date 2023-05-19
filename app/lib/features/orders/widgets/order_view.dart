@@ -10,15 +10,15 @@ import 'package:superfleet_courier/features/orders/domain/location_prgress.dart'
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
 import 'package:superfleet_courier/model/model.dart';
-import 'package:superfleet_courier/super_icons_icons.dart';
-import 'package:superfleet_courier/theme/colors.dart';
+import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/cancellation_button.dart';
+import 'package:superfleet_courier/widgets/buttons/close_button.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
+import 'package:superfleet_courier/widgets/dividers/sf_horizontal_divider.dart';
 import 'package:superfleet_courier/widgets/swiper_to_order.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-import '../domain/location_indicator_state.dart';
 part 'order_view.g.dart';
 
 class OrderView extends HookConsumerWidget {
@@ -58,7 +58,7 @@ class OrderView extends HookConsumerWidget {
                     const _TotalDistance(),
                     SliverToBoxAdapter(
                       child: OrderContent(
-                        order: order!,
+                        order: order,
                         showPickupInformation: true,
                       ),
                     ),
@@ -67,14 +67,16 @@ class OrderView extends HookConsumerWidget {
                         height: 104,
                         alignment: Alignment.center,
                         child: CancellationButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            CancelOrderViewRoute(order.id).go(context);
+                          },
                         ),
                       ),
                     )
                   ],
                 ),
               ),
-              Container(height: 1, decoration: context.borderDecoration),
+              const SFHorizontalDivider(),
               Container(
                   height: 73,
                   alignment: Alignment.center,
@@ -173,20 +175,7 @@ class _AppBar extends StatelessWidget {
           decoration: context.appbarDecoration,
           child: Row(
             children: [
-              Container(
-                width: 24,
-                height: 24,
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                child: IconButton(
-                  onPressed: onClosed,
-                  icon: const Icon(SuperIcons.close),
-                  iconSize: 14,
-                  padding: const EdgeInsets.all(0),
-                ),
-              ),
+              SFCloseButton(onClosed: onClosed),
               Text('#123456789', style: context.text14w700.copyWith()),
               const Expanded(child: SizedBox()),
               SFButton(
@@ -269,16 +258,14 @@ class _Map extends StatelessWidget {
       child: AspectRatio(
           aspectRatio: 16 / 9,
           child: !kIsWeb
-              ? Container(
-                  child: YandexMap(
-                    mapObjects: mapObjects,
-                    focusRect: ScreenRect(
-                      topLeft: ScreenPoint(x: 0, y: 0),
-                      bottomRight: ScreenPoint(x: 100, y: 10),
-                    ),
-                    mapType: MapType.map,
-                    zoomGesturesEnabled: true,
+              ? YandexMap(
+                  mapObjects: mapObjects,
+                  focusRect: const ScreenRect(
+                    topLeft: ScreenPoint(x: 0, y: 0),
+                    bottomRight: ScreenPoint(x: 100, y: 10),
                   ),
+                  mapType: MapType.map,
+                  zoomGesturesEnabled: true,
                 )
               : const Center(
                   child: Text('Map preview is working only on mobile devices'),

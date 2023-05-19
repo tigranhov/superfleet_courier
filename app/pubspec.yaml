@@ -112,4 +112,5 @@ flutter:
     - assets/logo.png
     - assets/offline.png
     - assets/animations/new_order_animation.json
+    - assets/animations/success_animation.json
     - .env

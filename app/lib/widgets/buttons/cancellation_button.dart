@@ -14,7 +14,7 @@ class CancellationButton extends StatelessWidget {
       width: width,
       height: height,
       child: OutlinedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         style: ButtonStyle(
           splashFactory: NoSplash.splashFactory,
           foregroundColor: MaterialStateProperty.all(context.superfleetRed!),
@@ -43,20 +43,6 @@ class CancellationButton extends StatelessWidget {
               height: 1.25,
             )),
       ),
-    );
-    return Container(
-      width: width,
-      height: height,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(64.0),
-        border: Border.all(color: context.superfleetGrey!, width: 2),
-      ),
-      child: Text('Cancel Order',
-          style: context.text16w700.copyWith(
-            color: context.superfleetRed!,
-            height: 1.25,
-          )),
     );
   }
 }

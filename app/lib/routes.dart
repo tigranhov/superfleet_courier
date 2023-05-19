@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:superfleet_courier/features/orders/widgets/cancel_order_view.dart';
 import 'package:superfleet_courier/features/orders/widgets/order_view.dart';
+import 'package:superfleet_courier/features/home/success_page.dart';
 import 'features/home/home_page.dart';
 import 'features/login/logic/auth_notifier.dart';
 import 'features/login/widgets/login_page.dart';
@@ -65,7 +67,9 @@ class LoginRoute extends GoRouteData {
 }
 
 @TypedGoRoute<HomeRoute>(path: '/', routes: [
-  TypedGoRoute<OrderViewRoute>(path: 'view_order/:id'),
+  TypedGoRoute<OrderViewRoute>(path: 'view_order/:id', routes: [
+    TypedGoRoute<CancelOrderViewRoute>(path: 'cancel'),
+  ]),
 ])
 class HomeRoute extends GoRouteData {
   const HomeRoute();
@@ -85,5 +89,26 @@ class OrderViewRoute extends GoRouteData {
     return OrderView(
       orderId: id,
     );
+  }
+}
+
+class CancelOrderViewRoute extends GoRouteData {
+  const CancelOrderViewRoute(this.id);
+  final int id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CancelOrderView(orderId: id);
+  }
+}
+
+@TypedGoRoute<SuccessPageRoute>(path: '/success')
+class SuccessPageRoute extends GoRouteData {
+  const SuccessPageRoute({required this.$extra});
+  final String $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return SuccessPage(text: $extra);
   }
 }
