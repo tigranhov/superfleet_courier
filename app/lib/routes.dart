@@ -104,11 +104,15 @@ class CancelOrderViewRoute extends GoRouteData {
 
 @TypedGoRoute<SuccessPageRoute>(path: '/success')
 class SuccessPageRoute extends GoRouteData {
-  const SuccessPageRoute({required this.$extra});
+  const SuccessPageRoute({required this.$extra, this.$popOnDone});
   final String $extra;
+  final bool? $popOnDone;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return SuccessPage(text: $extra);
+    return SuccessPage(
+      text: $extra,
+      popOnDone: $popOnDone,
+    );
   }
 }

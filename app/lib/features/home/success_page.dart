@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 
 class SuccessPage extends HookWidget {
-  const SuccessPage({super.key, required this.text});
+  const SuccessPage({super.key, required this.text, this.popOnDone});
   final String text;
+  final bool? popOnDone;
 
   @override
   Widget build(BuildContext context) {
     useFuture(
-      Future.delayed(const Duration(seconds: 3))
-          .then((value) => const HomeRoute().go(context)),
+      Future.delayed(const Duration(seconds: 3)).then((value) =>
+          popOnDone == true ? context.pop() : const HomeRoute().go(context)),
     );
     return Scaffold(
         body: SizedBox(

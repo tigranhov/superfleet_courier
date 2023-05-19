@@ -288,13 +288,22 @@ class _TotalDistance extends StatelessWidget {
   }
 }
 
-class _CancellationContainer extends ConsumerWidget {
+class _CancellationContainer extends HookConsumerWidget {
   const _CancellationContainer({required this.order});
   final Order order;
 
   @override
   Widget build(BuildContext context, ref) {
     final isOrderFinished = ref.watch(isOrderFinishedProvider(order));
+    useValueChanged(isOrderFinished, (oldValue, oldResult) {
+      if (isOrderFinished) {
+        Future.delayed(Duration.zero).then((value) => SuccessPageRoute(
+                $extra: 'Order #${order.id} has been sucessfully completed!',
+                $popOnDone: true)
+            .push(context));
+      }
+      return isOrderFinished;
+    });
     return SliverToBoxAdapter(
       child: Container(
         height: 104,
