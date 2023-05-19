@@ -24,7 +24,7 @@ class SuccessPage extends HookWidget {
             padding: const EdgeInsets.only(top: 100),
             child: Lottie.asset(
               'assets/animations/success_animation.json',
-              repeat: true,
+              repeat: false,
               height: 240,
               width: 240,
               options: LottieOptions(
