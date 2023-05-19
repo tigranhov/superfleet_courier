@@ -97,9 +97,9 @@ class PickupLocationSteps with LocationSteps {
   @override
   String actionString() {
     return switch (currentStep) {
-      0 => 'Kalbas',
-      1 => 'Kalbas2',
-      _ => 'sad[sopkfdas'
+      0 => 'Order picked up',
+      1 => 'Go to next location',
+      _ => 'Reached location'
     };
   }
 
@@ -126,9 +126,11 @@ class DropoffLocationSteps with LocationSteps {
 
   @override
   String actionString() {
-    // Adjust the string according to current step.
-    // Here is a placeholder implementation
-    return "Drop-off location - step $currentStep";
+    return switch (currentStep) {
+      0 => 'Order delivered',
+      1 => 'Delivery Complete',
+      _ => 'Reached location'
+    };
   }
 
   @override
