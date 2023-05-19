@@ -268,7 +268,7 @@ class _Map extends StatelessWidget {
     return SliverToBoxAdapter(
       child: AspectRatio(
           aspectRatio: 16 / 9,
-          child: kIsWeb
+          child: !kIsWeb
               ? Container(
                   child: YandexMap(
                     mapObjects: mapObjects,
