@@ -16,7 +16,7 @@ class SwipeToOrder extends HookWidget {
   final double width;
   final double height;
   final String text;
-  final Function(Function() resetCallback) onDone;
+  final Function(Function() resetCallback)? onDone;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +41,23 @@ class SwipeToOrder extends HookWidget {
         positionAnimator.reverse();
         colorChangeAnimator.animateTo(0);
       }
+    }
+
+    if (onDone == null) {
+      return Container(
+        width: width,
+        height: height,
+        decoration: const BoxDecoration(
+          color: Color(0xffF0F0F0),
+          borderRadius: BorderRadius.all(Radius.circular(64)),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          'Order completed',
+          style: context.text16w700
+              .copyWith(height: 1.07, color: const Color(0xff666666)),
+        ),
+      );
     }
 
     return SizedBox(
@@ -94,7 +111,7 @@ class SwipeToOrder extends HookWidget {
                 if (positionAnimator.value > 0.7) {
                   positionAnimator.animateTo(1);
                   colorChangeAnimator.animateTo(1);
-                  onDone(reset);
+                  onDone!(reset);
                 } else {
                   reset();
                 }

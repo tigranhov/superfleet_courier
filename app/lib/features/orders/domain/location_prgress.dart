@@ -135,7 +135,6 @@ class DropoffLocationSteps with LocationSteps {
   LocationIndicatorState get indicatorState => switch (currentStep) {
         0 => LocationIndicatorState.active,
         1 => LocationIndicatorState.exhausted,
-        2 => LocationIndicatorState.exhausted,
         < 0 => LocationIndicatorState.inactive,
         _ => LocationIndicatorState.exhausted
       };

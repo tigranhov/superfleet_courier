@@ -11,6 +11,7 @@ import 'package:superfleet_courier/features/orders/widgets/location_indicators/l
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/routes.dart';
+import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/cancellation_button.dart';
 import 'package:superfleet_courier/widgets/buttons/close_button.dart';
@@ -62,37 +63,12 @@ class OrderView extends HookConsumerWidget {
                         showPickupInformation: true,
                       ),
                     ),
-                    SliverToBoxAdapter(
-                      child: Container(
-                        height: 104,
-                        alignment: Alignment.center,
-                        child: CancellationButton(
-                          onPressed: () {
-                            CancelOrderViewRoute(order.id).go(context);
-                          },
-                        ),
-                      ),
-                    )
+                    _CancellationContainer(order: order),
                   ],
                 ),
               ),
               const SFHorizontalDivider(),
-              Container(
-                  height: 73,
-                  alignment: Alignment.center,
-                  child: SwipeToOrder(
-                    height: 56,
-                    width: 304,
-                    text: ref
-                        .watch(locationProgressProvider(order))
-                        .currentStepString(order.orderProgress)!,
-                    onDone: (reset) async {
-                      ref
-                          .read(orderByIdNotifierProvider(orderId).notifier)
-                          .addProgress();
-                      reset();
-                    },
-                  )),
+              _OrderSwipeButton(order: order),
             ],
           ),
         ),
@@ -104,6 +80,16 @@ class OrderView extends HookConsumerWidget {
 @riverpod
 LocationProgress locationProgress(LocationProgressRef ref, Order order) {
   return LocationProgress()..register(order);
+}
+
+@riverpod
+bool isOrderFinished(IsOrderFinishedRef ref, Order order) {
+  final progress = ref.watch(locationProgressProvider(order));
+  final currentStep = progress.currentStep(order.orderProgress)!;
+  if (currentStep is DropoffLocationSteps) {
+    return currentStep.currentStep == 1;
+  }
+  return false;
 }
 
 class OrderContent extends ConsumerWidget {
@@ -299,5 +285,65 @@ class _TotalDistance extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _CancellationContainer extends ConsumerWidget {
+  const _CancellationContainer({required this.order});
+  final Order order;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final isOrderFinished = ref.watch(isOrderFinishedProvider(order));
+    return SliverToBoxAdapter(
+      child: Container(
+        height: 104,
+        alignment: Alignment.center,
+        child: isOrderFinished
+            ? SizedBox(
+                width: 224,
+                child: Text(
+                  'Congradulations your delivery is completed ',
+                  textAlign: TextAlign.center,
+                  style: context.text16w700
+                      .copyWith(color: superfleetGreen, height: 1.07),
+                ),
+              )
+            : CancellationButton(
+                onPressed: () {
+                  CancelOrderViewRoute(order.id).go(context);
+                },
+              ),
+      ),
+    );
+  }
+}
+
+class _OrderSwipeButton extends ConsumerWidget {
+  _OrderSwipeButton({required this.order});
+
+  final Order order;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isOrderFinished = ref.watch(isOrderFinishedProvider(order));
+    return Container(
+        height: 73,
+        alignment: Alignment.center,
+        child: SwipeToOrder(
+          height: 56,
+          width: 304,
+          text: ref
+              .watch(locationProgressProvider(order))
+              .currentStepString(order.orderProgress)!,
+          onDone: isOrderFinished
+              ? null
+              : (reset) async {
+                  ref
+                      .read(orderByIdNotifierProvider(order.id).notifier)
+                      .addProgress();
+                  reset();
+                },
+        ));
   }
 }
