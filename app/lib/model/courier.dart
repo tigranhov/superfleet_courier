@@ -7,6 +7,7 @@ part 'courier.freezed.dart';
 part 'courier.g.dart';
 
 @freezed
+@JsonSerializable(explicitToJson: true)
 class Courier with _$Courier {
   const factory Courier(
       {required int id,

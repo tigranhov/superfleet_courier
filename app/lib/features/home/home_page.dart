@@ -96,7 +96,9 @@ class _OrderTab extends ConsumerWidget {
     final courierStatus = ref
         .watch(courierNotifierProvider.select((value) => value.value?.status));
     final orderCount = ref
-        .watch(ordersNotifierProvider().select((value) => value.value?.length));
+        .watch(
+        ordersNotifierProvider(status: OrderStatus.inProcess)
+            .select((value) => value.value?.length));
 
     if (orderCount == null) {
       return const Center(child: CircularProgressIndicator.adaptive());
@@ -183,7 +185,8 @@ class _OrderList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final orders = ref.watch(ordersNotifierProvider()).value!;
+    final orders =
+        ref.watch(ordersNotifierProvider(status: OrderStatus.inProcess)).value!;
 
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),

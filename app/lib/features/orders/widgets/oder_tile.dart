@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
 import 'package:superfleet_courier/features/orders/widgets/order_view.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:superfleet_courier/theme/sf_theme.dart';
-
-import '../domain/location_indicator_state.dart';
-import 'address_item.dart';
 
 class OrderTile extends HookConsumerWidget {
   const OrderTile(

@@ -2,8 +2,9 @@ PODS:
   - Flutter (1.0.0)
   - flutter_secure_storage (6.0.0):
     - Flutter
-  - location (0.0.1):
+  - location_ios (0.0.1):
     - Flutter
+    - SwiftLocation/Core (= 5.1.0)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -12,6 +13,7 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - SwiftLocation/Core (5.1.0)
   - url_launcher_ios (0.0.1):
     - Flutter
   - yandex_mapkit (0.0.1):
@@ -22,7 +24,7 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
-  - location (from `.symlinks/plugins/location/ios`)
+  - location_ios (from `.symlinks/plugins/location_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - search_choices (from `.symlinks/plugins/search_choices/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -31,6 +33,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - SwiftLocation
     - YandexMapsMobile
 
 EXTERNAL SOURCES:
@@ -38,8 +41,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
-  location:
-    :path: ".symlinks/plugins/location/ios"
+  location_ios:
+    :path: ".symlinks/plugins/location_ios/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   search_choices:
@@ -54,14 +57,15 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
-  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  location_ios: e212f211a9ad6ac5a1343a67c87179e4dc0333fe
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
   search_choices: b50731e8c425078048f681f39c34375c58d6ce8d
   shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
+  SwiftLocation: 83e0ea75a1969cee3a1197e2b7095603fc23fde5
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   yandex_mapkit: 3431f8997d36bc0df753407ef282565c09163766
   YandexMapsMobile: 1fd5f86bc368ad6ba528b199f9477e4a26796567
 
-PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
 
 COCOAPODS: 1.12.0

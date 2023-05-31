@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:superfleet_courier/features/orders/widgets/address_item.dart';
 import 'package:superfleet_courier/model/order.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -192,13 +191,13 @@ class _AddressItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        AddressItem(
-          address: addressString,
-          isPickup: isPickup,
-          time: time,
-          paddingTop: topPadding,
-          paddingBottom: 16,
-        ),
+        // AddressItem(
+        //   address: addressString,
+        //   isPickup: isPickup,
+        //   time: time,
+        //   paddingTop: topPadding,
+        //   paddingBottom: 16,
+        // ),
         Container(
           height: 40,
           color: const Color(0xffF0F0F0),

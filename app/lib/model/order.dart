@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get_storage/get_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/model/api.dart';
@@ -6,6 +8,21 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'order.freezed.dart';
 part 'order.g.dart';
+
+enum OrderStatus {
+  open,
+  inProcess,
+  delivered,
+  cancelled;
+
+  @override
+  String toString() => switch (this) {
+        open => 'OPEN',
+        inProcess => 'IN_PROCESS',
+        delivered => 'DELIVERED',
+        cancelled => 'CANCELLED',
+      };
+}
 
 @freezed
 class Order with _$Order {
@@ -47,33 +64,16 @@ class Order with _$Order {
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 }
 
-// extension YandexOrderLocationUpdate on Order {
-//   Future<Order> updateLocation(YandexGeocoder geocoder) async {
-//     final List<FromLocation> newFrom = [];
-//     for (final i in from) {
-//       newFrom.add(await i.updateLocation(geocoder));
-//     }
-//     final newTo = await to.updateLocation(geocoder);
-//
-//     return copyWith(from: newFrom, to: newTo);
-//   }
-// }
-
 @riverpod
 class OrdersNotifier extends _$OrdersNotifier {
   @override
-  Future<List<Order>> build({int? offset, int? limit}) async {
-    // final DotEnv dotEnv = DotEnv();
-    // await dotEnv.load();
-    // final geocoder = YandexGeocoder(apiKey: 'cb2c60ca-b404-4d6b-8861-564645da5aa3');
-    // geocoder.getGeocode(GeocodeRequest(
-    //         geocode: PointGeocode(latitude: 40, longitude: 40),
-    //         lang: Lang.enEn));
-    // final r = await geocoder.getGeocode(GeocodeRequest(
-    //     geocode: PointGeocode(latitude: 40, longitude: 40), lang: Lang.enEn));
+  Future<List<Order>> build(
+      {required OrderStatus status, int? offset, int? limit}) async {
     final courier = await ref.watch(courierNotifierProvider.future);
 
-    final queryParams = <String, dynamic>{};
+    final queryParams = <String, dynamic>{
+      'status': status.toString(),
+    };
     if (offset != null) queryParams['offset'] = offset;
     if (limit != null) queryParams['limit'] = limit;
     final dio = ref.watch(apiProvider);
@@ -156,4 +156,25 @@ class OrderByIdNotifier extends _$OrderByIdNotifier {
           .copyWith(orderProgress: state.value!.orderProgress + 1);
     });
   }
+}
+
+@riverpod
+class NewOrders extends _$NewOrders {
+  Timer? _timer;
+
+  @override
+  List<Order> build() {
+    ref.onAddListener(() {
+      _timer ??= Timer.periodic(const Duration(seconds: 5), (timer) {
+        updateState();
+      });
+    });
+    ref.onDispose(() {
+      _timer?.cancel();
+      _timer = null;
+    });
+    return [];
+  }
+
+  updateState() {}
 }

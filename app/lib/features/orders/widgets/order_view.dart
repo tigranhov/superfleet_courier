@@ -7,8 +7,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/features/orders/domain/location_prgress.dart';
+import 'package:superfleet_courier/features/orders/domain/yandex_path_provider.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
+import 'package:superfleet_courier/model/api.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';
@@ -32,6 +34,7 @@ class OrderView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(newOrdersProvider);
     final order = ref.watch(orderByIdNotifierProvider(orderId)).value;
     if (order == null) return const SizedBox();
     final pulsingAnimationController = useAnimationController();
@@ -209,50 +212,45 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class _Map extends StatelessWidget {
+final points = [
+  (lt: 40.174198, lng: 44.506577),
+  (lt: 40.180714, lng: 44.515468),
+  (lt: 40.181347, lng: 44.507955)
+];
+
+class _Map extends ConsumerWidget {
   const _Map({Key? key, required this.order}) : super(key: key);
   final Order order;
 
   @override
-  Widget build(BuildContext context) {
-    final PlacemarkMapObject startPlacemark = PlacemarkMapObject(
-      mapId: MapObjectId('start_placemark'),
-      point: Point(latitude: 55.7558, longitude: 37.6173),
-      icon: PlacemarkIcon.single(PlacemarkIconStyle(
-          image: BitmapDescriptor.fromAssetImage('assets/logo.png'),
-          scale: 0.3)),
-    );
-    final PlacemarkMapObject stopByPlacemark = PlacemarkMapObject(
-      mapId: MapObjectId('stop_by_placemark'),
-      point: Point(latitude: 45.0360, longitude: 38.9746),
-      icon: PlacemarkIcon.single(PlacemarkIconStyle(
-          image: BitmapDescriptor.fromAssetImage('assets/logo.png'),
-          scale: 0.3)),
-    );
-    final PlacemarkMapObject endPlacemark = PlacemarkMapObject(
-        mapId: MapObjectId('end_placemark'),
-        point: Point(latitude: 48.4814, longitude: 135.0721),
-        icon: PlacemarkIcon.single(PlacemarkIconStyle(
-            image: BitmapDescriptor.fromAssetImage('assets/logo.png'),
-            scale: 0.3)));
-    final List<MapObject> mapObjects = [
-      startPlacemark,
-      stopByPlacemark,
-      endPlacemark
-    ];
+  Widget build(BuildContext context, ref) {
+    final result = ref.watch(yandexPathProvider(points));
+    final mapObjects = ref.watch(routeObjectsProvider(points));
+    if (result.value == null || mapObjects.value == null) {
+      return const SliverToBoxAdapter(child: SizedBox());
+    }
+
     return SliverToBoxAdapter(
       child: AspectRatio(
           aspectRatio: 16 / 9,
           child: !kIsWeb
-              ? YandexMap(
-                  mapObjects: mapObjects,
-                  focusRect: const ScreenRect(
-                    topLeft: ScreenPoint(x: 0, y: 0),
-                    bottomRight: ScreenPoint(x: 100, y: 10),
-                  ),
-                  mapType: MapType.map,
-                  zoomGesturesEnabled: true,
-                )
+              ? LayoutBuilder(builder: (context, info) {
+                  final size = (x: info.maxWidth, y: info.maxHeight);
+                  return YandexMap(
+                    mode2DEnabled: true,
+                    focusRect: ScreenRect(
+                        topLeft: const ScreenPoint(x: 0, y: 0),
+                        bottomRight: ScreenPoint(x: size.x, y: size.y)),
+                    mapObjects: mapObjects.valueOrNull!,
+                    onMapCreated: (controller) async {
+                      await Future.delayed(const Duration(milliseconds: 200));
+                      controller.moveCamera(CameraUpdate.newBounds(
+                          calculateBoundingBoxFromRoute(
+                              result.value!.routes![0].geometry)));
+                    },
+                    mapType: MapType.map,
+                  );
+                })
               : const Center(
                   child: Text('Map preview is working only on mobile devices'),
                 )),

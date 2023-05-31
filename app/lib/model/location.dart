@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 part 'location.freezed.dart';
 part 'location.g.dart';
 
@@ -8,7 +7,7 @@ class Location with _$Location {
   static const String locationStatePickedUp = 'goingTo';
   static const String locationStateDelivered = 'reached';
   static const String locationStateNotPickedUp = 'completed';
-  const Location._();
+  Location._();
 
   const factory Location.to({
     int? id,
