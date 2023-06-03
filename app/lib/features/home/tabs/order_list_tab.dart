@@ -1,9 +1,11 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:superfleet_courier/features/orders/widgets/delivery_request.dart';
 import 'package:superfleet_courier/features/orders/widgets/oder_tile.dart';
 import 'package:superfleet_courier/model/courier_notifier.dart';
 import 'package:superfleet_courier/model/model.dart';
+import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
 import 'package:superfleet_courier/model/order/notifiers/order_notifiers.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 
@@ -109,6 +111,13 @@ class _OrderList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final List<Order> deliveryRequests =
+        ref.watch(deliveryRequestsProvider.select((value) {
+      if (value.hasValue) {
+        return value.value ?? [];
+      }
+      return [];
+    }));
     final orders =
         ref.watch(ordersNotifierProvider(status: OrderStatus.inProcess)).value!;
 
@@ -118,14 +127,17 @@ class _OrderList extends ConsumerWidget {
         height: 12,
       ),
       itemBuilder: (context, index) {
+        if (index < deliveryRequests.length) {
+          return DeliveryRequest();
+        }
         return OrderTile(
-          key: ValueKey(orders[index].id),
+          key: ValueKey(orders[index - deliveryRequests.length].id),
           onTap: onTilePressed,
-          order: orders[index],
+          order: orders[index - deliveryRequests.length],
           width: 296,
         );
       },
-      itemCount: orders.length,
+      itemCount: deliveryRequests.length + orders.length,
     );
   }
 }

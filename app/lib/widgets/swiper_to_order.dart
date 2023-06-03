@@ -141,7 +141,7 @@ class SwipeToOrder extends HookWidget {
                       opacity:
                           positionAnimator.drive(Tween(begin: 1.0, end: 0.0)),
                       child: const Icon(
-                        SuperIcons.doublerightarrows,
+                        SuperIcons.doubleRightArrows,
                         color: Colors.white,
                         size: 14,
                       ),

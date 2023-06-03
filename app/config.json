@@ -50,7 +50,7 @@
     },
     {
       "uid": "b4d212e3488d84f3aa6b1682416b4b06",
-      "css": "doublerightarrows",
+      "css": "doubleRightArrows",
       "code": 59395,
       "src": "custom_icons",
       "selected": true,
@@ -92,7 +92,7 @@
     },
     {
       "uid": "758bdb86e66d8aad054f8682fe512016",
-      "css": "location-pin",
+      "css": "locationPin",
       "code": 59398,
       "src": "custom_icons",
       "selected": true,
@@ -106,7 +106,7 @@
     },
     {
       "uid": "7a9e57e615e39ba1ceac3c79d2846710",
-      "css": "double_arrow",
+      "css": "rightArrow",
       "code": 59399,
       "src": "custom_icons",
       "selected": true,
@@ -130,6 +130,20 @@
       },
       "search": [
         "close"
+      ]
+    },
+    {
+      "uid": "88deecc4fe34522b104bd42223a99071",
+      "css": "watchlater",
+      "code": 59401,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M500 0C225 0 0 225 0 500 0 775 225 1000 500 1000 775 1000 1000 775 1000 500 1000 225 775 0 500 0ZM500 900C279.5 900 100 720.5 100 500 100 279.5 279.5 100 500 100 720.5 100 900 279.5 900 500 900 720.5 720.5 900 500 900ZM525 250H450V550L710 710 750 645 525 510V250Z",
+        "width": 1000
+      },
+      "search": [
+        "watchlater"
       ]
     }
   ]

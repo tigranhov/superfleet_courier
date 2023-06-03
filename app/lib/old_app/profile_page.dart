@@ -197,7 +197,7 @@ class _ChangePasswordCard extends StatelessWidget {
                   ),
                 ),
                 const Icon(
-                  SuperIcons.double_arrow,
+                  SuperIcons.rightArrow,
                   size: 24,
                   color: Color(0xff888888),
                 )
@@ -254,7 +254,7 @@ class _ChangeLanguageCard extends StatelessWidget {
                   ),
                 ),
                 const Icon(
-                  SuperIcons.double_arrow,
+                  SuperIcons.rightArrow,
                   size: 24,
                   color: Color(0xff888888),
                 )

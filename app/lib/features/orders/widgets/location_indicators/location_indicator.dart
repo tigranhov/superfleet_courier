@@ -124,7 +124,7 @@ class LocationIndicatorTile extends HookConsumerWidget {
                   },
                   icon: switch (type) {
                     LocationTileType.pickup => const Icon(
-                        SuperIcons.location_pin,
+                        SuperIcons.locationPin,
                         size: 13.33,
                         color: superfleetOrange,
                       ),

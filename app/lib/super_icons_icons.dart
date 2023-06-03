@@ -24,10 +24,11 @@ class SuperIcons {
   static const IconData car = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData bycicle = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData person = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData doublerightarrows = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData doubleRightArrows = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData done = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData flag = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData location_pin = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData double_arrow = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData locationPin = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData rightArrow = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData close = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData watchlater = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
