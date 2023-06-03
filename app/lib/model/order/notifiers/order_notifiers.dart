@@ -4,7 +4,7 @@ import 'package:superfleet_courier/model/api.dart';
 import '../../courier_notifier.dart';
 import '../../location.dart';
 import '../order.dart';
-import 'order_status.dart';
+import '../order_status.dart';
 
 part 'order_notifiers.g.dart';
 

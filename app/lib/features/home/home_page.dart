@@ -7,13 +7,16 @@ import 'package:superfleet_courier/features/transports/widgets/transport_selecto
 import 'package:superfleet_courier/model/courier_notifier.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/model/order/notifiers/order_notifiers.dart';
-import 'package:superfleet_courier/model/order/notifiers/order_status.dart';
+import 'package:superfleet_courier/model/order/order_status.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 
 import '../orders/widgets/oder_tile.dart';
+import 'tabs/history_tab.dart';
+import 'tabs/order_list_tab.dart';
+import 'widgets/no_content_view.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key, this.debugTools = false});
@@ -46,12 +49,12 @@ class HomePage extends HookConsumerWidget {
           ),
           Expanded(
             child: TabBarView(controller: tabController, children: [
-              _OrderTab(
+              OrderTab(
                 onOrderSelected: (order) {
                   OrderViewRoute(order.id).push(context);
                 },
               ),
-              const _HistoryTab()
+              const HistoryTab()
             ]),
           )
         ],
@@ -89,194 +92,3 @@ class _TabBar extends StatelessWidget {
   }
 }
 
-class _OrderTab extends ConsumerWidget {
-  const _OrderTab({required this.onOrderSelected});
-
-  final Function(Order order) onOrderSelected;
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final courierStatus = ref
-        .watch(courierNotifierProvider.select((value) => value.value?.status));
-    final orderCount = ref
-        .watch(
-        ordersNotifierProvider(status: OrderStatus.inProcess)
-            .select((value) => value.value?.length));
-
-    // final deliveryRequests = 
-
-    if (orderCount == null) {
-      return const Center(child: CircularProgressIndicator.adaptive());
-    }
-    buildWidget() {
-      if (courierStatus == 'INACTIVE') {
-        return const _InactiveOrders(
-          key: ValueKey(0),
-        );
-      } else {
-        return orderCount > 0
-            ? _OrderList(
-                key: const ValueKey(1),
-                onTilePressed: onOrderSelected,
-              )
-            : const _NoContent(
-                key: ValueKey(2),
-                description: 'You don’t have any orders, yet',
-                explanation: 'Orders will appear here once you accept them',
-                icon: Icons.remove_shopping_cart,
-              );
-      }
-    }
-
-    return PageTransitionSwitcher(
-      transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
-          SharedAxisTransition(
-        animation: primaryAnimation,
-        secondaryAnimation: secondaryAnimation,
-        transitionType: SharedAxisTransitionType.scaled,
-        child: child,
-      ),
-      duration: const Duration(milliseconds: 400),
-      child: buildWidget(),
-    );
-  }
-}
-
-class _InactiveOrders extends ConsumerWidget {
-  const _InactiveOrders({super.key});
-
-  @override
-  Widget build(BuildContext context, ref) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-            padding: const EdgeInsets.only(top: 80, left: 116, right: 116),
-            child: Image.asset('assets/offline.png')),
-        const SizedBox(height: 24),
-        const Text(
-          'You are currently offline',
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Color(0xff888888)),
-        ),
-        const SizedBox(height: 4),
-        const Text(
-          'Come online to start delivering',
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: Color(0xff888888)),
-        ),
-        const SizedBox(height: 32),
-        SFButton(
-            text: 'Go Online',
-            onPressed: () =>
-                ref.read(courierNotifierProvider.notifier).changeStatus()),
-        const Expanded(child: SizedBox())
-      ],
-    );
-  }
-}
-
-class _OrderList extends ConsumerWidget {
-  const _OrderList({
-    Key? key,
-    required this.onTilePressed,
-  }) : super(key: key);
-
-  final Function(Order order) onTilePressed;
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final orders =
-        ref.watch(ordersNotifierProvider(status: OrderStatus.inProcess)).value!;
-
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      separatorBuilder: (context, index) => const SizedBox(
-        height: 12,
-      ),
-      itemBuilder: (context, index) {
-        return OrderTile(
-          key: ValueKey(orders[index].id),
-          onTap: onTilePressed,
-          order: orders[index],
-          width: 296,
-        );
-      },
-      itemCount: orders.length,
-    );
-  }
-}
-
-class _HistoryTab extends StatelessWidget {
-  const _HistoryTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return const _NoContent(
-      description: 'You don’t have any order history, yet',
-      explanation: 'Order history will appear here once you complete one',
-      icon: Icons.watch_later_outlined,
-    );
-  }
-}
-
-class _NoContent extends StatelessWidget {
-  const _NoContent(
-      {Key? key,
-      required this.icon,
-      required this.description,
-      required this.explanation})
-      : super(key: key);
-  final IconData icon;
-  final String description;
-  final String explanation;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 80),
-            width: 88,
-            height: 88,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-                color: Colors.white, shape: BoxShape.circle),
-            child: Icon(
-              size: 36.72,
-              icon,
-              color: const Color(0xff888888),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Container(
-              width: double.infinity,
-              height: 22,
-              alignment: Alignment.center,
-              child: Text(
-                description,
-                style:
-                    context.text16grey88.copyWith(fontWeight: FontWeight.bold),
-              )),
-          const SizedBox(height: 4),
-          Container(
-              width: double.infinity,
-              height: 44,
-              alignment: Alignment.center,
-              child: Text(
-                explanation,
-                style: context.text16grey88,
-                textAlign: TextAlign.center,
-              )),
-        ],
-      ),
-    );
-  }
-}

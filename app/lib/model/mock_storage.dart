@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 import 'model.dart';
-import 'order/notifiers/order_status.dart';
+import 'order/order_status.dart';
 
 
 class DioMock extends InterceptorsWrapper {
