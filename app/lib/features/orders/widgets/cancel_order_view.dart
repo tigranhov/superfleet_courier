@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/orders/domain/cancellation_reason_state.dart';
-import 'package:superfleet_courier/model/model.dart';
+import 'package:superfleet_courier/model/order/notifiers/order_notifiers.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';

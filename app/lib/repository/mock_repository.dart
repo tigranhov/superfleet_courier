@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:superfleet_courier/model/courier.dart';
-import 'package:superfleet_courier/model/order.dart';
+import 'package:superfleet_courier/model/order/order.dart';
 import 'package:superfleet_courier/repository/superfleet_api.dart';
 
 class MockRepository implements SuperfleetAPI {

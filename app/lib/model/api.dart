@@ -3,12 +3,10 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:superfleet_courier/model/courier.dart';
-import 'package:superfleet_courier/model/location.dart';
-import 'package:superfleet_courier/model/order.dart';
+
+import 'mock_storage.dart';
 
 part 'api.g.dart';
-part 'mock_storage.dart';
 
 final _tokenStorage = SharedPreferencesTokenStorage();
 

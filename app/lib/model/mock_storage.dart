@@ -1,24 +1,10 @@
-part of 'api.dart';
+import 'package:dio/dio.dart';
+
+import 'model.dart';
+import 'order/notifiers/order_status.dart';
+
 
 class DioMock extends InterceptorsWrapper {
-  //
-  // DioMock(Dio dio){
-  //   adapter.onGet('/auth/me', (server) {
-  //     server.reply(200, map['/auth/me']);
-  //   });
-  //   adapter.onGet('/orders/courier/17', (server) {
-  //     server.reply(200, map['/orders/courier/17']);
-  //   });
-  //   adapter.onGet('/orders/15', (server) {
-  //     server.reply(200, map['/orders/15']);
-  //   });
-  //
-  //   adapter.onPatch('/orders/15', (server) {
-  //     server.reply(200, map['/orders/15']);
-  //     print('objec kalbast');
-  //   });
-  // }
-
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     final path = options.path;
@@ -200,6 +186,7 @@ class DioMock extends InterceptorsWrapper {
 final _adapters = [
   _MeAdapter(),
   _OrderAdapter(),
+  _CourierAdapter()
 ];
 
 abstract class _MockAdapter {
@@ -220,6 +207,24 @@ class _MeAdapter extends _MockAdapter {
 
   @override
   String get path => '/auth/me';
+}
+
+class _CourierAdapter extends _MockAdapter {
+  @override
+  String get path => '/couriers/17';
+
+  @override
+  resolve(RequestOptions requestOptions) {
+    if (requestOptions.method == 'PATCH') {
+      final data = requestOptions.data;
+      courier = Courier.fromJson(courier.toJson()..addAll(data));
+      return Response(
+          requestOptions: requestOptions, data: {'data': courier.toJson()});
+    } else {
+      return Response(
+          requestOptions: requestOptions, data: {'data': courier.toJson()});
+    }
+  }
 }
 
 class _OrderAdapter extends _MockAdapter {
@@ -261,7 +266,7 @@ class _OrderAdapter extends _MockAdapter {
   }
 }
 
-const courier = Courier(
+var courier = const Courier(
   id: 17,
   firstName: 'Vaxo',
   lastName: 'Patverashvili',
@@ -288,4 +293,13 @@ final orders = [
       courier: courier,
       deliverUntil: DateTime.now().add(const Duration(minutes: 30)),
       status: OrderStatus.inProcess.toString()),
+  Order(
+      id: 2,
+      to: const ToLocation(id: 2, locationData: LocationData(lng: 40, lat: 44)),
+      from: const [
+        FromLocation(id: 2, locationData: LocationData(lng: 40, lat: 44))
+      ],
+      courier: courier,
+      deliverUntil: DateTime.now().add(const Duration(minutes: 30)),
+      status: OrderStatus.open.toString()),
 ];

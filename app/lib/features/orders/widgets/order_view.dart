@@ -10,8 +10,9 @@ import 'package:superfleet_courier/features/orders/domain/location_prgress.dart'
 import 'package:superfleet_courier/features/orders/domain/yandex_path_provider.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
-import 'package:superfleet_courier/model/api.dart';
 import 'package:superfleet_courier/model/model.dart';
+import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
+import 'package:superfleet_courier/model/order/notifiers/order_notifiers.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -34,7 +35,6 @@ class OrderView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(newOrdersProvider);
     final order = ref.watch(orderByIdNotifierProvider(orderId)).value;
     if (order == null) return const SizedBox();
     final pulsingAnimationController = useAnimationController();

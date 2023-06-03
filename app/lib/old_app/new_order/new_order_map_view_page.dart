@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:superfleet_courier/model/order.dart';
+import 'package:superfleet_courier/model/order/order.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
