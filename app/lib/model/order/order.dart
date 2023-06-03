@@ -1,13 +1,5 @@
-import 'dart:async';
-
-import 'package:get_storage/get_storage.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:superfleet_courier/model/api.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../courier_notifier.dart';
-
 part 'order.freezed.dart';
 part 'order.g.dart';
 

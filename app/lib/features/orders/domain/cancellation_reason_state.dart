@@ -4,6 +4,7 @@ part 'cancellation_reason_state.g.dart';
 
 @riverpod
 class CancellationReasonState extends _$CancellationReasonState {
+  @override
   ({List<String> reasons, int? selectedReaonsIndex}) build() {
     return (
       reasons: [

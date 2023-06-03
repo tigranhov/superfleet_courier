@@ -135,7 +135,6 @@ class _CancellationReason extends StatelessWidget {
         child: Row(
           children: [
             Checkbox(
-              //TODO figma specs
               value: value,
               onChanged: (_) => onChanged!.call(),
               fillColor: const MaterialStatePropertyAll<Color>(superfleetBlue),

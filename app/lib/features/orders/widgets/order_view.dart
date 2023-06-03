@@ -11,7 +11,6 @@ import 'package:superfleet_courier/features/orders/domain/yandex_path_provider.d
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
 import 'package:superfleet_courier/model/model.dart';
-import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
 import 'package:superfleet_courier/model/order/notifiers/order_notifiers.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';
@@ -327,7 +326,7 @@ class _CancellationContainer extends HookConsumerWidget {
 }
 
 class _OrderSwipeButton extends ConsumerWidget {
-  _OrderSwipeButton({required this.order});
+  const _OrderSwipeButton({required this.order});
 
   final Order order;
 

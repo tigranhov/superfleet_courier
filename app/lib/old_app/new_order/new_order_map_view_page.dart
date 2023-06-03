@@ -164,7 +164,7 @@ class _AddressReviewList extends StatelessWidget {
                 description:
                     'Inch graca order descriptioni mej Take the box from lorem ipsum dolor set amet  lorem ipsum dolor set amet '),
           _AddressItem(
-              addressString: order.to!.addressString(),
+              addressString: order.to.addressString(),
               time: DateFormat.Hm().format(order.deliverUntil!).toString(),
               isPickup: false,
               description:

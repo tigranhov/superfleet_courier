@@ -11,7 +11,7 @@ class NewOrderBloc extends StateNotifier<NewOrderState> {
           FromLocation(
               availableFrom: DateTime.now(),
               id: 23,
-              locationData: LocationData(),
+              locationData: const LocationData(),
               pickedUp: false)
         ])));
 }

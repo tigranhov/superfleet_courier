@@ -49,7 +49,7 @@ class OrderTile extends HookConsumerWidget {
               _BeforeDivider(
                 status: order.status ?? '!!No Status',
                 isNew: true,
-              ), //TODO use actual value
+              ),
               const Divider(height: 0),
               const SizedBox(height: 18),
               OrderContent(order: order),

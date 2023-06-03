@@ -70,14 +70,12 @@ class Api extends _$Api {
         maxWidth: 90));
     dio.interceptors.add(InterceptorsWrapper(
       onResponse: (response, handler) {
-        print(response.data);
         return handler.next(response);
       },
     ));
     dio.interceptors.add(_refreshInterceptor = Fresh.oAuth2(
         httpClient: dio,
         tokenHeader: (token) {
-          print(token.accessToken);
           return {
             'Authorization': 'Bearer ${token.accessToken}',
           };

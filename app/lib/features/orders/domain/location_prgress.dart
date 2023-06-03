@@ -13,7 +13,6 @@ class LocationProgress {
       steps.add(PickupLocationSteps(currentStep, pLoc));
     }
     steps.add(DropoffLocationSteps(order.orderProgress - maxSteps(), order.to));
-    print(currentStepString(order.orderProgress));
   }
 
   int maxSteps() {
