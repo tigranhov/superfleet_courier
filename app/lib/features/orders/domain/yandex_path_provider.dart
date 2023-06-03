@@ -28,11 +28,10 @@ Future<List<MapObject>> routeObjects(
     RouteObjectsRef ref, List<({double lt, double lng})> points) async {
   final path = await ref.watch(yandexPathProvider(points).future);
   final firstRoute = path.routes!.first;
-  final stats = await getPermissionStatus();
   await requestPermission();
   final location = await getLocation();
   final PlacemarkMapObject myPositionPlacemark = PlacemarkMapObject(
-    mapId: MapObjectId('my_position'),
+    mapId: const MapObjectId('my_position'),
     point: Point(latitude: location.latitude!, longitude: location.longitude!),
     icon: PlacemarkIcon.single(PlacemarkIconStyle(
         image: BitmapDescriptor.fromAssetImage('assets/logo.png'), scale: 0.3)),

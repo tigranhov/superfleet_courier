@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:superfleet_courier/model/api.dart';
-import 'package:superfleet_courier/model/courier.dart';
+import 'package:superfleet_courier/model/courier_notifier.dart';
 
 part 'auth_notifier.freezed.dart';
 part 'auth_notifier.g.dart';

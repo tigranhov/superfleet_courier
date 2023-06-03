@@ -6,6 +6,8 @@ import 'package:superfleet_courier/model/api.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'courier_notifier.dart';
+
 part 'order.freezed.dart';
 part 'order.g.dart';
 

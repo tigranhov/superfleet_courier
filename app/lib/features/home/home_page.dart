@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/home/top_panel.dart';
 import 'package:superfleet_courier/features/transports/widgets/transport_selector.dart';
+import 'package:superfleet_courier/model/courier_notifier.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';

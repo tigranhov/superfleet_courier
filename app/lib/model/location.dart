@@ -7,7 +7,7 @@ class Location with _$Location {
   static const String locationStatePickedUp = 'goingTo';
   static const String locationStateDelivered = 'reached';
   static const String locationStateNotPickedUp = 'completed';
-  Location._();
+  const Location._();
 
   const factory Location.to({
     int? id,
