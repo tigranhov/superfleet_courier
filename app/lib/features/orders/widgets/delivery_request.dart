@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:superfleet_courier/model/model.dart';
+import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -7,20 +9,22 @@ import 'package:superfleet_courier/theme/sf_theme.dart';
 class DeliveryRequest extends ConsumerWidget {
   const DeliveryRequest({
     super.key,
+    required this.order,
     this.height = 48,
   });
   final double height;
+  final Order order;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        
+        NewOrderRoute(order.id).go(context);
       },
       child: Container(
         height: height,
         decoration: BoxDecoration(
-        color: superfleetBlue,
+          color: superfleetBlue,
           borderRadius: BorderRadius.circular(4),
         ),
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -34,7 +38,8 @@ class DeliveryRequest extends ConsumerWidget {
             size: 20,
           ),
           const SizedBox(width: 6),
-          Text('00:45', style: context.text14w700.copyWith(color: Colors.white)),
+          Text('00:45',
+              style: context.text14w700.copyWith(color: Colors.white)),
           const SizedBox(width: 12)
         ]),
       ),

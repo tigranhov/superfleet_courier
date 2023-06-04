@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
-import 'package:superfleet_courier/features/orders/widgets/order_view.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:superfleet_courier/theme/sf_theme.dart';
+
+import 'order_content.dart';
 
 class OrderTile extends HookConsumerWidget {
   const OrderTile(
@@ -112,4 +113,3 @@ class _IsNewTag extends StatelessWidget {
     );
   }
 }
-

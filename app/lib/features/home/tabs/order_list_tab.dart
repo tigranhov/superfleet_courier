@@ -2,7 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/orders/widgets/delivery_request.dart';
-import 'package:superfleet_courier/features/orders/widgets/oder_tile.dart';
+import 'package:superfleet_courier/features/orders/widgets/order_tile.dart';
 import 'package:superfleet_courier/model/courier_notifier.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
@@ -128,7 +128,9 @@ class _OrderList extends ConsumerWidget {
       ),
       itemBuilder: (context, index) {
         if (index < deliveryRequests.length) {
-          return DeliveryRequest();
+          return DeliveryRequest(
+            order: deliveryRequests[index],
+          );
         }
         return OrderTile(
           key: ValueKey(orders[index - deliveryRequests.length].id),

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class TimeProgressBar extends StatelessWidget {
-  const TimeProgressBar({this.value = 0});
+  const TimeProgressBar({super.key, this.value = 0});
   final double value;
 
   get superfleetBlue => null;

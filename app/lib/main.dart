@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
+import 'package:superfleet_courier/theme/colors.dart';
 
 import 'theme/sf_theme.dart';
 
@@ -46,7 +47,16 @@ class MyApp extends HookConsumerWidget {
       theme: ThemeData(
               primarySwatch: Colors.blue,
               textTheme: GoogleFonts.robotoTextTheme(),
-              backgroundColor: const Color(0xffCCCCCC))
+        colorScheme: const ColorScheme.light(
+          surface: Colors.white,
+          background: Colors.white,
+          primaryContainer: Colors.white,
+          primary: superfleetBlue,
+          secondary: superfleetGreen,
+          surfaceTint: Colors.transparent,
+          
+        ),
+      )
           .copyWith(extensions: [SFTheme.light]),
     );
   }

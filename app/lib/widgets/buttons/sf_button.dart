@@ -15,8 +15,8 @@ class SFButton extends StatelessWidget {
       required this.onPressed,
       this.textStyle =
           const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)});
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final bool inverse;
   final EdgeInsets? padding;
   final String text;

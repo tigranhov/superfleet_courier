@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/features/orders/widgets/cancel_order_view.dart';
+import 'package:superfleet_courier/features/orders/widgets/new_orders/new_order_popup_screen.dart';
+import 'package:superfleet_courier/features/orders/widgets/new_orders/new_order_screen.dart';
 import 'package:superfleet_courier/features/orders/widgets/order_view.dart';
 import 'package:superfleet_courier/features/home/success_page.dart';
 import 'features/home/home_page.dart';
@@ -68,8 +70,11 @@ class LoginRoute extends GoRouteData {
 
 @TypedGoRoute<HomeRoute>(path: '/', routes: [
   TypedGoRoute<OrderViewRoute>(path: 'view_order/:id', routes: [
-    TypedGoRoute<CancelOrderViewRoute>(path: 'cancel'),
-  ]),
+      TypedGoRoute<CancelOrderViewRoute>(path: 'cancel'),
+    ],
+  ),
+  TypedGoRoute<NewOrderPopupRoute>(path: 'new_orders_popup'),
+  TypedGoRoute<NewOrderRoute>(path: 'new_order/:id')
 ])
 class HomeRoute extends GoRouteData {
   const HomeRoute();
@@ -113,6 +118,29 @@ class SuccessPageRoute extends GoRouteData {
     return SuccessPage(
       text: $extra,
       popOnDone: $popOnDone,
+    );
+  }
+}
+
+
+//New Orders
+class NewOrderPopupRoute extends GoRouteData {
+  const NewOrderPopupRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NewOrderPopupScreen();
+  }
+}
+
+class NewOrderRoute extends GoRouteData {
+  const NewOrderRoute(this.id);
+  final int id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return NewOrderScreen(
+      orderId: id,
     );
   }
 }
