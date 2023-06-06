@@ -43,7 +43,7 @@ class AuthNotifier extends _$AuthNotifier {
             'username': 'ketchup@gmail.com',
             'password': 'Aaaa123\$',
           },
-          options: Options(headers: {'x-login-type': 'COURIER'}));
+          options: Options(headers: {'x-account-type': 'COURIER'}));
       await apiNotifier.updateToken(response.data['data']['accessToken'],
           response.data['data']['refreshToken']);
       return const AuthState.loggedIn();
