@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 
@@ -35,6 +36,7 @@ class OrderContent extends ConsumerWidget {
               type: LocationTileType.pickup,
               showPickupInformation: showPickupInformation,
               text: e.location.addressString(),
+              time: (e.location as FromLocation).availableFrom,
             );
           } else if (e is DropoffLocationSteps) {
             return Column(
@@ -47,6 +49,7 @@ class OrderContent extends ConsumerWidget {
                   type: LocationTileType.dropoff,
                   showPickupInformation: showPickupInformation,
                   text: e.location.addressString(),
+                  time: order.deliverUntil,
                 ),
                 if (showPickupInformation)
                   Container(height: 1, decoration: context.borderDecoration),

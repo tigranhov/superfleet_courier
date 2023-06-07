@@ -2,16 +2,19 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/model/api.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 import 'package:superfleet_courier/theme/colors.dart';
-
+import 'model/interceptors/mock_interceptor.dart' as mock_interceptor;
+import 'model/location.dart';
+import 'model/order/order.dart';
+import 'model/order/order_status.dart';
 import 'theme/sf_theme.dart';
 
 void main() async {
@@ -39,43 +42,85 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final router = ref.watch(routerProvider);
-    final app = MaterialApp.router(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      title: 'Courier',
-      routerConfig: router,
-      builder: DevicePreview.appBuilder,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: GoogleFonts.robotoTextTheme(),
-        colorScheme: const ColorScheme.light(
-          surface: Colors.white,
-          background: Colors.white,
-          primaryContainer: Colors.white,
-          primary: superfleetBlue,
-          secondary: superfleetGreen,
-          surfaceTint: Colors.transparent,
-        ),
-      ).copyWith(extensions: [SFTheme.light]),
-    );
-    if (!kDebugMode) return app;
+
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Stack(
         children: [
-          app,
+          MaterialApp.router(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            title: 'Courier',
+            routerConfig: router,
+            builder: DevicePreview.appBuilder,
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              textTheme: GoogleFonts.robotoTextTheme(),
+              colorScheme: const ColorScheme.light(
+                surface: Colors.white,
+                background: Colors.white,
+                primaryContainer: Colors.white,
+                primary: superfleetBlue,
+                secondary: superfleetGreen,
+                surfaceTint: Colors.transparent,
+              ),
+            ).copyWith(extensions: [SFTheme.light]),
+          ),
           Positioned(
               bottom: 0,
-              right: 0,
+              left: 0,
               child: TextButton(
-                  child: const Text('Copy token'),
-                  onPressed: () async {
-                    final token = await ref.read(accessTokenProvider.future);
-                    if (token != null) {
-                      await Clipboard.setData(
-                          ClipboardData(text: token.accessToken));
-                    }
-                  })),
+                child: const Text('New order'),
+                onPressed: () {
+                  mock_interceptor.orders.add(
+                    Order(
+                        id: 1,
+                        to: const ToLocation(
+                            id: 2,
+                            locationData: LocationData(
+                                lat: 40.172456,
+                                lng: 44.509642,
+                                address: 'Movses Khorenatsi Street, 56/1')),
+                        from: [
+                          FromLocation(
+                              id: 1,
+                              availableFrom: DateTime.now().add(
+                                const Duration(minutes: 5),
+                              ),
+                              locationData: const LocationData(
+                                  lat: 40.182352,
+                                  lng: 44.515472,
+                                  address: 'Hin Yerevantsu Street')),
+                          FromLocation(
+                              id: 1,
+                              availableFrom: DateTime.now().add(
+                                const Duration(minutes: 10),
+                              ),
+                              locationData: LocationData(
+                                  lat: 40.180056,
+                                  lng: 44.514238,
+                                  address: 'Khachatur Abovyan Street, 1/3')),
+                        ],
+                        courier: mock_interceptor.courier,
+                        deliverUntil:
+                            DateTime.now().add(const Duration(minutes: 30)),
+                        status: OrderStatus.open.toString()),
+                  );
+                },
+              )),
+          if (kDebugMode)
+            Positioned(
+                bottom: 0,
+                right: 0,
+                child: TextButton(
+                    child: const Text('Copy token'),
+                    onPressed: () async {
+                      final token = await ref.read(accessTokenProvider.future);
+                      if (token != null) {
+                        await Clipboard.setData(
+                            ClipboardData(text: token.accessToken));
+                      }
+                    })),
         ],
       ),
     );

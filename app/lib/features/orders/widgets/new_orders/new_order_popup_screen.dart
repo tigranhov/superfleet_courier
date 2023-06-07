@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
+import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
+import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 
@@ -38,7 +40,7 @@ class _YouHaveANewOrder extends StatelessWidget {
 }
 
 class _TimeLinearProgress extends StatelessWidget {
-  const _TimeLinearProgress({super.key});
+  const _TimeLinearProgress();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class _TimeLinearProgress extends StatelessWidget {
 }
 
 class _TimeText extends StatelessWidget {
-  const _TimeText({super.key});
+  const _TimeText();
 
   @override
   Widget build(BuildContext context) {
@@ -65,11 +67,11 @@ class _TimeText extends StatelessWidget {
   }
 }
 
-class _PulsingIndicatorIcon extends StatelessWidget {
-  const _PulsingIndicatorIcon({super.key});
+class _PulsingIndicatorIcon extends ConsumerWidget {
+  const _PulsingIndicatorIcon();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -87,16 +89,24 @@ class _PulsingIndicatorIcon extends StatelessWidget {
             ),
           ),
         ),
-        Center(
-          child: UnconstrainedBox(
-            clipBehavior: Clip.hardEdge,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 30),
-              child: Lottie.asset('assets/animations/new_order_animation.json',
-                  width: 666,
-                  height: 666,
-                  addRepaintBoundary: true,
-                  fit: BoxFit.fill),
+        GestureDetector(
+          onTap: () {
+            final deliveryRequest = ref.read(deliveryRequestsProvider).value!;
+            NewOrderRoute(deliveryRequest.id).go(context);
+          },
+          behavior: HitTestBehavior.opaque,
+          child: Center(
+            child: UnconstrainedBox(
+              clipBehavior: Clip.hardEdge,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: Lottie.asset(
+                    'assets/animations/new_order_animation.json',
+                    width: 666,
+                    height: 666,
+                    addRepaintBoundary: true,
+                    fit: BoxFit.fill),
+              ),
             ),
           ),
         ),

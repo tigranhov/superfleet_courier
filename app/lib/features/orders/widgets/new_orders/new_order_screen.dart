@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:superfleet_courier/features/map/order_preview_on_map.dart';
 import 'package:superfleet_courier/features/orders/widgets/order_content.dart';
+import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
 import 'package:superfleet_courier/model/order/notifiers/order_notifiers.dart';
 import 'package:superfleet_courier/model/order/order.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
@@ -21,7 +23,7 @@ class NewOrderScreen extends HookConsumerWidget {
         order: order,
         body: OrderPreviewOnMap(order: order),
       ),
-      bottomNavigationBar: _BottomBar(),
+      bottomNavigationBar: const _BottomBar(),
     );
   }
 }
@@ -73,10 +75,10 @@ class _ContentViewWithSlidingPanel extends HookConsumerWidget {
   }
 }
 
-class _BottomBar extends StatelessWidget {
-  const _BottomBar({super.key});
+class _BottomBar extends ConsumerWidget {
+  const _BottomBar();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     const buttonHeight = 56.0;
     const buttonWidth = 148.0;
 
@@ -89,13 +91,19 @@ class _BottomBar extends StatelessWidget {
           height: buttonHeight,
           text: 'Reject',
           inverse: true,
-          onPressed: () {},
+          onPressed: () {
+            ref.read(deliveryRequestsProvider.notifier).reject();
+            context.pop();
+          },
         ),
         SFButton(
           height: buttonHeight,
           width: buttonWidth,
           text: 'Accept',
-          onPressed: () {},
+          onPressed: () {
+            ref.read(deliveryRequestsProvider.notifier).accept();
+            context.pop();
+          },
         )
       ]),
     );

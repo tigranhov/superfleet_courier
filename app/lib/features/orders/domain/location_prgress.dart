@@ -83,7 +83,7 @@ class MeLocationSteps with LocationSteps {
 
 class PickupLocationSteps with LocationSteps {
   @override
-  final int stepCount = 3;
+  final int stepCount = 2;
 
   @override
   final int currentStep;
@@ -105,8 +105,7 @@ class PickupLocationSteps with LocationSteps {
   @override
   LocationIndicatorState get indicatorState => switch (currentStep) {
         0 => LocationIndicatorState.active,
-        1 => LocationIndicatorState.active,
-        2 => LocationIndicatorState.exhausted,
+        1 => LocationIndicatorState.exhausted,
         < 0 => LocationIndicatorState.inactive,
         _ => LocationIndicatorState.exhausted
       };

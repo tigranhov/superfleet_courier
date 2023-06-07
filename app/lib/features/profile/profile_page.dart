@@ -166,24 +166,24 @@ class _ChangePasswordCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 12, top: 12, right: 12),
       child: InkWell(
         onTap: onTap,
-        child: Card(
+        child: const Card(
           elevation: 1,
           child: Padding(
-            padding: const EdgeInsets.only(
+            padding: EdgeInsets.only(
                 left: 12, top: 18, right: 19.5, bottom: 16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
+                Icon(
                   Icons.key,
                   color: Color(0xffCA1E1E),
                   size: 22,
                 ),
-                const SizedBox(width: 9),
+                SizedBox(width: 9),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         'Change Password',
                         style: TextStyle(
@@ -198,7 +198,7 @@ class _ChangePasswordCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(
+                Icon(
                   SuperIcons.rightArrow,
                   size: 24,
                   color: Color(0xff888888),
@@ -222,24 +222,24 @@ class _ChangeLanguageCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 12, top: 12, right: 12),
       child: InkWell(
         onTap: onTap,
-        child: Card(
+        child: const Card(
           elevation: 1,
           child: Padding(
-            padding: const EdgeInsets.only(
+            padding: EdgeInsets.only(
                 left: 12, top: 18, right: 19.5, bottom: 16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
+                Icon(
                   Icons.language,
                   color: superfleetBlue,
                   size: 22,
                 ),
-                const SizedBox(width: 9),
+                SizedBox(width: 9),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         'Change Language',
                         style: TextStyle(
@@ -254,7 +254,7 @@ class _ChangeLanguageCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(
+                Icon(
                   SuperIcons.rightArrow,
                   size: 24,
                   color: Color(0xff888888),

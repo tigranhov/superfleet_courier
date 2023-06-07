@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:superfleet_courier/features/orders/domain/location_indicator_state.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
 import 'package:superfleet_courier/features/orders/widgets/pickup_description.dart';
@@ -83,12 +84,14 @@ class LocationIndicatorTile extends HookConsumerWidget {
     required this.state,
     required this.type,
     this.showPickupInformation = false,
+    this.time,
   }) : super(key: key);
 
   final String text;
   final LocationIndicatorState state;
   final LocationTileType type;
   final bool showPickupInformation;
+  final DateTime? time;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -160,12 +163,14 @@ class LocationIndicatorTile extends HookConsumerWidget {
                         Row(
                           children: [
                             Text(
-                              'Pickup time:',
+                              type == LocationTileType.pickup
+                                  ? 'Pickup time:'
+                                  : 'Dropoff time:',
                               style: context.text16w700grey,
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              'ASAP',
+                              time?.format() ?? 'ASAP',
                               style: context.text16w700,
                             )
                           ],
@@ -213,5 +218,12 @@ class _PulsingBorderOverlay extends ConsumerWidget {
         child,
       ],
     );
+  }
+}
+
+extension on DateTime? {
+  String? format() {
+    if (this == null) return null;
+    return DateFormat('HH:mm').format(this!);
   }
 }

@@ -173,9 +173,12 @@ class _Map extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     if(kIsWeb){
-      return const SliverToBoxAdapter(child: AspectRatio(aspectRatio: 16 / 9, child:  Center(
-                child: Text('Map preview is working only on mobile devices'),
-              )),);
+      return const SliverToBoxAdapter(
+          child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Center(
+                  child:
+                      Text('Map preview is working only on mobile devices'))));
     }
     final result = ref.watch(yandexDrivingPathProvider(points));
     final mapObjects = ref.watch(

@@ -23,6 +23,8 @@ class OrderTab extends ConsumerWidget {
     final orderCount = ref.watch(
         ordersNotifierProvider(status: OrderStatus.inProcess)
             .select((value) => value.value?.length));
+    final deliveryRequestCount = ref.watch(deliveryRequestsProvider
+        .select((value) => value.value != null ? 1 : 0));
 
     // final deliveryRequests =
 
@@ -35,7 +37,7 @@ class OrderTab extends ConsumerWidget {
           key: ValueKey(0),
         );
       } else {
-        return orderCount > 0
+        return orderCount + deliveryRequestCount > 0
             ? _OrderList(
                 key: const ValueKey(1),
                 onTilePressed: onOrderSelected,
@@ -111,35 +113,36 @@ class _OrderList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final List<Order> deliveryRequests =
-        ref.watch(deliveryRequestsProvider.select((value) {
-      if (value.hasValue) {
-        return value.value ?? [];
-      }
-      return [];
-    }));
+    final deliveryRequest = ref.watch(deliveryRequestsProvider).valueOrNull;
     final orders =
         ref.watch(ordersNotifierProvider(status: OrderStatus.inProcess)).value!;
 
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      separatorBuilder: (context, index) => const SizedBox(
-        height: 12,
-      ),
-      itemBuilder: (context, index) {
-        if (index < deliveryRequests.length) {
-          return DeliveryRequest(
-            order: deliveryRequests[index],
-          );
-        }
-        return OrderTile(
-          key: ValueKey(orders[index - deliveryRequests.length].id),
-          onTap: onTilePressed,
-          order: orders[index - deliveryRequests.length],
-          width: 296,
-        );
-      },
-      itemCount: deliveryRequests.length + orders.length,
+    return Column(
+      children: [
+        if (deliveryRequest != null)
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: DeliveryRequest(order: deliveryRequest),
+          ),
+        Expanded(
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            separatorBuilder: (context, index) => const SizedBox(
+              height: 12,
+            ),
+            itemBuilder: (context, index) {
+             
+              return OrderTile(
+                key: ValueKey(orders[index].id),
+                onTap: onTilePressed,
+                order: orders[index],
+                width: 296,
+              );
+            },
+            itemCount: orders.length,
+          ),
+        ),
+      ],
     );
   }
 }

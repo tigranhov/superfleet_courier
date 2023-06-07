@@ -3,6 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/home/top_panel.dart';
 import 'package:superfleet_courier/features/transports/widgets/transport_selector.dart';
+import 'package:superfleet_courier/model/courier_notifier.dart';
+import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -17,6 +19,16 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final tabController = useTabController(initialLength: 2);
+    final isCourierActive = ref.watch(courierNotifierProvider
+        .select((value) => value.value?.status == 'ACTIVE'));
+    ref.listen(
+      deliveryRequestsProvider,
+      (prev, next) {
+        if (isCourierActive && prev != next && next.value != null) {
+          const NewOrderPopupRoute().go(context);
+        }
+      },
+    );
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -27,7 +39,6 @@ class HomePage extends HookConsumerWidget {
                   isScrollControlled: true,
                   context: context,
                   shape: const RoundedRectangleBorder(
-                    // <-- SEE HERE
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(25.0),
                     ),
@@ -82,4 +93,3 @@ class _TabBar extends StatelessWidget {
     );
   }
 }
-

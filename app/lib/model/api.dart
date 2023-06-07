@@ -4,13 +4,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'mock_storage.dart';
-
+import 'interceptors/mock_interceptor.dart';
 part 'api.g.dart';
 
 final _tokenStorage = SharedPreferencesTokenStorage();
 @riverpod
-Future<OAuth2Token?> accessToken(ref) async {
+Future<OAuth2Token?> accessToken(AccessTokenRef ref) async {
   return await _tokenStorage.read();
 }
 
@@ -62,8 +61,7 @@ class Api extends _$Api {
         'Accept': 'application/json',
       },
     ));
-    // DioMock(dio);
-    // dio.interceptors.add(DioMock());
+    dio.interceptors.add(DioMock());
     dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
