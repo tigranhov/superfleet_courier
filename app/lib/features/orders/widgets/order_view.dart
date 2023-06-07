@@ -172,6 +172,11 @@ class _Map extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    if(kIsWeb){
+      return const SliverToBoxAdapter(child: AspectRatio(aspectRatio: 16 / 9, child:  Center(
+                child: Text('Map preview is working only on mobile devices'),
+              )),);
+    }
     final result = ref.watch(yandexDrivingPathProvider(points));
     final mapObjects = ref.watch(
         routeObjectsProvider(pickupPoints: points, dropoffPoint: points.last));
@@ -182,14 +187,10 @@ class _Map extends ConsumerWidget {
     return SliverToBoxAdapter(
       child: AspectRatio(
           aspectRatio: 16 / 9,
-          child: !kIsWeb
-              ? LayoutBuilder(builder: (context, info) {
-                  final size = (x: info.maxWidth, y: info.maxHeight);
+          child: 
+               LayoutBuilder(builder: (context, info) {
                   return YandexMap(
                     mode2DEnabled: true,
-                    focusRect: ScreenRect(
-                        topLeft: const ScreenPoint(x: 0, y: 0),
-                        bottomRight: ScreenPoint(x: size.x, y: size.y)),
                     mapObjects: mapObjects.valueOrNull!,
                     onMapCreated: (controller) async {
                       await Future.delayed(const Duration(milliseconds: 200));
@@ -200,9 +201,7 @@ class _Map extends ConsumerWidget {
                     mapType: MapType.map,
                   );
                 })
-              : const Center(
-                  child: Text('Map preview is working only on mobile devices'),
-                )),
+              ),
     );
   }
 }
