@@ -173,6 +173,7 @@ class _Map extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    if (kIsWeb) return const SliverToBoxAdapter(child: SizedBox());
     final result = ref.watch(yandexPathProvider(points));
     final mapObjects = ref.watch(routeObjectsProvider(points));
     if (result.value == null || mapObjects.value == null) {
