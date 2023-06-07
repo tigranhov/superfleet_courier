@@ -50,8 +50,8 @@ class LocationData with _$LocationData {
     String? provider,
     String? street,
     String? house,
-    double? lat,
-    double? lng,
+    required double lat,
+    required double lng,
     double? alt,
   }) = _LocationData;
 

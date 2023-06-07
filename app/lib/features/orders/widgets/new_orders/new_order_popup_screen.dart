@@ -22,7 +22,7 @@ class NewOrderPopupScreen extends ConsumerWidget {
 }
 
 class _YouHaveANewOrder extends StatelessWidget {
-  const _YouHaveANewOrder({super.key});
+  const _YouHaveANewOrder();
 
   @override
   Widget build(BuildContext context) {

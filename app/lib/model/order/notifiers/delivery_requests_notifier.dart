@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:superfleet_courier/model/api.dart';
 import 'package:superfleet_courier/model/model.dart';
-import '../../courier_notifier.dart';
 import 'order_notifiers.dart';
 part 'delivery_requests_notifier.g.dart';
 
@@ -13,7 +11,7 @@ class DeliveryRequests extends _$DeliveryRequests {
   @override
   Future<List<Order>> build() async {
     ref.onAddListener(() {
-      _timer ??= Timer.periodic(const Duration(seconds: 5), (timer) {
+      _timer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
         updateState();
       });
     });

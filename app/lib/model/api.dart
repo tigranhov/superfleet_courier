@@ -9,6 +9,10 @@ import 'mock_storage.dart';
 part 'api.g.dart';
 
 final _tokenStorage = SharedPreferencesTokenStorage();
+@riverpod
+Future<OAuth2Token?> accessToken(ref) async {
+  return await _tokenStorage.read();
+}
 
 class SharedPreferencesTokenStorage extends TokenStorage<OAuth2Token> {
   static const _tokenKey = 'token';
@@ -59,7 +63,7 @@ class Api extends _$Api {
       },
     ));
     // DioMock(dio);
-    dio.interceptors.add(DioMock());
+    // dio.interceptors.add(DioMock());
     dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
@@ -106,5 +110,9 @@ class Api extends _$Api {
       accessToken: accessToken,
       refreshToken: refreshToken,
     ));
+  }
+
+  clearToken() {
+    _refreshInterceptor.clearToken();
   }
 }

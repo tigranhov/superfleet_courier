@@ -294,10 +294,14 @@ final orders = [
       deliverUntil: DateTime.now().add(const Duration(minutes: 30)),
       status: OrderStatus.inProcess.toString()),
   Order(
-      id: 2,
-      to: const ToLocation(id: 2, locationData: LocationData(lng: 40, lat: 44)),
+      id: 3,
+      to: const ToLocation(
+          id: 2, locationData: LocationData(lat: 40.185829, lng: 44.515078)),
       from: const [
-        FromLocation(id: 2, locationData: LocationData(lng: 40, lat: 44))
+        FromLocation(
+            id: 2, locationData: LocationData(lat: 40.172270, lng: 44.507051)),
+        FromLocation(
+            id: 2, locationData: LocationData(lat: 40.175533, lng: 44.505680))
       ],
       courier: courier,
       deliverUntil: DateTime.now().add(const Duration(minutes: 30)),

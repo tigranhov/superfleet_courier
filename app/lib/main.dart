@@ -1,10 +1,13 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:superfleet_courier/model/api.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 import 'package:superfleet_courier/theme/colors.dart';
@@ -36,17 +39,15 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final router = ref.watch(routerProvider);
-
-    return MaterialApp.router(
+    final app = MaterialApp.router(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       title: 'Courier',
       routerConfig: router,
       builder: DevicePreview.appBuilder,
-      locale: DevicePreview.locale(context),
       theme: ThemeData(
-              primarySwatch: Colors.blue,
-              textTheme: GoogleFonts.robotoTextTheme(),
+        primarySwatch: Colors.blue,
+        textTheme: GoogleFonts.robotoTextTheme(),
         colorScheme: const ColorScheme.light(
           surface: Colors.white,
           background: Colors.white,
@@ -54,10 +55,29 @@ class MyApp extends HookConsumerWidget {
           primary: superfleetBlue,
           secondary: superfleetGreen,
           surfaceTint: Colors.transparent,
-          
         ),
-      )
-          .copyWith(extensions: [SFTheme.light]),
+      ).copyWith(extensions: [SFTheme.light]),
+    );
+    if (!kDebugMode) return app;
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
+        children: [
+          app,
+          Positioned(
+              bottom: 0,
+              right: 0,
+              child: TextButton(
+                  child: const Text('Copy token'),
+                  onPressed: () async {
+                    final token = await ref.read(accessTokenProvider.future);
+                    if (token != null) {
+                      await Clipboard.setData(
+                          ClipboardData(text: token.accessToken));
+                    }
+                  })),
+        ],
+      ),
     );
   }
 }

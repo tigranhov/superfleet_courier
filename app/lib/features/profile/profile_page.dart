@@ -1,14 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:superfleet_courier/features/login/logic/auth_notifier.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -20,15 +22,17 @@ class ProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 1),
             const _ProfileInfoCard(),
-            _ChangePasswordCard(onTap: () {
-              
-            },),
-            _ChangeLanguageCard(onTap: () {
-              
-            },),
-            _LogoutButton(onTap: () {
-              
-            },)
+            _ChangePasswordCard(
+              onTap: () {},
+            ),
+            _ChangeLanguageCard(
+              onTap: () {},
+            ),
+            _LogoutButton(
+              onTap: () {
+                ref.read(authNotifierProvider.notifier).logout();
+              },
+            )
           ]),
         ),
       ),
@@ -131,9 +135,7 @@ class _ProfileInfoCard extends StatelessWidget {
 
 class _IconText extends StatelessWidget {
   const _IconText(
-      {required this.iconData,
-      required this.text,
-      required this.iconColor});
+      {required this.iconData, required this.text, required this.iconColor});
   final IconData iconData;
   final String text;
   final Color iconColor;
@@ -223,8 +225,7 @@ class _ChangeLanguageCard extends StatelessWidget {
         child: Card(
           elevation: 1,
           child: Padding(
-            padding:
-                const EdgeInsets.only(
+            padding: const EdgeInsets.only(
                 left: 12, top: 18, right: 19.5, bottom: 16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -49,6 +49,11 @@ class AuthNotifier extends _$AuthNotifier {
       return const AuthState.loggedIn();
     });
   }
+
+  void logout() {
+    ref.read(apiProvider.notifier).clearToken();
+    state = const AsyncData(AuthState.loggedOut());
+  }
 }
 
 @freezed

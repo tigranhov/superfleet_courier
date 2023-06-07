@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/features/transports/logic/selected_transport_provider.dart';
 import 'package:superfleet_courier/features/transports/widgets/selected_delivery_method_icon.dart';
 import 'package:superfleet_courier/model/courier_notifier.dart';
-import 'package:superfleet_courier/old_app/profile_page.dart';
+import 'package:superfleet_courier/features/profile/profile_page.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 
 class TopPanel extends ConsumerWidget {

@@ -7,8 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/features/orders/domain/location_prgress.dart';
-import 'package:superfleet_courier/features/orders/domain/yandex_path_provider.dart';
-import 'package:superfleet_courier/features/orders/widgets/location_indicators/location_indicator.dart';
+import 'package:superfleet_courier/features/map/domain/yandex_path_provider.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
 import 'package:superfleet_courier/model/model.dart';
 import 'package:superfleet_courier/model/order/notifiers/order_notifiers.dart';
@@ -162,9 +161,9 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 }
 
 final points = [
-  (lt: 40.174198, lng: 44.506577),
-  (lt: 40.180714, lng: 44.515468),
-  (lt: 40.181347, lng: 44.507955)
+  (lat: 40.174198, lng: 44.506577),
+  (lat: 40.180714, lng: 44.515468),
+  (lat: 40.181347, lng: 44.507955)
 ];
 
 class _Map extends ConsumerWidget {
@@ -173,8 +172,9 @@ class _Map extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final result = ref.watch(yandexPathProvider(points));
-    final mapObjects = ref.watch(routeObjectsProvider(points));
+    final result = ref.watch(yandexDrivingPathProvider(points));
+    final mapObjects = ref.watch(
+        routeObjectsProvider(pickupPoints: points, dropoffPoint: points.last));
     if (result.value == null || mapObjects.value == null) {
       return const SliverToBoxAdapter(child: SizedBox());
     }

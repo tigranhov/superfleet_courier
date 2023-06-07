@@ -2,7 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/model/api.dart';
 
 import '../../courier_notifier.dart';
-import '../../location.dart';
 import '../order.dart';
 import '../order_status.dart';
 
@@ -30,29 +29,7 @@ class OrdersNotifier extends _$OrdersNotifier {
     return Future.wait(result.map(
       (e) async {
         final order = Order.fromJson(e);
-        return order.copyWith(
-          from: [
-            // FromLocation(
-            //     location: const Location(
-            //         street: "Alikhanyan brothers street", house: '1'),
-            //     availableFrom: DateTime.now().add(const Duration(minutes: 40))),
-            FromLocation(
-                locationData: const LocationData(
-                    street: "Alikhanyan brothers street", house: '2'),
-                availableFrom: DateTime.now().add(const Duration(minutes: 50))),
-            FromLocation(
-                locationData: const LocationData(
-                    street:
-                        "Some other street, where the street is a streeet by the side of another street",
-                    house: '4'),
-                availableFrom: DateTime.now().add(const Duration(minutes: 50))),
-          ],
-          to: const ToLocation(
-            locationData:
-                LocationData(street: "Bagrevand 1st deadlock", house: '2'),
-          ),
-          deliverUntil: DateTime.now().add(const Duration(hours: 1)),
-        );
+        return order;
       },
     ).toList());
   }
@@ -65,28 +42,7 @@ class OrderByIdNotifier extends _$OrderByIdNotifier {
     final dio = ref.watch(apiProvider);
     final response = await dio.get('/orders/$id');
     final result = response.data['data'];
-    return Order.fromJson(result).copyWith(
-      from: [
-        // FromLocation(
-        //     location: const Location(
-        //         street: "Alikhanyan brothers street", house: '1'),
-        //     availableFrom: DateTime.now().add(const Duration(minutes: 40))),
-        FromLocation(
-            locationData: const LocationData(
-                street: "Alikhanyan brothers street", house: '2'),
-            availableFrom: DateTime.now().add(const Duration(minutes: 50))),
-        FromLocation(
-            locationData: const LocationData(
-                street:
-                    "Some other street, where the street is a streeet by the side of another street",
-                house: '4'),
-            availableFrom: DateTime.now().add(const Duration(minutes: 50))),
-      ],
-      to: const ToLocation(
-        locationData:
-            LocationData(street: "Bagrevand 1st deadlock", house: '2'),
-      ),
-    );
+    return Order.fromJson(result);
   }
 
   addProgress() async {

@@ -10,6 +10,8 @@ class CourierNotifier extends _$CourierNotifier {
   @override
   Future<Courier?> build() async {
     final api = ref.watch(apiProvider);
+    //TODO timer for demonstration, remove later
+    await Future.delayed(const Duration(seconds: 1));
     final response = await api.get('/auth/me');
     return response.data['data'] == null
         ? null

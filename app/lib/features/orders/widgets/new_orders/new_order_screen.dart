@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:superfleet_courier/features/map/order_preview_on_map.dart';
 import 'package:superfleet_courier/features/orders/widgets/order_content.dart';
 import 'package:superfleet_courier/model/order/notifiers/order_notifiers.dart';
 import 'package:superfleet_courier/model/order/order.dart';
@@ -16,22 +17,27 @@ class NewOrderScreen extends HookConsumerWidget {
     final order = ref.watch(orderByIdNotifierProvider(orderId)).value;
     if (order == null) return const SizedBox();
     return Scaffold(
-      bottomSheet: _ContentViewWithSlidingPanel(order: order),
+      bottomSheet: _ContentViewWithSlidingPanel(
+        order: order,
+        body: OrderPreviewOnMap(order: order),
+      ),
       bottomNavigationBar: _BottomBar(),
     );
   }
 }
 
 class _ContentViewWithSlidingPanel extends HookConsumerWidget {
-  const _ContentViewWithSlidingPanel({required this.order});
+  const _ContentViewWithSlidingPanel({required this.order, required this.body});
 
   final Order order;
+  final Widget body;
 
   @override
   Widget build(BuildContext context, ref) {
     final height = MediaQuery.of(context).size.height;
     final isClosed = useState(true);
     return SlidingUpPanel(
+      body: body,
       backdropEnabled: true,
       maxHeight: height * 0.7,
       minHeight: 59,
