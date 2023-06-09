@@ -8,6 +8,9 @@ import 'package:superfleet_courier/features/orders/widgets/order_content.dart';
 import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
 import 'package:superfleet_courier/model/order/notifiers/order_notifiers.dart';
 import 'package:superfleet_courier/model/order/order.dart';
+import 'package:superfleet_courier/theme/colors.dart';
+import 'package:superfleet_courier/theme/sf_theme.dart';
+import 'package:superfleet_courier/widgets/buttons/close_button.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 
 class NewOrderScreen extends HookConsumerWidget {
@@ -18,7 +21,33 @@ class NewOrderScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final order = ref.watch(orderByIdNotifierProvider(orderId)).value;
     if (order == null) return const SizedBox();
+    final remainingTime = ref.watch(deliveryRequestRemainingTimeProvider);
     return Scaffold(
+      appBar: AppBar(
+        leading: SFCloseButton(
+          onClosed: () => context.pop(),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'NEW ORDER',
+              style:
+                  context.text14w700.copyWith(color: Colors.black, height: 1),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              remainingTime.toMMSS(),
+              style:
+                  context.text14w700.copyWith(color: superfleetBlue, height: 1),
+            ),
+          ],
+        ),
+        centerTitle: true,
+        toolbarHeight: 48,
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.white,
+      ),
       bottomSheet: _ContentViewWithSlidingPanel(
         order: order,
         body: SafeArea(child: OrderPreviewOnMap(order: order)),

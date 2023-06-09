@@ -19,6 +19,7 @@ class SFCloseButton extends StatelessWidget {
         onPressed: onClosed,
         splashColor: Colors.transparent,
         splashRadius: 1,
+        color: Colors.black,
         icon: const Icon(SuperIcons.close),
         iconSize: 14,
         padding: const EdgeInsets.all(0),

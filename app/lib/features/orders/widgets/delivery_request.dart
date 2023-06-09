@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/model/model.dart';
+import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/colors.dart';
@@ -17,6 +18,8 @@ class DeliveryRequest extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final remainingTime = ref.watch(deliveryRequestRemainingTimeProvider);
+
     return GestureDetector(
       onTap: () {
         NewOrderRoute(order.id).go(context);
@@ -38,7 +41,7 @@ class DeliveryRequest extends ConsumerWidget {
             size: 20,
           ),
           const SizedBox(width: 6),
-          Text('00:45',
+          Text(remainingTime.toMMSS(),
               style: context.text14w700.copyWith(color: Colors.white)),
           const SizedBox(width: 12)
         ]),

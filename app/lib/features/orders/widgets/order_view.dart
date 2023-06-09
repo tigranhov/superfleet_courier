@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:superfleet_courier/features/map/order_preview_on_map.dart';
 import 'package:superfleet_courier/features/orders/domain/location_prgress.dart';
 import 'package:superfleet_courier/features/map/domain/yandex_path_provider.dart';
 import 'package:superfleet_courier/features/orders/widgets/location_indicators/pulsing_border.dart';
@@ -95,7 +96,6 @@ bool isOrderFinished(IsOrderFinishedRef ref, Order order) {
   return false;
 }
 
-
 class _AppBar extends StatelessWidget {
   const _AppBar({required this.onClosed});
 
@@ -160,19 +160,13 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-final points = [
-  (lat: 40.174198, lng: 44.506577),
-  (lat: 40.180714, lng: 44.515468),
-  (lat: 40.181347, lng: 44.507955)
-];
-
 class _Map extends ConsumerWidget {
   const _Map({Key? key, required this.order}) : super(key: key);
   final Order order;
 
   @override
   Widget build(BuildContext context, ref) {
-    if(kIsWeb){
+    if (kIsWeb) {
       return const SliverToBoxAdapter(
           child: AspectRatio(
               aspectRatio: 16 / 9,
@@ -180,31 +174,16 @@ class _Map extends ConsumerWidget {
                   child:
                       Text('Map preview is working only on mobile devices'))));
     }
-    final result = ref.watch(yandexDrivingPathProvider(points));
-    final mapObjects = ref.watch(
-        routeObjectsProvider(pickupPoints: points, dropoffPoint: points.last));
-    if (result.value == null || mapObjects.value == null) {
-      return const SliverToBoxAdapter(child: SizedBox());
-    }
 
     return SliverToBoxAdapter(
       child: AspectRatio(
           aspectRatio: 16 / 9,
-          child: 
-               LayoutBuilder(builder: (context, info) {
-                  return YandexMap(
-                    mode2DEnabled: true,
-                    mapObjects: mapObjects.valueOrNull!,
-                    onMapCreated: (controller) async {
-                      await Future.delayed(const Duration(milliseconds: 200));
-                      controller.moveCamera(CameraUpdate.newBounds(
-                          calculateBoundingBoxFromRoute(
-                              result.value!.routes![0].geometry)));
-                    },
-                    mapType: MapType.map,
-                  );
-                })
-              ),
+          child: LayoutBuilder(builder: (context, info) {
+            return OrderPreviewOnMap(
+              order: order,
+              useFocusRect: false,
+            );
+          })),
     );
   }
 }

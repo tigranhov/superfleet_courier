@@ -12,6 +12,7 @@ class NewOrderPopupScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return const Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(children: [
           _YouHaveANewOrder(),
@@ -41,26 +42,29 @@ class _YouHaveANewOrder extends StatelessWidget {
   }
 }
 
-class _TimeLinearProgress extends StatelessWidget {
+class _TimeLinearProgress extends ConsumerWidget {
   const _TimeLinearProgress();
 
   @override
-  Widget build(BuildContext context) {
-    return const LinearProgressIndicator(
+  Widget build(BuildContext context, ref) {
+    final remainingPercentage =
+        ref.watch(deliveryRequestRemainingTimePercentageProvider);
+    return LinearProgressIndicator(
       minHeight: 8,
       backgroundColor: superfleetGrey,
       color: superfleetBlue,
-      value: 0.5,
+      value: remainingPercentage.value ?? 0,
     );
   }
 }
 
-class _TimeText extends StatelessWidget {
+class _TimeText extends ConsumerWidget {
   const _TimeText();
 
   @override
-  Widget build(BuildContext context) {
-    return Text('00:45',
+  Widget build(BuildContext context, ref) {
+    final remainingTime = ref.watch(deliveryRequestRemainingTimeProvider);
+    return Text(remainingTime.toMMSS(),
         style: context.text14w700.copyWith(
           color: superfleetBlue,
           fontSize: 30,
@@ -74,45 +78,65 @@ class _PulsingIndicatorIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Center(
-          child: Container(
-            width: 114,
-            height: 114,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(600),
-            ),
-            child: const Icon(
-              Icons.shopping_bag,
-              color: superfleetBlue,
-              size: 37,
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            final deliveryRequest = ref.read(deliveryRequestsProvider).value!;
-            NewOrderRoute(deliveryRequest.id).go(context);
-          },
-          behavior: HitTestBehavior.opaque,
-          child: Center(
-            child: UnconstrainedBox(
-              clipBehavior: Clip.hardEdge,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: Lottie.asset(
-                    'assets/animations/new_order_animation.json',
-                    width: 666,
-                    height: 666,
-                    addRepaintBoundary: true,
-                    fit: BoxFit.fill),
+    return GestureDetector(
+      onTap: () {
+        final deliveryRequest = ref.read(deliveryRequestsProvider).value!;
+        NewOrderRoute(deliveryRequest.id).go(context);
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            top: 115,
+            child: Container(
+              width: 114,
+              height: 114,
+              clipBehavior: Clip.none,
+              child: OverflowBox(
+                maxHeight: double.infinity,
+                maxWidth: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 30),
+                  child: Lottie.asset(
+                      'assets/animations/new_order_animation.json',
+                      width: 1600,
+                      height: 1600,
+                      addRepaintBoundary: true,
+                      fit: BoxFit.cover),
+                ),
               ),
             ),
           ),
-        ),
-      ],
+          Positioned(
+            top: 345,
+            child: TextButton(
+              onPressed: null,
+              child: Text(
+                'Tap to see order',
+                style: context.text16w700.copyWith(color: superfleetBlue),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 130,
+            child: Container(
+              width: 114,
+              height: 114,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(600),
+              ),
+              child: const Icon(
+                Icons.shopping_bag,
+                color: superfleetBlue,
+                size: 37,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

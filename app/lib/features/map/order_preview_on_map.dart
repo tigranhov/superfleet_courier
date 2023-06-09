@@ -7,8 +7,10 @@ import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'domain/yandex_path_provider.dart';
 
 class OrderPreviewOnMap extends HookConsumerWidget {
-  const OrderPreviewOnMap({super.key, required this.order});
+  const OrderPreviewOnMap(
+      {super.key, required this.order, this.useFocusRect = true});
   final Order order;
+  final bool useFocusRect;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +29,7 @@ class OrderPreviewOnMap extends HookConsumerWidget {
     final mapFoucsRect = ScreenRect(
       topLeft: const ScreenPoint(x: 0, y: 0),
       bottomRight:
-          ScreenPoint(x: size.width * 2, y: mapFocusRectHeight * 2 - 130),
+          ScreenPoint(x: size.width * 2, y: mapFocusRectHeight * 2 - 260),
     );
 
     return YandexMap(
@@ -37,9 +39,12 @@ class OrderPreviewOnMap extends HookConsumerWidget {
       onMapCreated: (controller) async {
         await Future.delayed(const Duration(milliseconds: 200));
 
-        controller.moveCamera(CameraUpdate.newBounds(
-            calculateBoundingBoxFromRoute(result.value!.routes![0].geometry),
-            focusRect: mapFoucsRect));
+        final bounds =
+            calculateBoundingBoxFromRoute(result.value!.routes![0].geometry);
+        await controller.moveCamera(
+          CameraUpdate.newBounds(bounds,
+              focusRect: useFocusRect ? mapFoucsRect : null),
+        );
       },
       mapType: MapType.map,
     );

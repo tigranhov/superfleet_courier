@@ -26,7 +26,7 @@ class NewOrderPage extends StatelessWidget {
             const SizedBox(height: 131),
             _TapToSeeOrder(
               onTap: () {
-                context.push('/new_order/map_view', extra: order);
+                context.go('/new_order/map_view', extra: order);
               },
             )
           ],

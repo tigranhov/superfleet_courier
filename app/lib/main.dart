@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superfleet_courier/model/api.dart';
@@ -96,7 +95,7 @@ class MyApp extends HookConsumerWidget {
                               availableFrom: DateTime.now().add(
                                 const Duration(minutes: 10),
                               ),
-                              locationData: LocationData(
+                              locationData: const LocationData(
                                   lat: 40.180056,
                                   lng: 44.514238,
                                   address: 'Khachatur Abovyan Street, 1/3')),
@@ -104,6 +103,8 @@ class MyApp extends HookConsumerWidget {
                         courier: mock_interceptor.courier,
                         deliverUntil:
                             DateTime.now().add(const Duration(minutes: 30)),
+                        canAcceptUntil:
+                            DateTime.now().add(const Duration(seconds: 60)),
                         status: OrderStatus.open.toString()),
                   );
                 },

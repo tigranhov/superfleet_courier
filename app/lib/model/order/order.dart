@@ -16,6 +16,7 @@ class Order with _$Order {
       DateTime? createdAt,
       DateTime? updatedAt,
       DateTime? deletedAt,
+      DateTime? canAcceptUntil,
       @Default(0) int orderProgress}) = _Order;
 
   int locationIndex(Location location) {
@@ -30,6 +31,14 @@ class Order with _$Order {
     final index = (orderProgress - 2) ~/ 3;
 
     return index;
+  }
+
+  int remainingTime() {
+    if(canAcceptUntil == null) return 0;
+    final now = DateTime.now();
+    final difference = canAcceptUntil!.difference(now);
+    if (difference.isNegative) return 0;
+    return difference.inSeconds;
   }
 
   Location? activeLocation() {

@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:superfleet_courier/utilities/audio_player.dart';
 
 import 'api.dart';
 import 'courier.dart';
@@ -8,15 +9,10 @@ part 'courier_notifier.g.dart';
 
 @riverpod
 class CourierNotifier extends _$CourierNotifier {
-  AudioPlayer? player;
   @override
   Future<Courier?> build() async {
     final api = ref.watch(apiProvider);
-    player = AudioPlayer();
-    ref.onDispose(() {
-      player?.dispose();
-    });
-
+   
     //TODO timer for demonstration, remove later
     await Future.delayed(const Duration(seconds: 1));
     final response = await api.get('/auth/me');
@@ -26,9 +22,6 @@ class CourierNotifier extends _$CourierNotifier {
   }
 
   void changeStatus([bool? active]) async {
-    if (player?.source == null) {
-      await player?.setSource(AssetSource('sounds/go_online.mp3'));
-    }
     state = await AsyncValue.guard(() async {
       final courier = state.value!;
       final dio = ref.read(apiProvider);
@@ -37,8 +30,7 @@ class CourierNotifier extends _$CourierNotifier {
       final response = await dio
           .patch('/couriers/${courier.id}', data: {'status': targetStatus});
       if (targetStatus == 'ACTIVE') {
-        await player?.stop();
-        player?.resume();
+        ref.read(audioPlayerProvider).play(AssetSource('sounds/go_online.mp3'));
       }
       return Courier.fromJson(response.data['data']);
     });
