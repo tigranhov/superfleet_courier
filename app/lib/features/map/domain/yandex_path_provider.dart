@@ -61,14 +61,14 @@ Future<List<MapObject>> routeObjects(RouteObjectsRef ref,
         .future);
     return result.routes!.first.geometry;
   });
-  await requestPermission();
-  final location = await getLocation();
-  final PlacemarkMapObject myPositionPlacemark = PlacemarkMapObject(
-    mapId: const MapObjectId('my_position'),
-    point: Point(latitude: location.latitude!, longitude: location.longitude!),
-    icon: PlacemarkIcon.single(PlacemarkIconStyle(
-        image: BitmapDescriptor.fromAssetImage('assets/logo.png'), scale: 1)),
-  );
+  // await requestPermission();
+  // final location = await getLocation();
+  // final PlacemarkMapObject myPositionPlacemark = PlacemarkMapObject(
+  //   mapId: const MapObjectId('my_position'),
+  //   point: Point(latitude: location.latitude!, longitude: location.longitude!),
+  //   icon: PlacemarkIcon.single(PlacemarkIconStyle(
+  //       image: BitmapDescriptor.fromAssetImage('assets/logo.png'), scale: 1)),
+  // );
   int index = 0;
   final pickupPlacemarks = pickupPoints
       .map((e) => PlacemarkMapObject(
@@ -96,7 +96,7 @@ Future<List<MapObject>> routeObjects(RouteObjectsRef ref,
         scale: 1)),
   );
   return [
-    myPositionPlacemark,
+    // myPositionPlacemark,
     ...pickupPlacemarks,
     dropoffPlacemark,
     PolylineMapObject(
