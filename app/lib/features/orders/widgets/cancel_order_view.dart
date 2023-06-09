@@ -40,53 +40,55 @@ class CancelOrderView extends ConsumerWidget {
               context.text14w700.copyWith(height: 16 / 14, color: Colors.black),
           toolbarHeight: 48,
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SFHorizontalDivider(),
-                    const _WhyDidYouCancel(),
-                    const SFHorizontalDivider(),
-                    for (int i = 0; i < cancellationState.reasons.length; i++)
-                      Column(
-                        children: [
-                          _CancellationReason(
-                            key: ValueKey(i),
-                            value: cancellationState.selectedReaonsIndex == i,
-                            text: cancellationState.reasons[i],
-                            onChanged: () {
-                              ref
-                                  .read(
-                                      cancellationReasonStateProvider.notifier)
-                                  .toggle(i);
-                            },
-                          ),
-                          const SFHorizontalDivider(),
-                        ],
-                      ),
-                    const _CustomReason(),
-                  ],
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SFHorizontalDivider(),
+                      const _WhyDidYouCancel(),
+                      const SFHorizontalDivider(),
+                      for (int i = 0; i < cancellationState.reasons.length; i++)
+                        Column(
+                          children: [
+                            _CancellationReason(
+                              key: ValueKey(i),
+                              value: cancellationState.selectedReaonsIndex == i,
+                              text: cancellationState.reasons[i],
+                              onChanged: () {
+                                ref
+                                    .read(
+                                        cancellationReasonStateProvider.notifier)
+                                    .toggle(i);
+                              },
+                            ),
+                            const SFHorizontalDivider(),
+                          ],
+                        ),
+                      const _CustomReason(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SFHorizontalDivider(),
-            Container(
-              height: 73,
-              alignment: Alignment.center,
-              child: SFButton(
-                text: 'Cancel Order',
-                width: 304,
-                onPressed: () {
-                  SuccessPageRoute(
-                          $extra:
-                              'Order $orderId has been sucessfully completed!')
-                      .go(context);
-                },
-              ),
-            )
-          ],
+              const SFHorizontalDivider(),
+              Container(
+                height: 73,
+                alignment: Alignment.center,
+                child: SFButton(
+                  text: 'Cancel Order',
+                  width: 304,
+                  onPressed: () {
+                    SuccessPageRoute(
+                            $extra:
+                                'Order $orderId has been sucessfully completed!')
+                        .go(context);
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -21,7 +21,7 @@ class NewOrderScreen extends HookConsumerWidget {
     return Scaffold(
       bottomSheet: _ContentViewWithSlidingPanel(
         order: order,
-        body: OrderPreviewOnMap(order: order),
+        body: SafeArea(child: OrderPreviewOnMap(order: order)),
       ),
       bottomNavigationBar: const _BottomBar(),
     );

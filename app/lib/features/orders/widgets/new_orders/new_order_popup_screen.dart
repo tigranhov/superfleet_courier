@@ -12,13 +12,15 @@ class NewOrderPopupScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return const Scaffold(
-      body: Column(children: [
-        _YouHaveANewOrder(),
-        _TimeLinearProgress(),
-        SizedBox(height: 24),
-        _TimeText(),
-        Expanded(child: _PulsingIndicatorIcon()),
-      ]),
+      body: SafeArea(
+        child: Column(children: [
+          _YouHaveANewOrder(),
+          _TimeLinearProgress(),
+          SizedBox(height: 24),
+          _TimeText(),
+          Expanded(child: _PulsingIndicatorIcon()),
+        ]),
+      ),
     );
   }
 }
