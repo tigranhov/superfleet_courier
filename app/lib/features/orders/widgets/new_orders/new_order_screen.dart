@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:superfleet_courier/features/map/order_preview_on_map.dart';
+import 'package:superfleet_courier/features/orders/widgets/new_orders/time_progress_bar.dart';
 import 'package:superfleet_courier/features/orders/widgets/order_content.dart';
 import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
 import 'package:superfleet_courier/model/order/notifiers/order_notifiers.dart';
@@ -22,11 +23,17 @@ class NewOrderScreen extends HookConsumerWidget {
     final order = ref.watch(orderByIdNotifierProvider(orderId)).value;
     if (order == null) return const SizedBox();
     final remainingTime = ref.watch(deliveryRequestRemainingTimeProvider);
+    ref.listen(deliveryRequestsProvider, (_, next) {
+      if (next.value == null && context.canPop()) {
+        context.pop();
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         leading: SFCloseButton(
           onClosed: () => context.pop(),
         ),
+        
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -48,9 +55,16 @@ class NewOrderScreen extends HookConsumerWidget {
         surfaceTintColor: Colors.transparent,
         backgroundColor: Colors.white,
       ),
-      bottomSheet: _ContentViewWithSlidingPanel(
-        order: order,
-        body: SafeArea(child: OrderPreviewOnMap(order: order)),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            _ContentViewWithSlidingPanel(
+              order: order,
+              body: OrderPreviewOnMap(order: order),
+            ),
+            const TimeLinearProgress(),
+          ],
+        ),
       ),
       bottomNavigationBar: const _BottomBar(),
     );

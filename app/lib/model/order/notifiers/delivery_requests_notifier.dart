@@ -25,6 +25,7 @@ class DeliveryRequests extends _$DeliveryRequests {
     updateState();
     return null;
   }
+
   @override
   @protected
   set state(AsyncValue<Order?> newState) {
@@ -44,7 +45,10 @@ class DeliveryRequests extends _$DeliveryRequests {
   accept() async {
     state = await AsyncValue.guard(() async {
       //TODO actual implementation instead of mock
-      orders[0] = orders[0].copyWith(status: OrderStatus.inProcess.toString());
+      final index =
+          orders.indexWhere((element) => element.id == state.value?.id);
+      orders[index] =
+          orders[index].copyWith(status: OrderStatus.inProcess.toString());
       ref.invalidate(ordersNotifierProvider(status: OrderStatus.inProcess));
       return null;
     });
@@ -53,7 +57,10 @@ class DeliveryRequests extends _$DeliveryRequests {
   reject() async {
     state = await AsyncValue.guard(() async {
       //TODO actual implementation instead of mock
-      orders.clear();
+      final index =
+          orders.indexWhere((element) => element.id == state.value?.id);
+      if (index == -1) return null;
+      orders.removeAt(index);
       return null;
     });
   }
@@ -66,11 +73,14 @@ class DeliveryRequestRemainingTime extends _$DeliveryRequestRemainingTime {
     final deliveryRequest = await ref.watch(deliveryRequestsProvider.future);
     var remainingTime = deliveryRequest?.remainingTime() ?? 0;
     final keepAlive = ref.keepAlive();
-    if (remainingTime > 0) {
+    if (remainingTime == 0) {
+      ref.read(deliveryRequestsProvider.notifier).reject();
+    } else if (remainingTime > 0) {
       Timer timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (remainingTime == 0) {
           timer.cancel();
           keepAlive.close();
+          ref.read(deliveryRequestsProvider.notifier).reject();
         }
         state = AsyncValue.data(remainingTime--);
       });

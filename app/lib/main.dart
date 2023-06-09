@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +75,7 @@ class MyApp extends HookConsumerWidget {
                 onPressed: () {
                   mock_interceptor.orders.add(
                     Order(
-                        id: 1,
+                        id: Random.secure().nextInt(1000),
                         to: const ToLocation(
                             id: 2,
                             locationData: LocationData(
@@ -104,7 +106,7 @@ class MyApp extends HookConsumerWidget {
                         deliverUntil:
                             DateTime.now().add(const Duration(minutes: 30)),
                         canAcceptUntil:
-                            DateTime.now().add(const Duration(seconds: 60)),
+                            DateTime.now().add(const Duration(seconds: 15)),
                         status: OrderStatus.open.toString()),
                   );
                 },
