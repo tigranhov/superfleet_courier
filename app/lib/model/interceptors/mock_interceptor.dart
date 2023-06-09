@@ -5,7 +5,17 @@ import '../model.dart';
 class DioMock extends InterceptorsWrapper {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+   
     final path = options.path;
+    if (!loggedin && path != '/auth/login') {
+      handler.reject(
+          DioError(
+            requestOptions: options,
+            response: Response(statusCode: 401, requestOptions: options),
+          ),
+          true);
+      return;
+    }
     for (final adapter in _adapters) {
       if (adapter.matchPath(path)) {
         handler.resolve(adapter.resolve(options));
@@ -16,7 +26,12 @@ class DioMock extends InterceptorsWrapper {
   }
 }
 
-final _adapters = [_MeAdapter(), _OrderAdapter(), _CourierAdapter()];
+final _adapters = [
+  _MeAdapter(),
+  _OrderAdapter(),
+  _CourierAdapter(),
+  _LoginAdaptor()
+];
 
 abstract class _MockAdapter {
   String get path;
@@ -27,11 +42,26 @@ abstract class _MockAdapter {
   }
 }
 
+class _LoginAdaptor extends _MockAdapter {
+  @override
+  String get path => '/auth/login';
+
+  @override
+  resolve(RequestOptions requestOptions) {
+    loggedin = true;
+    return Response(requestOptions: requestOptions, data: {
+      'data': {'accessToken': 'saf', 'refreshToken': 'dsaf'}
+    });
+  }
+}
+
 class _MeAdapter extends _MockAdapter {
   @override
   Response resolve(RequestOptions requestOptions) {
     return Response(
-        requestOptions: requestOptions, data: {'data': courier.toJson()});
+      requestOptions: requestOptions,
+      data: {'data': courier.toJson()},
+    );
   }
 
   @override
@@ -94,6 +124,8 @@ class _OrderAdapter extends _MockAdapter {
     }
   }
 }
+
+bool loggedin = false;
 
 var courier = const Courier(
   id: 17,

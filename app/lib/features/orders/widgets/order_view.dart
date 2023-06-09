@@ -20,6 +20,7 @@ import 'package:superfleet_courier/widgets/buttons/close_button.dart';
 import 'package:superfleet_courier/widgets/buttons/sf_button.dart';
 import 'package:superfleet_courier/widgets/dividers/sf_horizontal_divider.dart';
 import 'package:superfleet_courier/widgets/swiper_to_order.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'order_content.dart';
 
@@ -52,6 +53,7 @@ class OrderView extends HookConsumerWidget {
                   primary: true,
                   slivers: [
                     _AppBar(
+                      order: order,
                       onClosed: () {
                         context.pop();
                       },
@@ -96,9 +98,10 @@ bool isOrderFinished(IsOrderFinishedRef ref, Order order) {
 }
 
 class _AppBar extends StatelessWidget {
-  const _AppBar({required this.onClosed});
+  const _AppBar({required this.onClosed, required this.order});
 
   final Function()? onClosed;
+  final Order order;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +123,13 @@ class _AppBar extends StatelessWidget {
                 width: 122,
                 text: 'Navigator App',
                 textStyle: context.text14w700,
-                onPressed: () {},
+                onPressed: () {
+                  final points = <Location>[...order.from, order.to].map((e) {
+                    return (lat: e.locationData!.lat, lng: e.locationData!.lng);
+                  }).toList(growable: false);
+
+                  openYandexNavigator(points);
+                },
               ),
               const SizedBox(width: 12)
             ],
@@ -282,5 +291,31 @@ class _OrderSwipeButton extends ConsumerWidget {
                   reset();
                 },
         ));
+  }
+}
+
+void openYandexNavigator(List<({double lat, double lng})> points) async {
+  if (points.length < 2) {
+    print('Need at least 2 points to create a route');
+    return;
+  }
+
+  String baseUri = 'yandexnavi://build_route_on_map?';
+  String fromPoint =
+      'lat_from=${points.first.lat}&lon_from=${points.first.lng}';
+  String toPoint = 'lat_to=${points.last.lat}&lon_to=${points.last.lng}';
+
+  List<String> viaPoints = [];
+  for (var i = 1; i < points.length - 1; i++) {
+    viaPoints.add(
+        'lat_via_${i - 1}=${points[i].lat}&lon_via_${i - 1}=${points[i].lng}');
+  }
+
+  String finalUri = '$baseUri$fromPoint&$toPoint&${viaPoints.join("&")}';
+
+  if (await canLaunchUrl(Uri.parse(finalUri))) {
+    await launchUrl(Uri.parse(finalUri));
+  } else {
+    print('Could not launch $finalUri');
   }
 }

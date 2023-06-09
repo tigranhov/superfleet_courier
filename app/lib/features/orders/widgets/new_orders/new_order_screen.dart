@@ -66,7 +66,7 @@ class NewOrderScreen extends HookConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const _BottomBar(),
+      bottomNavigationBar: const SafeArea(child: _BottomBar()),
     );
   }
 }

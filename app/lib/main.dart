@@ -106,7 +106,7 @@ class MyApp extends HookConsumerWidget {
                         deliverUntil:
                             DateTime.now().add(const Duration(minutes: 30)),
                         canAcceptUntil:
-                            DateTime.now().add(const Duration(seconds: 15)),
+                            DateTime.now().add(const Duration(seconds: 45)),
                         status: OrderStatus.open.toString()),
                   );
                 },
