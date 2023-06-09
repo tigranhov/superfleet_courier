@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/model/interceptors/mock_interceptor.dart';
 import 'package:superfleet_courier/model/model.dart';
@@ -23,6 +24,13 @@ class DeliveryRequests extends _$DeliveryRequests {
     });
     updateState();
     return null;
+  }
+  @override
+  @protected
+  set state(AsyncValue<Order?> newState) {
+    if (super.state.value != newState.value) {
+      super.state = newState;
+    }
   }
 
   updateState() async {
@@ -52,19 +60,27 @@ class DeliveryRequests extends _$DeliveryRequests {
 }
 
 @riverpod
-Future<int> deliveryRequestRemainingTime(
-    DeliveryRequestRemainingTimeRef ref) async {
-  final deliveryRequest = await ref.watch(deliveryRequestsProvider.future);
-  final remainingTime = deliveryRequest?.remainingTime() ?? 0;
-  if (remainingTime > 0) {
-    Future.delayed(const Duration(seconds: 1)).then((value) {
-      ref.invalidateSelf();
-    });
+class DeliveryRequestRemainingTime extends _$DeliveryRequestRemainingTime {
+  @override
+  Future<int> build() async {
+    final deliveryRequest = await ref.watch(deliveryRequestsProvider.future);
+    var remainingTime = deliveryRequest?.remainingTime() ?? 0;
+    final keepAlive = ref.keepAlive();
+    if (remainingTime > 0) {
+      Timer timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (remainingTime == 0) {
+          timer.cancel();
+          keepAlive.close();
+        }
+        state = AsyncValue.data(remainingTime--);
+      });
+
+      ref.onDispose(() {
+        timer.cancel();
+      });
+    }
+    return remainingTime;
   }
-  ref.onDispose(() {
-    print('disposed');
-  });
-  return remainingTime;
 }
 
 @riverpod

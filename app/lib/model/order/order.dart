@@ -38,7 +38,7 @@ class Order with _$Order {
     final now = DateTime.now();
     final difference = canAcceptUntil!.difference(now);
     if (difference.isNegative) return 0;
-    return difference.inSeconds;
+    return (difference.inMilliseconds / 1000).round();
   }
 
   Location? activeLocation() {
