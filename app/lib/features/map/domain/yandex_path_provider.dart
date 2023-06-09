@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:superfleet_courier/features/transports/logic/selected_transport_provider.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';

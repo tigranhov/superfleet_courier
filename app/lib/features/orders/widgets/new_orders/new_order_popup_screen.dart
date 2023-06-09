@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notifier.dart';
@@ -73,11 +75,26 @@ class _TimeText extends ConsumerWidget {
   }
 }
 
-class _PulsingIndicatorIcon extends ConsumerWidget {
+class _PulsingIndicatorIcon extends HookConsumerWidget {
   const _PulsingIndicatorIcon();
 
   @override
   Widget build(BuildContext context, ref) {
+    final controller =
+        useAnimationController(duration: const Duration(seconds: 3));
+    useEffect(() {
+      HapticFeedback.vibrate();
+      controller.forward();
+      controller.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reset();
+          controller.forward();
+          HapticFeedback.vibrate();
+        }
+      });
+      return null;
+    }, [controller]);
+
     return GestureDetector(
       onTap: () {
         final deliveryRequest = ref.read(deliveryRequestsProvider).value!;

@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,6 +24,7 @@ class SuccessPage extends HookConsumerWidget {
       ref
           .read(audioPlayerProvider)
           .play(AssetSource('sounds/change_state.mp3'));
+      HapticFeedback.vibrate();
       return null;
     }, ['audio']);
 
