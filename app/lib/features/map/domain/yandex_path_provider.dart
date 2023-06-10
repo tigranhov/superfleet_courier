@@ -78,8 +78,7 @@ Future<List<MapObject>> routeObjects(RouteObjectsRef ref,
                 image: BitmapDescriptor.fromAssetImage(
                   'assets/pickup.png',
                 ),
-                scale: 1,
-                isFlat: true,
+                scale: 3,
                 zIndex: 100)),
           ))
       .toList();
@@ -92,7 +91,7 @@ Future<List<MapObject>> routeObjects(RouteObjectsRef ref,
         image: BitmapDescriptor.fromAssetImage(
           'assets/dropoff.png',
         ),
-        scale: 1)),
+        scale: 3)),
   );
   return [
     // myPositionPlacemark,
