@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:superfleet_courier/features/transports/model/transport.dart';
 import 'package:superfleet_courier/model/order/order.dart';
-import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
 import 'package:superfleet_courier/widgets/cards/sf_card.dart';
 import 'package:superfleet_courier/widgets/transport_icon.dart';
