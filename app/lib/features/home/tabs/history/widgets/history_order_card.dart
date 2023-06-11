@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:superfleet_courier/features/transports/model/transport.dart';
 import 'package:superfleet_courier/model/order/order.dart';
 import 'package:superfleet_courier/super_icons_icons.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
@@ -48,11 +49,12 @@ class HistoryOrderCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                   width: 36,
                   height: 36,
                   child: FittedBox(
-                      child: TransportIcon(icon: SuperIcons.bycicle))),
+                      child: TransportIcon(
+                          icon: Transport.fromString(order.transport!).icon))),
               const SizedBox(width: 12),
             ],
           ),

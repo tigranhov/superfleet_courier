@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:superfleet_courier/features/transports/logic/selected_transport_provider.dart';
 import 'package:superfleet_courier/model/api.dart';
 
 import '../../courier_notifier.dart';
@@ -48,9 +49,12 @@ class OrderByIdNotifier extends _$OrderByIdNotifier {
   Future<void> addProgress({bool delivered = false}) async {
     state = await AsyncValue.guard(() async {
       final api = ref.watch(apiProvider);
+      final selectedTransport =
+          await ref.watch(selectedTransportProvider.future);
       final response = await api.patch('/orders/$id', data: {
         'orderProgress': state.value!.orderProgress + 1,
         if (delivered) 'status': OrderStatus.delivered.toString(),
+        if (delivered) 'transport': selectedTransport.key
       });
 
       ref.invalidate(ordersNotifierProvider(status: OrderStatus.inProcess));

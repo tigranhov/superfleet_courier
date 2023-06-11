@@ -17,6 +17,7 @@ class Order with _$Order {
       DateTime? updatedAt,
       DateTime? deletedAt,
       DateTime? canAcceptUntil,
+      String? transport,
       @Default(0) int orderProgress}) = _Order;
 
   int locationIndex(Location location) {
