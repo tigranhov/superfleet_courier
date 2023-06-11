@@ -9,7 +9,7 @@ import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notif
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
-import 'tabs/history_tab.dart';
+import 'tabs/history/history_tab.dart';
 import 'tabs/order_list_tab.dart';
 
 class HomePage extends HookConsumerWidget {

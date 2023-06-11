@@ -5,6 +5,7 @@ import 'package:superfleet_courier/features/orders/widgets/location_indicators/p
 import 'package:superfleet_courier/model/model.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:superfleet_courier/theme/sf_theme.dart';
+import 'package:superfleet_courier/widgets/cards/sf_card.dart';
 
 import 'order_content.dart';
 
@@ -32,23 +33,13 @@ class OrderTile extends HookConsumerWidget {
       ],
       child: GestureDetector(
         onTap: () => onTap(order),
-        child: Container(
+        child: SFCard(
           constraints: BoxConstraints(minWidth: width),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(width: 0.5, color: const Color(0xffCCCCCC)),
-              borderRadius: BorderRadius.circular(4),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color.fromARGB(64, 0, 0, 0),
-                  offset: Offset(0, 2),
-                  blurRadius: 2,
-                ),
-              ]),
           child: Column(
             children: [
               _BeforeDivider(
                 status: order.status ?? '!!No Status',
+                orderId: order.id,
                 isNew: true,
               ),
               const Divider(height: 0),
@@ -64,10 +55,15 @@ class OrderTile extends HookConsumerWidget {
 }
 
 class _BeforeDivider extends StatelessWidget {
-  const _BeforeDivider({Key? key, required this.status, this.isNew = false})
+  const _BeforeDivider(
+      {Key? key,
+      required this.status,
+      this.isNew = false,
+      required this.orderId})
       : super(key: key);
   final String status;
   final bool isNew;
+  final int orderId;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +79,7 @@ class _BeforeDivider extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
-              '#123456789',
+              '#$orderId',
               style: context.text14w700grey,
             ),
           )
