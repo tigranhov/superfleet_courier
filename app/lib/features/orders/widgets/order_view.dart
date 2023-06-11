@@ -88,11 +88,14 @@ LocationProgress locationProgress(LocationProgressRef ref, Order order) {
 }
 
 @riverpod
-bool isOrderFinished(IsOrderFinishedRef ref, Order order) {
-  final progress = ref.watch(locationProgressProvider(order));
+bool isOrderFinished(IsOrderFinishedRef ref, Order order,
+    {int? orderProgress}) {
+  final progress = ref.watch(locationProgressProvider(orderProgress != null
+      ? order.copyWith(orderProgress: orderProgress)
+      : order));
   final currentStep = progress.currentStep(order.orderProgress)!;
   if (currentStep is DropoffLocationSteps) {
-    return currentStep.currentStep == 1;
+    return currentStep.currentStep >= 1;
   }
   return false;
 }
@@ -284,10 +287,12 @@ class _OrderSwipeButton extends ConsumerWidget {
           onDone: isOrderFinished
               ? null
               : (reset) async {
+                  final delivered = ref.read(isOrderFinishedProvider(order,
+                      orderProgress: order.orderProgress + 1));
+                  HapticFeedback.heavyImpact();
                   ref
                       .read(orderByIdNotifierProvider(order.id).notifier)
-                      .addProgress();
-                  HapticFeedback.heavyImpact();
+                      .addProgress(delivered: delivered);
                   reset();
                 },
         ));
@@ -296,7 +301,9 @@ class _OrderSwipeButton extends ConsumerWidget {
 
 void openYandexNavigator(List<({double lat, double lng})> points) async {
   if (points.length < 2) {
-    print('Need at least 2 points to create a route');
+    if (kDebugMode) {
+      print('Need at least 2 points to create a route');
+    }
     return;
   }
 
@@ -316,6 +323,8 @@ void openYandexNavigator(List<({double lat, double lng})> points) async {
   if (await canLaunchUrl(Uri.parse(finalUri))) {
     await launchUrl(Uri.parse(finalUri));
   } else {
-    print('Could not launch $finalUri');
+    if (kDebugMode) {
+      print('Could not launch $finalUri');
+    }
   }
 }

@@ -45,15 +45,16 @@ class OrderByIdNotifier extends _$OrderByIdNotifier {
     return Order.fromJson(result);
   }
 
-  addProgress() async {
+  Future<void> addProgress({bool delivered = false}) async {
     state = await AsyncValue.guard(() async {
       final api = ref.watch(apiProvider);
-      await api.patch('/orders/$id',
-          data: {'orderProgress': state.value!.orderProgress + 1});
-      ref.invalidateSelf();
-      ref.invalidate(ordersNotifierProvider);
-      return state.value!
-          .copyWith(orderProgress: state.value!.orderProgress + 1);
+      final response = await api.patch('/orders/$id', data: {
+        'orderProgress': state.value!.orderProgress + 1,
+        if (delivered) 'status': OrderStatus.delivered.toString(),
+      });
+
+      ref.invalidate(ordersNotifierProvider(status: OrderStatus.inProcess));
+      return Order.fromJson(response.data['data']);
     });
   }
 }
