@@ -20,16 +20,13 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final tabController = useTabController(initialLength: 2);
-    final audioPlayer = useState(AudioPlayer());
     final isCourierActive = ref.watch(courierNotifierProvider
         .select((value) => value.value?.status == 'ACTIVE'));
     ref.listen(
       deliveryRequestsProvider,
       (prev, next) async {
         if (isCourierActive && prev?.value == null && next.value != null) {
-          await audioPlayer.value.play(AssetSource(
-            'sounds/new_order_v1.mp3',
-          ));
+          
           if (context.mounted) {
             const NewOrderPopupRoute().go(context);
           }

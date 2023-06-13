@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,6 +9,7 @@ import 'package:superfleet_courier/model/order/notifiers/delivery_requests_notif
 import 'package:superfleet_courier/routes.dart';
 import 'package:superfleet_courier/theme/colors.dart';
 import 'package:superfleet_courier/theme/sf_theme.dart';
+import 'package:superfleet_courier/utilities/audio_player.dart';
 
 import 'time_progress_bar.dart';
 
@@ -54,8 +56,6 @@ class _YouHaveANewOrder extends StatelessWidget {
   }
 }
 
-
-
 class _TimeText extends ConsumerWidget {
   const _TimeText();
 
@@ -78,19 +78,33 @@ class _PulsingIndicatorIcon extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final controller =
         useAnimationController(duration: const Duration(seconds: 3));
+
+    final audioPlayer = ref.read(audioPlayerProvider);
     useEffect(() {
       HapticFeedback.vibrate();
       controller.forward();
+      audioPlayer.play(
+          AssetSource(
+            'sounds/new_order_v1.mp3',
+          ),
+          mode: PlayerMode.lowLatency);
       controller.addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           controller.reset();
           controller.forward();
           HapticFeedback.vibrate();
+          audioPlayer.seek(Duration.zero);
+          audioPlayer.play(
+              AssetSource(
+                'sounds/new_order_v1.mp3',
+              ),
+              mode: PlayerMode.lowLatency);
         }
       });
       return null;
     }, [controller]);
 
+    const size = 120.0;
     return GestureDetector(
       onTap: () {
         final deliveryRequest = ref.read(deliveryRequestsProvider).value!;
@@ -104,8 +118,8 @@ class _PulsingIndicatorIcon extends HookConsumerWidget {
           Positioned(
             top: 115,
             child: Container(
-              width: 114,
-              height: 114,
+              width: size,
+              height: size,
               clipBehavior: Clip.none,
               child: OverflowBox(
                 maxHeight: double.infinity,
@@ -116,6 +130,7 @@ class _PulsingIndicatorIcon extends HookConsumerWidget {
                       'assets/animations/new_order_animation.json',
                       width: 1600,
                       height: 1600,
+                      controller: controller,
                       addRepaintBoundary: true,
                       fit: BoxFit.cover),
                 ),
@@ -135,8 +150,8 @@ class _PulsingIndicatorIcon extends HookConsumerWidget {
           Positioned(
             top: 130,
             child: Container(
-              width: 114,
-              height: 114,
+              width: size,
+              height: size,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(600),
