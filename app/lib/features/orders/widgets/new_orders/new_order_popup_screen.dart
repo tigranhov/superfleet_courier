@@ -104,7 +104,8 @@ class _PulsingIndicatorIcon extends HookConsumerWidget {
       return null;
     }, [controller]);
 
-    const size = 120.0;
+    const size = 100.0;
+    final pulseSize = MediaQuery.of(context).size.width * 2;
     return GestureDetector(
       onTap: () {
         final deliveryRequest = ref.read(deliveryRequestsProvider).value!;
@@ -116,7 +117,7 @@ class _PulsingIndicatorIcon extends HookConsumerWidget {
         clipBehavior: Clip.none,
         children: [
           Positioned(
-            top: 115,
+            top: 130,
             child: Container(
               width: size,
               height: size,
@@ -128,8 +129,8 @@ class _PulsingIndicatorIcon extends HookConsumerWidget {
                   padding: const EdgeInsets.only(bottom: 30),
                   child: Lottie.asset(
                       'assets/animations/new_order_animation.json',
-                      width: 1600,
-                      height: 1600,
+                      width: pulseSize,
+                      height: pulseSize,
                       controller: controller,
                       addRepaintBoundary: true,
                       fit: BoxFit.cover),
